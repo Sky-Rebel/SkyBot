@@ -9,7 +9,7 @@ public class CMDExecutor
 {
 	private static final Logger LOGGER = LoggerFactory.getLogger(CMDExecutor.class);
 
-	public static void runBat(String workDir, String batFile)
+	public static void runBat(String workDir, String batFile, String arg)
 	{
 		File file = new File(workDir, batFile);
 		try
@@ -19,7 +19,7 @@ public class CMDExecutor
 				LOGGER.error("无法找到Bat文件 -> {}", file.getAbsolutePath());
 				return;
 			}
-			ProcessBuilder processBuilder = new ProcessBuilder("cmd.exe ", "/c", file.getAbsolutePath());
+			ProcessBuilder processBuilder = new ProcessBuilder("cmd.exe ", "/c", file.getAbsolutePath(), arg);
 			processBuilder.directory(file.getParentFile());
 			processBuilder.redirectOutput(ProcessBuilder.Redirect.DISCARD);
 			processBuilder.redirectError(ProcessBuilder.Redirect.DISCARD);

@@ -1,0 +1,42 @@
+package com.skybot;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+public class Bot
+{
+	private static final Logger LOGGER = LoggerFactory.getLogger(Bot.class);
+
+	public static final String NAPCAT_WORK_DIR = "napcat";
+
+	public static final String LAUNCHER_BAT = "launcher.bat";
+
+	public static final String LAUNCHER_USER_BAT = "launcher-user.bat";
+
+	public static BotConfig config;
+
+	public Bot()
+	{
+		BotConfig botConfig = BotConfig.getBotConfig();
+		this(botConfig);
+	}
+
+	public Bot(BotConfig botConfig)
+	{
+		NapcatInstall.checkInstall();
+		BotConfig.saveConfig(botConfig);
+		config = botConfig;
+	}
+
+	public void start()
+	{
+		BotClient botClient = new BotClient();
+		botClient.start();
+		if (config.botId == BotConfig.DEF_BOT_ID)
+		{
+			LOGGER.warn("BotId未配置，无法启动Bot!");
+			return;
+		}
+		CMDExecutor.runBat(NAPCAT_WORK_DIR, LAUNCHER_USER_BAT, String.valueOf(config.botId));
+	}
+}
