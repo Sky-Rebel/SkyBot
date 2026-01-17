@@ -60,7 +60,7 @@ public class BotConfig
 		/**
 		 * HTTP服务器鉴权密钥
 		 */
-		public String token = "skybot";
+		public String token = "";
 
 		/**
 		 * HTTP服务器主机位置
@@ -134,7 +134,7 @@ public class BotConfig
 		/**
 		 * WS客户端鉴权密钥
 		 */
-		public String token = "SkyBot";
+		public String token = "";
 
 		/**
 		 * WS客户端唯一标识
@@ -154,7 +154,7 @@ public class BotConfig
 		/**
 		 * WS客户端上报自身消息与否
 		 */
-		public boolean reportSelfMessage = false;
+		public boolean reportSelfMessage = true;
 
 		/**
 		 * WS客户端消息上报格式
@@ -225,7 +225,7 @@ public class BotConfig
 		httpServerConfig.enableWebsocket = napcatHttpServersConfig.getBoolean("enableWebsocket");
 		httpServerConfig.messagePostFormat = napcatHttpServersConfig.getString("messagePostFormat");
 		httpServerConfig.port = napcatHttpServersConfig.getInt("port");
-		httpServerConfig.token = napcatHttpServersConfig.getString("token");
+//		httpServerConfig.token = napcatHttpServersConfig.getString("token");
 		botConfig.httpServerConfig = httpServerConfig;
 		JSONObject napcatWSClientsConfig = napcatNetworkConfig.getJSONArray("websocketClients").getJSONObject(0);
 		BotConfig.WSClientConfig wsClientConfig = new WSClientConfig();
@@ -237,7 +237,7 @@ public class BotConfig
 		wsClientConfig.heartInterval = napcatWSClientsConfig.getInt("heartInterval");
 		wsClientConfig.reconnectInterval = napcatWSClientsConfig.getInt("reconnectInterval");
 		wsClientConfig.reportSelfMessage = napcatWSClientsConfig.getBoolean("reportSelfMessage");
-		wsClientConfig.token = napcatWSClientsConfig.getString("token");
+//		wsClientConfig.token = napcatWSClientsConfig.getString("token");
 		botConfig.wsClientConfig = wsClientConfig;
 		return botConfig;
 	}

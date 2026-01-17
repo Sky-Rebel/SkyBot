@@ -3,6 +3,7 @@ package com.skybot;
 import org.java_websocket.WebSocket;
 import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,7 +48,9 @@ public class BotClient extends WebSocketServer
 	@Override
 	public void onMessage(WebSocket webSocket, String s)
 	{
-		System.out.println(s);
+		JSONObject jsonObject = new JSONObject(s);
+		System.out.println(jsonObject.toString(4) + "\n".repeat(5));
+		EventDispatcher.dispatch(jsonObject);
 	}
 
 	@Override

@@ -19,7 +19,7 @@ public class CMDExecutor
 				LOGGER.error("无法找到Bat文件 -> {}", file.getAbsolutePath());
 				return;
 			}
-			ProcessBuilder processBuilder = new ProcessBuilder("cmd.exe ", "/c", file.getAbsolutePath(), arg);
+			ProcessBuilder processBuilder = new ProcessBuilder("cmd.exe", "/c", "start",  file.getAbsolutePath(), arg);
 			processBuilder.directory(file.getParentFile());
 			processBuilder.redirectOutput(ProcessBuilder.Redirect.DISCARD);
 			processBuilder.redirectError(ProcessBuilder.Redirect.DISCARD);

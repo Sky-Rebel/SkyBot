@@ -9,11 +9,11 @@ public class Bot
 
 	public static final String NAPCAT_WORK_DIR = "napcat";
 
-	public static final String LAUNCHER_BAT = "launcher.bat";
-
 	public static final String LAUNCHER_USER_BAT = "launcher-user.bat";
 
 	public static BotConfig config;
+
+	public static boolean isStart;
 
 	public Bot()
 	{
@@ -37,6 +37,8 @@ public class Bot
 			LOGGER.warn("BotId未配置，无法启动Bot!");
 			return;
 		}
+		System.out.println(config.botId);
 		CMDExecutor.runBat(NAPCAT_WORK_DIR, LAUNCHER_USER_BAT, String.valueOf(config.botId));
+		isStart = true;
 	}
 }
