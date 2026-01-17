@@ -1,5 +1,6 @@
 package com.skybot;
 
+import com.skybot.event.handler.OB11EventDispatcher;
 import org.java_websocket.WebSocket;
 import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
@@ -50,7 +51,7 @@ public class BotClient extends WebSocketServer
 	{
 		JSONObject jsonObject = new JSONObject(s);
 		System.out.println(jsonObject.toString(4) + "\n".repeat(5));
-		EventDispatcher.dispatch(jsonObject);
+		OB11EventDispatcher.dispatch(jsonObject);
 	}
 
 	@Override

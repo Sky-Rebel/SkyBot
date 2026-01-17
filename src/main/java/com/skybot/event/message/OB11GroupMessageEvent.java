@@ -4,7 +4,7 @@ import com.skybot.event.OB11BaseMessageEvent;
 
 public class OB11GroupMessageEvent extends OB11BaseMessageEvent
 {
-	public static final String MESSAGE_TYPE = "group";
+	public static final String MESSAGE_EVENT_TYPE = "group";
 
 	public long groupId;
 
@@ -18,10 +18,6 @@ public class OB11GroupMessageEvent extends OB11BaseMessageEvent
 
 		public String card;
 
-		public String title;
-
-		public String level;
-
 		public String role;
 
 		@Override
@@ -31,8 +27,6 @@ public class OB11GroupMessageEvent extends OB11BaseMessageEvent
 				"userId=" + userId +
 				", nickname='" + nickname + '\'' +
 				", card='" + card + '\'' +
-				", title='" + title + '\'' +
-				", level='" + level + '\'' +
 				", role='" + role + '\'' +
 				'}';
 		}
@@ -42,15 +36,14 @@ public class OB11GroupMessageEvent extends OB11BaseMessageEvent
 	public String toString()
 	{
 		return "OB11GroupMessageEvent{" +
-			"message=" + message +
-			", groupId=" + groupId +
+			"groupId=" + groupId +
 			", sender=" + sender +
 			", messageId=" + messageId +
 			", userId=" + userId +
+			", message=" + message +
 			", rawMessage='" + rawMessage + '\'' +
 			", time=" + time +
-			", self_id=" + self_id +
-			", post_type='" + post_type + '\'' +
+			", selfId=" + selfId +
 			'}';
 	}
 }

@@ -225,7 +225,7 @@ public class BotConfig
 		httpServerConfig.enableWebsocket = napcatHttpServersConfig.getBoolean("enableWebsocket");
 		httpServerConfig.messagePostFormat = napcatHttpServersConfig.getString("messagePostFormat");
 		httpServerConfig.port = napcatHttpServersConfig.getInt("port");
-//		httpServerConfig.token = napcatHttpServersConfig.getString("token");
+		httpServerConfig.token = napcatHttpServersConfig.getString("token");
 		botConfig.httpServerConfig = httpServerConfig;
 		JSONObject napcatWSClientsConfig = napcatNetworkConfig.getJSONArray("websocketClients").getJSONObject(0);
 		BotConfig.WSClientConfig wsClientConfig = new WSClientConfig();
@@ -237,7 +237,7 @@ public class BotConfig
 		wsClientConfig.heartInterval = napcatWSClientsConfig.getInt("heartInterval");
 		wsClientConfig.reconnectInterval = napcatWSClientsConfig.getInt("reconnectInterval");
 		wsClientConfig.reportSelfMessage = napcatWSClientsConfig.getBoolean("reportSelfMessage");
-//		wsClientConfig.token = napcatWSClientsConfig.getString("token");
+		wsClientConfig.token = napcatWSClientsConfig.getString("token");
 		botConfig.wsClientConfig = wsClientConfig;
 		return botConfig;
 	}

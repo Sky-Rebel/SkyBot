@@ -11,17 +11,17 @@ public class OB11LifeCycleEvent extends OB11BaseMetaEvent
 	public enum LifeCycleSubType
 	{
 		/**
-		 * Bot启用
+		 * Bot启用事件
 		 */
 		ENABLE("enable"),
 
 		/**
-		 * Bot禁用
+		 * Bot禁用事件
 		 */
 		DISABLE("disable"),
 
 		/**
-		 * Bot连接
+		 * Bot连接事件
 		 */
 		CONNECT("connect");
 
