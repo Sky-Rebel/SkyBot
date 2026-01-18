@@ -22,6 +22,12 @@ public class OB11NotifyNoticeEvent
 		/**
 		 * Bot收到点赞事件
 		 */
-		PROFILE_LIKE
+		PROFILE_LIKE,
+
+		/**
+		 * 群组名字变更事件
+		 */
+		GROUP_NAME
+
 	}
 }

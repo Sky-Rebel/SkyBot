@@ -1,4 +1,4 @@
-package com.skybot;
+package com.skybot.bot;
 
 import org.json.JSONObject;
 import org.slf4j.Logger;

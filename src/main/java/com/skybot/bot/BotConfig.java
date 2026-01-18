@@ -1,4 +1,4 @@
-package com.skybot;
+package com.skybot.bot;
 
 import com.google.gson.*;
 import com.google.gson.stream.JsonWriter;

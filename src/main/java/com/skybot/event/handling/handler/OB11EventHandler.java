@@ -1,7 +1,11 @@
-package com.skybot.event.handler;
+package com.skybot.event.handling.handler;
 
 import com.skybot.event.OB11BaseEvent;
 import com.skybot.event.OB11BaseNoticeEvent;
+import com.skybot.event.handling.dispatcher.OB11MateEventDispatcher;
+import com.skybot.event.handling.dispatcher.OB11MessageEventDispatcher;
+import com.skybot.event.handling.dispatcher.OB11NoticeEventDispatcher;
+import com.skybot.event.handling.dispatcher.OB11RequestEventDispatcher;
 import com.skybot.event.message.OB11GroupMessageEvent;
 import com.skybot.event.message.OB11PrivateMessageEvent;
 import com.skybot.event.meta.OB11HeartbeatEvent;
@@ -12,18 +16,19 @@ import com.skybot.event.notice.notify.OB11InputStatusNotifyNoticeEvent;
 import com.skybot.event.notice.notify.OB11ProfileLikeNotifyNoticeEvent;
 import com.skybot.event.notice.notify.poke.OB11FriendPokeNotifyNoticeEvent;
 import com.skybot.event.notice.notify.poke.OB11GroupPokeNotifyNoticeEvent;
-import com.skybot.event.request.OB11FriendRequestEvent;
-import com.skybot.event.request.OB11GroupRequestEvent;
+import com.skybot.event.request.OB11FriendAddRequestEvent;
+import com.skybot.event.request.OB11GroupAddRequestEvent;
+import com.skybot.event.request.OB11GroupInviteRequestEvent;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class OB11EventDispatcher
+public class OB11EventHandler
 {
-	public static final Logger LOGGER = LoggerFactory.getLogger(OB11EventDispatcher.class);
+	public static final Logger LOGGER = LoggerFactory.getLogger(OB11EventHandler.class);
 
 	/**
-	 * 分发OB11事件
+	 * 分发底层事件
 	 * @param ob11EventPostData Napcat客户端上报的原始数据
 	 */
 	public static void dispatch(JSONObject ob11EventPostData)
@@ -48,9 +53,9 @@ public class OB11EventDispatcher
 					ob11LifeCycleEvent.lifeCycleSubType = OB11LifeCycleEvent.LifeCycleSubType.valueOf(subType.toUpperCase());
 					switch (ob11LifeCycleEvent.lifeCycleSubType)
 					{
-						case ENABLE -> OB11MetaEventHandler.onEnable(ob11LifeCycleEvent);
-						case DISABLE -> OB11MetaEventHandler.onDisable(ob11LifeCycleEvent);
-						case CONNECT -> OB11MetaEventHandler.onConnect(ob11LifeCycleEvent);
+						case ENABLE -> OB11MateEventDispatcher.onEnable(ob11LifeCycleEvent);
+						case DISABLE -> OB11MateEventDispatcher.onDisable(ob11LifeCycleEvent);
+						case CONNECT -> OB11MateEventDispatcher.onConnect(ob11LifeCycleEvent);
 						default -> LOGGER.warn("未知生命周期事件类型！");
 					}
 				}
@@ -65,7 +70,7 @@ public class OB11EventDispatcher
 					heartbeatStatus.good = status.getBoolean("good");
 					heartbeatStatus.undefined = status.getBoolean("online");
 					ob11HeartbeatEvent.heartbeatStatus = heartbeatStatus;
-					OB11MetaEventHandler.onHeartbeat(ob11HeartbeatEvent);
+					OB11MateEventDispatcher.onHeartbeat(ob11HeartbeatEvent);
 				}
 				else LOGGER.warn("未知元事件类型！");
 			}
@@ -89,7 +94,7 @@ public class OB11EventDispatcher
 					sender.nickname = senderJson.getString("nickname");
 					sender.role = senderJson.getString("role");
 					ob11GroupMessageEvent.sender = sender;
-					OB11MessageEventHandler.onGroupMessage(ob11GroupMessageEvent);
+					OB11MessageEventDispatcher.onGroupMessage(ob11GroupMessageEvent);
 				}
 				else if (messageEventType.equals(OB11PrivateMessageEvent.MESSAGE_EVENT_TYPE))
 				{
@@ -107,7 +112,7 @@ public class OB11EventDispatcher
 					sender.nickname = senderJson.getString("nickname");
 					sender.sex = senderJson.getString("sex");
 					ob11PrivateMessageEvent.sender = sender;
-					OB11MessageEventHandler.onPrivateMessage(ob11PrivateMessageEvent);
+					OB11MessageEventDispatcher.onPrivateMessage(ob11PrivateMessageEvent);
 				}
 				else LOGGER.warn("未知消息事件类型！");
 			}
@@ -122,7 +127,7 @@ public class OB11EventDispatcher
 						ob11FriendAddNoticeEvent.time = ob11EventPostData.getLong("time");
 						ob11FriendAddNoticeEvent.userId = ob11EventPostData.getLong("user_id");
 						ob11FriendAddNoticeEvent.selfId = ob11EventPostData.getLong("self_id");
-						OB11NoticeEventHandler.onFriendAdd(ob11FriendAddNoticeEvent);
+						OB11NoticeEventDispatcher.onFriendAdded(ob11FriendAddNoticeEvent);
 					}
 					case FRIEND_RECALL ->
 					{
@@ -131,7 +136,7 @@ public class OB11EventDispatcher
 						ob11FriendRecallNoticeEvent.messageId = ob11EventPostData.getLong("message_id");
 						ob11FriendRecallNoticeEvent.userId = ob11EventPostData.getLong("user_id");
 						ob11FriendRecallNoticeEvent.selfId = ob11EventPostData.getLong("self_id");
-						OB11NoticeEventHandler.onFriendRecall(ob11FriendRecallNoticeEvent);
+						OB11NoticeEventDispatcher.onFriendMessageRecalled(ob11FriendRecallNoticeEvent);
 					}
 					case GROUP_BAN ->
 					{
@@ -143,9 +148,9 @@ public class OB11EventDispatcher
 						ob11GroupBanNoticeEvent.operatorId = ob11EventPostData.getLong("operator_id");
 						String subType = ob11EventPostData.getString("sub_type");
 						if (subType.equals("ban"))
-							OB11NoticeEventHandler.onGroupBan(ob11GroupBanNoticeEvent);
+							OB11NoticeEventDispatcher.onGroupMemberMuted(ob11GroupBanNoticeEvent);
 						else if (subType.equals("lift_ban"))
-							OB11NoticeEventHandler.onGroupLiftBan(ob11GroupBanNoticeEvent);
+							OB11NoticeEventDispatcher.onGroupMemberUnmuted(ob11GroupBanNoticeEvent);
 						else LOGGER.warn("未知群组禁言事件子类型");
 					}
 					case GROUP_CARD ->
@@ -153,9 +158,9 @@ public class OB11EventDispatcher
 						OB11GroupCardNoticeEvent ob11GroupCardNoticeEvent = new OB11GroupCardNoticeEvent();
 						ob11GroupCardNoticeEvent.time = ob11EventPostData.getLong("time");
 						ob11GroupCardNoticeEvent.selfId = ob11EventPostData.getLong("self_id");
-						ob11GroupCardNoticeEvent.newCard = ob11EventPostData.getString("new_card");
-						ob11GroupCardNoticeEvent.oldCrd = ob11EventPostData.getString("old_card");
-						OB11NoticeEventHandler.onGroupCard(ob11GroupCardNoticeEvent);
+						ob11GroupCardNoticeEvent.newCard = ob11EventPostData.getString("card_new");
+						ob11GroupCardNoticeEvent.oldCrd = ob11EventPostData.getString("card_old");
+						OB11NoticeEventDispatcher.onGroupMemberCardUpdated(ob11GroupCardNoticeEvent);
 					}
 					case GROUP_ADMIN ->
 					{
@@ -166,9 +171,9 @@ public class OB11EventDispatcher
 						ob11GroupAdminNoticeEvent.groupId = ob11EventPostData.getLong("group_id");
 						String subType = ob11EventPostData.getString("sub_type");
 						if (subType.equals("set"))
-							OB11NoticeEventHandler.onGroupAdminSet(ob11GroupAdminNoticeEvent);
+							OB11NoticeEventDispatcher.onGroupAdminAssigned(ob11GroupAdminNoticeEvent);
 						else if (subType.equals("unset"))
-							OB11NoticeEventHandler.onGroupAdminUnset(ob11GroupAdminNoticeEvent);
+							OB11NoticeEventDispatcher.onGroupAdminRevoked(ob11GroupAdminNoticeEvent);
 					}
 					case GROUP_RECALL ->
 					{
@@ -177,7 +182,7 @@ public class OB11EventDispatcher
 						ob11GroupRecallNoticeEvent.selfId = ob11EventPostData.getLong("self_id");
 						ob11GroupRecallNoticeEvent.messageId = ob11EventPostData.getLong("message_id");
 						ob11GroupRecallNoticeEvent.operatorId = ob11EventPostData.getLong("operator_id");
-						OB11NoticeEventHandler.onGroupRecall(ob11GroupRecallNoticeEvent);
+						OB11NoticeEventDispatcher.onGroupMessageRecalled(ob11GroupRecallNoticeEvent);
 					}
 					case GROUP_UPLOAD ->
 					{
@@ -190,7 +195,8 @@ public class OB11EventDispatcher
 						groupUploadFile.name = fileInfo.getString("name");
 						groupUploadFile.size = fileInfo.getLong("size");
 						groupUploadFile.busid = fileInfo.getLong("busid");
-						OB11NoticeEventHandler.onGroupUpload(ob11GroupUploadNoticeEvent);
+						ob11GroupUploadNoticeEvent.groupUploadFile = groupUploadFile;
+						OB11NoticeEventDispatcher.onGroupFileUploaded(ob11GroupUploadNoticeEvent);
 					}
 					case GROUP_DECREASE ->
 					{
@@ -204,9 +210,9 @@ public class OB11EventDispatcher
 						OB11GroupDecreaseNoticeEvent.DecreaseSubType decreaseSubType = OB11GroupDecreaseNoticeEvent.DecreaseSubType.valueOf(subType.toUpperCase());
 						switch (decreaseSubType)
 						{
-							case LEAVE -> OB11NoticeEventHandler.onGroupLeaveDecrease(ob11GroupDecreaseNoticeEvent);
-							case KICK -> OB11NoticeEventHandler.onGroupKickDecrease(ob11GroupDecreaseNoticeEvent);
-							case KICK_ME -> OB11NoticeEventHandler.onGroupKickMeDecrease(ob11GroupDecreaseNoticeEvent);
+							case LEAVE -> OB11NoticeEventDispatcher.onGroupMemberKicked(ob11GroupDecreaseNoticeEvent);
+							case KICK -> OB11NoticeEventDispatcher.onGroupMemberKicked(ob11GroupDecreaseNoticeEvent);
+							case KICK_ME -> OB11NoticeEventDispatcher.onGroupBotKicked(ob11GroupDecreaseNoticeEvent);
 							default -> LOGGER.warn("未知群组减少成员事件子类型！");
 						}
 					}
@@ -220,9 +226,9 @@ public class OB11EventDispatcher
 						ob11GroupIncreaseNoticeEvent.operatorId = ob11EventPostData.getLong("operator_id");
 						String subType = ob11EventPostData.getString("sub_type");
 						if (subType.equals("approve"))
-							OB11NoticeEventHandler.onGroupApproveIncrease(ob11GroupIncreaseNoticeEvent);
+							OB11NoticeEventDispatcher.onGroupMemberApproved(ob11GroupIncreaseNoticeEvent);
 						else if (subType.equals("invite"))
-							OB11NoticeEventHandler.onGroupInviteIncrease(ob11GroupIncreaseNoticeEvent);
+							OB11NoticeEventDispatcher.onGroupMemberInvited(ob11GroupIncreaseNoticeEvent);
 						else LOGGER.warn("未知群组增加成员事件子类型！");
 					}
 					case ESSENCE ->
@@ -235,9 +241,9 @@ public class OB11EventDispatcher
 						ob11GroupEssenceNoticeEvent.operatorId = ob11EventPostData.getLong("operator_id");
 						String subType = ob11EventPostData.getString("sub_type");
 						if (subType.equals("add"))
-							OB11NoticeEventHandler.onGroupAddEssence(ob11GroupEssenceNoticeEvent);
+							OB11NoticeEventDispatcher.onGroupEssenceMessageAdded(ob11GroupEssenceNoticeEvent);
 						else if (subType.equals("delete"))
-							OB11NoticeEventHandler.onGroupDeleteEssence(ob11GroupEssenceNoticeEvent);
+							OB11NoticeEventDispatcher.onGroupEssenceMessageRemoved(ob11GroupEssenceNoticeEvent);
 						else LOGGER.warn("未知精华消息变动事件子类型");
 					}
 					case NOTIFY ->
@@ -256,7 +262,7 @@ public class OB11EventDispatcher
 									ob11GroupPokeNotifyNoticeEvent.userId = ob11EventPostData.getLong("user_id");
 									ob11GroupPokeNotifyNoticeEvent.groupId = ob11EventPostData.getLong("group_id");
 									ob11GroupPokeNotifyNoticeEvent.targetId = ob11EventPostData.getLong("target_id");
-									OB11NoticeEventHandler.onGroupPokeNotify(ob11GroupPokeNotifyNoticeEvent);
+									OB11NoticeEventDispatcher.onGroupPoke(ob11GroupPokeNotifyNoticeEvent);
 								}
 								else
 								{
@@ -265,7 +271,7 @@ public class OB11EventDispatcher
 									ob11FriendPokeNotifyNoticeEvent.selfId = ob11EventPostData.getLong("self_id");
 									ob11FriendPokeNotifyNoticeEvent.userId = ob11EventPostData.getLong("user_id");
 									ob11FriendPokeNotifyNoticeEvent.targetId = ob11EventPostData.getLong("target_id");
-									OB11NoticeEventHandler.onFriendPokeNotify(ob11FriendPokeNotifyNoticeEvent);
+									OB11NoticeEventDispatcher.onFriendPoke(ob11FriendPokeNotifyNoticeEvent);
 								}
 							}
 							case TITLE ->
@@ -274,7 +280,7 @@ public class OB11EventDispatcher
 								ob11GroupTitleNotifyNoticeEvent.time = ob11EventPostData.getLong("time");
 								ob11GroupTitleNotifyNoticeEvent.selfId = ob11EventPostData.getLong("self_id");
 								ob11GroupTitleNotifyNoticeEvent.title = ob11EventPostData.getString("title");;
-								OB11NoticeEventHandler.onTitle(ob11GroupTitleNotifyNoticeEvent);
+								OB11NoticeEventDispatcher.onGroupMemberTitleUpdated(ob11GroupTitleNotifyNoticeEvent);
 							}
 							case INPUT_STATUS ->
 							{
@@ -285,7 +291,7 @@ public class OB11EventDispatcher
 								ob11InputStatusNotifyNoticeEvent.status_text = ob11EventPostData.getString("event_type");
 								ob11InputStatusNotifyNoticeEvent.userId = ob11EventPostData.getLong("user_id");
 								ob11InputStatusNotifyNoticeEvent.groupId = ob11EventPostData.getLong("group_id");
-								OB11NoticeEventHandler.onInputStatusNotify(ob11InputStatusNotifyNoticeEvent);
+								OB11NoticeEventDispatcher.onFriendInputStatusUpdated(ob11InputStatusNotifyNoticeEvent);
 							}
 							case PROFILE_LIKE ->
 							{
@@ -295,7 +301,17 @@ public class OB11EventDispatcher
 								ob11ProfileLikeNotifyNoticeEvent.times = ob11EventPostData.getInt("times");
 								ob11ProfileLikeNotifyNoticeEvent.operatorId = ob11EventPostData.getLong("operator_id");
 								ob11ProfileLikeNotifyNoticeEvent.operatorNick = ob11EventPostData.getString("operator_nick");
-								OB11NoticeEventHandler.onProfileLikeNotify(ob11ProfileLikeNotifyNoticeEvent);
+								OB11NoticeEventDispatcher.onProfileLikeNotify(ob11ProfileLikeNotifyNoticeEvent);
+							}
+							case GROUP_NAME ->
+							{
+								OB11GroupNameNoticeEvent ob11GroupNameNoticeEvent = new OB11GroupNameNoticeEvent();
+								ob11GroupNameNoticeEvent.time = ob11EventPostData.getLong("time");
+								ob11GroupNameNoticeEvent.selfId = ob11EventPostData.getLong("self_id");
+								ob11GroupNameNoticeEvent.userId = ob11EventPostData.getLong("user_id");
+								ob11GroupNameNoticeEvent.newName = ob11EventPostData.getString("name_new");
+								ob11GroupNameNoticeEvent.groupId = ob11EventPostData.getLong("group_id");
+								OB11NoticeEventDispatcher.onGroupNameUpdated(ob11GroupNameNoticeEvent);
 							}
 						}
 					}
@@ -306,28 +322,39 @@ public class OB11EventDispatcher
 				final String requestEventType = ob11EventPostData.getString("request_type");
 				if (requestEventType.equals("friend"))
 				{
-					OB11FriendRequestEvent ob11FriendRequestEvent = new OB11FriendRequestEvent();
-					ob11FriendRequestEvent.comment = ob11EventPostData.getString("comment");
-					ob11FriendRequestEvent.userId = ob11EventPostData.getLong("user_id");
-					ob11FriendRequestEvent.flag = ob11EventPostData.getString("flag");
-					ob11FriendRequestEvent.time = ob11EventPostData.getLong("time");
-					ob11FriendRequestEvent.selfId = ob11EventPostData.getLong("self_id");
-					OB11RequestEventHandler.onFriendRequest(ob11FriendRequestEvent);
+					OB11FriendAddRequestEvent ob11FriendAddRequestEvent = new OB11FriendAddRequestEvent();
+					ob11FriendAddRequestEvent.comment = ob11EventPostData.getString("comment");
+					ob11FriendAddRequestEvent.userId = ob11EventPostData.getLong("user_id");
+					ob11FriendAddRequestEvent.flag = ob11EventPostData.getString("flag");
+					ob11FriendAddRequestEvent.time = ob11EventPostData.getLong("time");
+					ob11FriendAddRequestEvent.selfId = ob11EventPostData.getLong("self_id");
+					OB11RequestEventDispatcher.onFriendRequest(ob11FriendAddRequestEvent);
 				}
 				else if (requestEventType.equals("group"))
 				{
-					OB11GroupRequestEvent ob11GroupRequestEvent = new OB11GroupRequestEvent();
-					ob11GroupRequestEvent.time = ob11EventPostData.getLong("time");
-					ob11GroupRequestEvent.comment = ob11EventPostData.getString("comment");
-					ob11GroupRequestEvent.groupId = ob11EventPostData.getLong("group_id");
-					ob11GroupRequestEvent.flag = ob11EventPostData.getString("flag");
-					ob11GroupRequestEvent.selfId = ob11EventPostData.getLong("self_id");
-					ob11GroupRequestEvent.userId = ob11EventPostData.getLong("user_id");
 					final String subType = ob11EventPostData.getString("sub_type");
 					if (subType.equals("add"))
-						OB11RequestEventHandler.onGroupAddRequest(ob11GroupRequestEvent);
+					{
+						OB11GroupAddRequestEvent ob11GroupAddRequestEvent = new OB11GroupAddRequestEvent();
+						ob11GroupAddRequestEvent.time = ob11EventPostData.getLong("time");
+						ob11GroupAddRequestEvent.comment = ob11EventPostData.getString("comment");
+						ob11GroupAddRequestEvent.groupId = ob11EventPostData.getLong("group_id");
+						ob11GroupAddRequestEvent.flag = ob11EventPostData.getString("flag");
+						ob11GroupAddRequestEvent.selfId = ob11EventPostData.getLong("self_id");
+						ob11GroupAddRequestEvent.userId = ob11EventPostData.getLong("user_id");
+						OB11RequestEventDispatcher.onGroupAddRequest(ob11GroupAddRequestEvent);
+					}
 					else if (subType.equals("invite"))
-						OB11RequestEventHandler.onGroupInviteRequest(ob11GroupRequestEvent);
+					{
+						OB11GroupInviteRequestEvent ob11GroupInviteRequestEvent = new OB11GroupInviteRequestEvent();
+						ob11GroupInviteRequestEvent.time = ob11EventPostData.getLong("time");
+						ob11GroupInviteRequestEvent.selfId = ob11EventPostData.getLong("self_id");
+						ob11GroupInviteRequestEvent.groupId = ob11EventPostData.getLong("group_id");
+						ob11GroupInviteRequestEvent.userId = ob11EventPostData.getLong("user_id");
+						ob11GroupInviteRequestEvent.flag = ob11EventPostData.getString("flag");
+						ob11GroupInviteRequestEvent.comment = ob11EventPostData.getString("comment");
+						OB11RequestEventDispatcher.onGroupInviteRequest(ob11GroupInviteRequestEvent);
+					}
 					else LOGGER.warn("未知群组请求事件类型！");
 				}
 				else LOGGER.warn("未知请求事件类型！");

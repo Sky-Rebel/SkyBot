@@ -1,5 +1,7 @@
-package com.skybot;
+package com.skybot.bot;
 
+import com.skybot.util.CMDExecutor;
+import com.skybot.util.NapcatInstall;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

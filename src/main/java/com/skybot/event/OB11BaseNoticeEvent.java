@@ -64,6 +64,7 @@ public class OB11BaseNoticeEvent extends OB11BaseEvent
 		 */
 		ESSENCE,
 
+
 		/**
 		 * 其他通知事件
 		 */
