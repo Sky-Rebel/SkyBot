@@ -1,13 +1,13 @@
 package com.skybot;
 
-import com.skybot.api.MessageManage;
-import com.skybot.event.handling.listener.notice.OB11NoticeEventListener;
-import com.skybot.event.notice.*;
-import com.skybot.event.notice.notify.OB11GroupTitleNotifyNoticeEvent;
-import com.skybot.event.notice.notify.OB11InputStatusNotifyNoticeEvent;
-import com.skybot.event.notice.notify.OB11ProfileLikeNotifyNoticeEvent;
-import com.skybot.event.notice.notify.poke.OB11FriendPokeNotifyNoticeEvent;
-import com.skybot.event.notice.notify.poke.OB11GroupPokeNotifyNoticeEvent;
+import com.skybot.bot.api.OB11MessageService;
+import com.skybot.bot.event.handling.listener.OB11NoticeEventListener;
+import com.skybot.bot.event.notice.*;
+import com.skybot.bot.event.notice.notify.OB11GroupTitleNotifyNoticeEvent;
+import com.skybot.bot.event.notice.notify.OB11InputStatusNotifyNoticeEvent;
+import com.skybot.bot.event.notice.notify.OB11ProfileLikeNotifyNoticeEvent;
+import com.skybot.bot.event.notice.notify.poke.OB11FriendPokeNotifyNoticeEvent;
+import com.skybot.bot.event.notice.notify.poke.OB11GroupPokeNotifyNoticeEvent;
 
 public class OB11NoticeEventListenerImpl implements OB11NoticeEventListener
 {
@@ -75,7 +75,7 @@ public class OB11NoticeEventListenerImpl implements OB11NoticeEventListener
 	@Override
 	public void onGroupNameUpdated(OB11GroupNameNoticeEvent ob11GroupNameNoticeEvent)
 	{
-		MessageManage.sendGroupTextMessage(ob11GroupNameNoticeEvent.groupId, ob11GroupNameNoticeEvent.userId + "为本群更改了新的名字 -> " + ob11GroupNameNoticeEvent.newName);
+		OB11MessageService.sendGroupTextMessage(ob11GroupNameNoticeEvent.groupId, ob11GroupNameNoticeEvent.userId + "为本群更改了新的名字 -> " + ob11GroupNameNoticeEvent.newName);
 	}
 
 	@Override
@@ -154,6 +154,6 @@ public class OB11NoticeEventListenerImpl implements OB11NoticeEventListener
 	@Override
 	public void onGroupPoke(OB11GroupPokeNotifyNoticeEvent ob11GroupPokeNoticeEvent)
 	{
-		MessageManage.sendGroupTextMessage(ob11GroupPokeNoticeEvent.groupId, "请不要戳我！");
+		OB11MessageService.sendGroupTextMessage(ob11GroupPokeNoticeEvent.groupId, "请不要戳我！");
 	}
 }

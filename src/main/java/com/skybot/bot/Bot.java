@@ -1,7 +1,8 @@
 package com.skybot.bot;
 
-import com.skybot.util.CMDExecutor;
-import com.skybot.util.NapcatInstall;
+import com.skybot.bot.event.handling.listener.OB11EventListener;
+import com.skybot.bot.util.CMDExecutor;
+import com.skybot.bot.util.NapcatInstall;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,15 +33,15 @@ public class Bot
 
 	public void start()
 	{
-		BotClient botClient = new BotClient();
-		botClient.start();
+		OB11EventListener OB11EventListener = new OB11EventListener();
+		OB11EventListener.start();
 		if (config.botId == BotConfig.DEF_BOT_ID)
 		{
 			LOGGER.warn("BotId未配置，无法启动Bot!");
 			return;
 		}
 		System.out.println(config.botId);
-		CMDExecutor.runBat(NAPCAT_WORK_DIR, LAUNCHER_USER_BAT, String.valueOf(config.botId));
+		CMDExecutor.startBat(LAUNCHER_USER_BAT, true, NAPCAT_WORK_DIR, LAUNCHER_USER_BAT, String.valueOf(config.botId));
 		isStart = true;
 	}
 }

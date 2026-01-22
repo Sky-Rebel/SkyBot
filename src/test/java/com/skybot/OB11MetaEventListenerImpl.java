@@ -1,8 +1,8 @@
 package com.skybot;
 
-import com.skybot.event.handling.listener.meta.OB11MetaEventListener;
-import com.skybot.event.meta.OB11HeartbeatEvent;
-import com.skybot.event.meta.OB11LifeCycleEvent;
+import com.skybot.bot.event.handling.listener.OB11MetaEventListener;
+import com.skybot.bot.event.meta.OB11HeartbeatEvent;
+import com.skybot.bot.event.meta.OB11LifeCycleEvent;
 
 public class OB11MetaEventListenerImpl implements OB11MetaEventListener
 {

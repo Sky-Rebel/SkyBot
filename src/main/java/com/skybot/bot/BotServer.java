@@ -41,15 +41,15 @@ public class BotServer
 		}
 		catch (URISyntaxException e)
 		{
-			throw new RuntimeException(e);
+			LOGGER.warn("URI创建异常！非法URl！");
 		}
 	}
 
-	public static class BotRequestResult
+	public static class APIRequestResult
 	{
 		public boolean isSuccess;
 
-		public int returnCode;
+		public int retcode;
 
 		public String message;
 
@@ -57,15 +57,15 @@ public class BotServer
 
 		public JSONObject data;
 
-		public static BotRequestResult getInstance(JSONObject requestResult)
+		public static APIRequestResult getInstance(JSONObject requestResult)
 		{
-			BotRequestResult botRequestResult = new BotRequestResult();
-			botRequestResult.isSuccess = requestResult.optString("status").equals("ok");
-			botRequestResult.returnCode = requestResult.optInt("retcode");
-			botRequestResult.message = requestResult.optString("message");
-			botRequestResult.wording = requestResult.optString("wording");
-			botRequestResult.data = (JSONObject) requestResult.opt("data");
-			return botRequestResult;
+			APIRequestResult APIRequestResult = new APIRequestResult();
+			APIRequestResult.isSuccess = requestResult.optString("status").equals("ok");
+			APIRequestResult.retcode = requestResult.optInt("retcode");
+			APIRequestResult.message = requestResult.optString("message");
+			APIRequestResult.wording = requestResult.optString("wording");
+			APIRequestResult.data = requestResult.optJSONObject("data", new JSONObject());
+			return APIRequestResult;
 		}
 
 		@Override
@@ -73,7 +73,7 @@ public class BotServer
 		{
 			return "BotRequestResult{" +
 				"isSuccess=" + isSuccess +
-				", returnCode=" + returnCode +
+				", returnCode=" + retcode +
 				", message='" + message + '\'' +
 				", wording='" + wording + '\'' +
 				", data=" + data +
@@ -81,7 +81,7 @@ public class BotServer
 		}
 	}
 
-	public BotRequestResult sendRequest(String requestBody)
+	public APIRequestResult sendRequest(String requestBody)
 	{
 		try (HttpClient httpClient = HttpClient.newBuilder().build())
 		{
@@ -93,7 +93,7 @@ public class BotServer
 				.build();
 			HttpResponse<String> httpResponse = httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());
 			JSONObject requestResult = new JSONObject(httpResponse.body());
-			return BotRequestResult.getInstance(requestResult);
+			return APIRequestResult.getInstance(requestResult);
 		}
 		catch (InterruptedException | IOException e) {
 			LOGGER.error("请求Api发生异常 -> {}", e.getMessage());
