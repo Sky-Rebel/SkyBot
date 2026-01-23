@@ -1,13 +1,13 @@
 package com.skybot;
 
-import com.skybot.bot.api.OB11MessageService;
-import com.skybot.bot.event.handling.listener.OB11NoticeEventListener;
-import com.skybot.bot.event.notice.*;
-import com.skybot.bot.event.notice.notify.OB11GroupTitleNotifyNoticeEvent;
-import com.skybot.bot.event.notice.notify.OB11InputStatusNotifyNoticeEvent;
-import com.skybot.bot.event.notice.notify.OB11ProfileLikeNotifyNoticeEvent;
-import com.skybot.bot.event.notice.notify.poke.OB11FriendPokeNotifyNoticeEvent;
-import com.skybot.bot.event.notice.notify.poke.OB11GroupPokeNotifyNoticeEvent;
+import com.skybot.api.OB11MessageService;
+import com.skybot.event.handling.listener.OB11NoticeEventListener;
+import com.skybot.event.notice.*;
+import com.skybot.event.notice.notify.OB11GroupTitleNotifyNoticeEvent;
+import com.skybot.event.notice.notify.OB11InputStatusNotifyNoticeEvent;
+import com.skybot.event.notice.notify.OB11ProfileLikeNotifyNoticeEvent;
+import com.skybot.event.notice.notify.poke.OB11FriendPokeNotifyNoticeEvent;
+import com.skybot.event.notice.notify.poke.OB11GroupPokeNotifyNoticeEvent;
 
 public class OB11NoticeEventListenerImpl implements OB11NoticeEventListener
 {

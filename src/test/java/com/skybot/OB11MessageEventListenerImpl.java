@@ -1,9 +1,9 @@
 package com.skybot;
 
-import com.skybot.bot.api.OB11MessageService;
-import com.skybot.bot.event.handling.listener.message.OB11MessageEventListener;
-import com.skybot.bot.event.message.OB11GroupMessageEvent;
-import com.skybot.bot.event.message.OB11PrivateMessageEvent;
+import com.skybot.api.OB11MessageService;
+import com.skybot.event.handling.listener.message.OB11MessageEventListener;
+import com.skybot.event.message.OB11GroupMessageEvent;
+import com.skybot.event.message.OB11PrivateMessageEvent;
 
 public class OB11MessageEventListenerImpl implements OB11MessageEventListener
 {

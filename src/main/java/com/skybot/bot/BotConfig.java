@@ -1,274 +1,291 @@
 package com.skybot.bot;
 
-import com.google.gson.*;
-import com.google.gson.stream.JsonWriter;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.io.IOException;
-import java.io.StringWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.StringJoiner;
 
 public class BotConfig
 {
+	public SkybotConfig skybotConfig;
+
+	public NapcatConfig napcatConfig;
+
+	private static final String SKYBOT_CONFIG_NAME = "config.json";
+
+	private static final Path SKYBOT_CONFIG_PATH = Path.of("config", SKYBOT_CONFIG_NAME);
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(BotConfig.class);
+
 	public BotConfig()
 	{
-		wsClientConfig = new WSClientConfig();
-		httpServerConfig = new HttpServerConfig();
+		skybotConfig = new SkybotConfig();
+		napcatConfig = new NapcatConfig();
 	}
 
-	public static final Path SKYBOT_BOT_CONFIG_PATH = Path.of("bot_config.json");
-
-	public static Path napcatBotConfigPath;
-
-	public static final Logger LOGGER = LoggerFactory.getLogger(BotConfig.class);
-
-	/**
-	 * 机器人ID默认值
-	 */
-	public static final long DEF_BOT_ID = -12345;
-
-	/**
-	 * 机器人ID
-	 */
-	public long botId = DEF_BOT_ID;
-
-	public HttpServerConfig httpServerConfig;
-
-	public WSClientConfig wsClientConfig;
-
-	public static class HttpServerConfig
+	public static class SkybotConfig
 	{
-		/**
-		 * HTTP服务器端口位置
-		 */
-		public int port = 5200;
-
-		/**
-		 * HTTP服务器上报原始(raw)数据与否
-		 */
-		public boolean debug = false;
-
-		/**
-		 * HTTP服务器启动状态
-		 */
-		public boolean enable = true;
-
-		/**
-		 * HTTP服务器鉴权密钥
-		 */
-		public String token = "";
-
-		/**
-		 * HTTP服务器主机位置
-		 */
-		public String host = "127.0.0.1";
-
-		/**
-		 * 尚未赋予意义之字段
-		 */
-		public boolean enableCors = false;
-
-		/**
-		 * HTTP服务器唯一标识
-		 */
-		public String name = "HttpServer";
-
-		/**
-		 * 尚未赋予意义之字段
-		 */
-		public boolean enableWebsocket = false;
-
-		/**
-		 * HTTP服务器消息上报格式
-		 * 可选 -> (string/array)
-		 */
-		public String messagePostFormat = "array";
-
-		public JSONObject toJSONObject()
-		{
-			return new JSONObject()
-				.put("name", name)
-				.put("port", port)
-				.put("host", host)
-				.put("debug", debug)
-				.put("token", token)
-				.put("enable", enable)
-				.put("enableCors", enableCors)
-				.put("enableWebsocket", enableWebsocket)
-				.put("messagePostFormat", messagePostFormat);
-		}
-
-		@Override
-		public String toString()
-		{
-			return "HttpServerConfig{" +
-				"port=" + port +
-				", debug=" + debug +
-				", enable=" + enable +
-				", token='" + token + '\'' +
-				", host='" + host + '\'' +
-				", enableCors=" + enableCors +
-				", name='" + name + '\'' +
-				", enableWebsocket=" + enableWebsocket +
-				", messagePostFormat='" + messagePostFormat + '\'' +
-				'}';
-		}
+		public long botId = -1;
 	}
 
-	public static class WSClientConfig
+	public static class NapcatConfig
 	{
-		/**
-		 * WS客户端上报原始(raw)数据与否
-		 */
-		public boolean debug = true;
-
-		/**
-		 * WS客户端启用状态
-		 */
-		public boolean enable = true;
-
-		/**
-		 * WS客户端鉴权密钥
-		 */
-		public String token = "";
-
-		/**
-		 * WS客户端唯一标识
-		 */
-		public String name = "WSClient";
-
-		/**
-		 * WS客户端心跳间隔
-		 */
-		public int heartInterval = 30000;
-
-		/**
-		 * WS客户端重连间隔
-		 */
-		public int reconnectInterval = 5000;
-
-		/**
-		 * WS客户端上报自身消息与否
-		 */
-		public boolean reportSelfMessage = true;
-
-		/**
-		 * WS客户端消息上报格式
-		 */
-		public String messagePostFormat = "array";
-
-		/**
-		 * WS客户端上报地址
-		 */
-		public String url = "ws://127.0.0.1:5210";
-
-		public JSONObject toJSONObject()
+		public NapcatConfig()
 		{
-			return new JSONObject()
-				.put("name", name)
-				.put("enable", enable)
-				.put("url", url)
-				.put("messagePostFormat", messagePostFormat)
-				.put("reportSelfMessage", reportSelfMessage)
-				.put("reconnectInterval", reconnectInterval)
-				.put("token", token)
-				.put("debug", debug)
-				.put("heartInterval", heartInterval);
+			wsClientConfig = new WsClientConfig();
+			httpServerConfig = new HttpServerConfig();
 		}
 
-		@Override
-		public String toString()
+		public WsClientConfig wsClientConfig;
+
+		public HttpServerConfig httpServerConfig;
+
+		public static class WsClientConfig
 		{
-			return "WSClientConfig{" +
-				"debug=" + debug +
-				", enable=" + enable +
-				", token='" + token + '\'' +
-				", name='" + name + '\'' +
-				", heartInterval=" + heartInterval +
-				", reconnectInterval=" + reconnectInterval +
-				", reportSelfMessage=" + reportSelfMessage +
-				", messagePostFormat='" + messagePostFormat + '\'' +
-				", url='" + url + '\'' +
-				'}';
+			public String token = "";
+
+			public boolean debug = true;
+
+			public boolean enable = true;
+
+			public String name = "WSClient";
+
+			public int heartInterval = 30000;
+
+			public int reconnectInterval = 5000;
+
+			public boolean reportSelfMessage = true;
+
+			public String url = "ws://127.0.0.1:5210";
+
+			public String messagePostFormat = "array";
+
+			public JSONObject toJSONObject()
+			{
+				return new JSONObject()
+					.put("token", token)
+					.put("debug", debug)
+					.put("enable", enable)
+					.put("name", name)
+					.put("heartInterval", heartInterval)
+					.put("reconnectInterval", reconnectInterval)
+					.put("reportSelfMessage", reportSelfMessage)
+					.put("url", url)
+					.put("messagePostFormat", messagePostFormat);
+			}
+
+			@Override
+			public String toString()
+			{
+				return new StringJoiner(", ", WsClientConfig.class.getSimpleName() + "[", "]")
+					.add("token='" + token + "'")
+					.add("debug=" + debug)
+					.add("enable=" + enable)
+					.add("name='" + name + "'")
+					.add("heartInterval=" + heartInterval)
+					.add("reconnectInterval=" + reconnectInterval)
+					.add("reportSelfMessage=" + reportSelfMessage)
+					.add("url='" + url + "'")
+					.add("messagePostFormat='" + messagePostFormat + "'")
+					.toString();
+			}
+		}
+
+		public static class HttpServerConfig
+		{
+			public int port = 5200;
+
+			public String token = "";
+
+			public boolean debug = false;
+
+			public boolean enable = true;
+
+			public String host = "127.0.0.1";
+
+			public String name = "HttpServer";
+
+			public boolean enableCors = false;
+
+			public boolean enableWebsocket = false;
+
+			public String messagePostFormat = "array";
+
+			public JSONObject toJSONObject()
+			{
+				return new JSONObject()
+					.put("port", port)
+					.put("token", token)
+					.put("debug", debug)
+					.put("enable", enable)
+					.put("host", host)
+					.put("name", name)
+					.put("enableCors", enableCors)
+					.put("enableWebsocket", enableWebsocket)
+					.put("messagePostFormat", messagePostFormat);
+			}
+
+			@Override
+			public String toString()
+			{
+				return new StringJoiner(", ", HttpServerConfig.class.getSimpleName() + "[", "]")
+					.add("port=" + port)
+					.add("token='" + token + "'")
+					.add("debug=" + debug)
+					.add("enable=" + enable)
+					.add("host='" + host + "'")
+					.add("name='" + name + "'")
+					.add("enableCors=" + enableCors)
+					.add("enableWebsocket=" + enableWebsocket)
+					.add("messagePostFormat='" + messagePostFormat + "'")
+					.toString();
+			}
 		}
 	}
 
 	public static BotConfig getBotConfig()
 	{
-		if (!Files.exists(SKYBOT_BOT_CONFIG_PATH)) return new BotConfig();
+		SkybotConfig skybotConfig = getSkybotConfig();
+		if (skybotConfig.botId == -1) LOGGER.warn("BotId未配置，将返回默认配置！");
+		NapcatConfig napcatConfig = getNapcatConfig(skybotConfig.botId);
 		BotConfig botConfig = new BotConfig();
-		JSONObject napcatConfig = new JSONObject();
-		try
-		{
-			JSONObject skybotConfig = new JSONObject(Files.readString(SKYBOT_BOT_CONFIG_PATH));
-			botConfig.botId = skybotConfig.getLong("bot_id");
-			Path napcatConfigPath = Path.of("napcat", "config", "onebot11_" + botConfig.botId + ".json");
-			if (!Files.exists(napcatConfigPath)) return botConfig;
-			napcatConfig = new JSONObject(Files.readString(napcatConfigPath));
-		}
-		catch (IOException e)
-		{
-			LOGGER.error("Bot配置文件读取异常！", e);
-		}
-		JSONObject napcatNetworkConfig = napcatConfig.getJSONObject("network");
-		JSONObject napcatHttpServersConfig = napcatNetworkConfig.getJSONArray("httpServers").getJSONObject(0);
-		BotConfig.HttpServerConfig httpServerConfig = new HttpServerConfig();
-		httpServerConfig.debug = napcatHttpServersConfig.getBoolean("debug");
-		httpServerConfig.enable = napcatHttpServersConfig.getBoolean("enable");
-		httpServerConfig.enableCors = napcatHttpServersConfig.getBoolean("enableCors");
-		httpServerConfig.host = napcatHttpServersConfig.getString("host");
-		httpServerConfig.name = napcatHttpServersConfig.getString("name");
-		httpServerConfig.enableWebsocket = napcatHttpServersConfig.getBoolean("enableWebsocket");
-		httpServerConfig.messagePostFormat = napcatHttpServersConfig.getString("messagePostFormat");
-		httpServerConfig.port = napcatHttpServersConfig.getInt("port");
-		httpServerConfig.token = napcatHttpServersConfig.getString("token");
-		botConfig.httpServerConfig = httpServerConfig;
-		JSONObject napcatWSClientsConfig = napcatNetworkConfig.getJSONArray("websocketClients").getJSONObject(0);
-		BotConfig.WSClientConfig wsClientConfig = new WSClientConfig();
-		wsClientConfig.debug = napcatWSClientsConfig.getBoolean("debug");
-		wsClientConfig.enable = napcatWSClientsConfig.getBoolean("enable");
-		wsClientConfig.name = napcatWSClientsConfig.getString("name");
-		wsClientConfig.messagePostFormat = napcatWSClientsConfig.getString("messagePostFormat");
-		wsClientConfig.url = napcatWSClientsConfig.getString("url");
-		wsClientConfig.heartInterval = napcatWSClientsConfig.getInt("heartInterval");
-		wsClientConfig.reconnectInterval = napcatWSClientsConfig.getInt("reconnectInterval");
-		wsClientConfig.reportSelfMessage = napcatWSClientsConfig.getBoolean("reportSelfMessage");
-		wsClientConfig.token = napcatWSClientsConfig.getString("token");
-		botConfig.wsClientConfig = wsClientConfig;
+		botConfig.skybotConfig = skybotConfig;
+		botConfig.napcatConfig = napcatConfig;
 		return botConfig;
 	}
 
-	public static void saveConfig(BotConfig botConfig)
+	public static SkybotConfig getSkybotConfig()
 	{
-		if (botConfig.botId == DEF_BOT_ID)
+		try
 		{
-			LOGGER.warn("无法保存配置文件, robotId字段未赋新值");
-			return;
+			if (!Files.exists(SKYBOT_CONFIG_PATH)) return new SkybotConfig();
+			String fileContent = Files.readString(SKYBOT_CONFIG_PATH);
+			JSONObject skybotConfigJson = new JSONObject(fileContent);
+			SkybotConfig skybotConfig = new SkybotConfig();
+			skybotConfig.botId = skybotConfigJson.getLong("bot_id");
+			return skybotConfig;
 		}
-		if (!Files.exists(SKYBOT_BOT_CONFIG_PATH))
+		catch (IOException e)
 		{
-			try
+			LOGGER.error("Skybot配置文件读取失败！");
+			return new SkybotConfig();
+		}
+	}
+
+	public static NapcatConfig.HttpServerConfig getNapcatHttpServerConfig(Path napcatConfigPath, long botId)
+	{
+		try
+		{
+			if (napcatConfigPath == null) napcatConfigPath = Path.of("napcat", "config", "onebot11_" + botId + ".json");
+			if (!Files.exists(napcatConfigPath)) return new NapcatConfig.HttpServerConfig();
+			String fileContent = Files.readString(napcatConfigPath);
+			JSONObject napcatConfigJson = new JSONObject(fileContent);
+			JSONObject napcatNetworkConfigJson = napcatConfigJson.getJSONObject("network");
+			JSONObject napcatHttpServerConfigJson = napcatNetworkConfigJson.getJSONArray("httpServers").getJSONObject(0);
+			NapcatConfig.HttpServerConfig httpServerConfig = new NapcatConfig.HttpServerConfig();
+			httpServerConfig.port = napcatHttpServerConfigJson.getInt("port");
+			httpServerConfig.name = napcatHttpServerConfigJson.getString("name");
+			httpServerConfig.host = napcatHttpServerConfigJson.getString("host");
+			httpServerConfig.token = napcatHttpServerConfigJson.getString("token");
+			httpServerConfig.debug = napcatHttpServerConfigJson.getBoolean("debug");
+			httpServerConfig.enable = napcatHttpServerConfigJson.getBoolean("enable");
+			httpServerConfig.enableCors = napcatHttpServerConfigJson.getBoolean("enableCors");
+			httpServerConfig.enableWebsocket = napcatHttpServerConfigJson.getBoolean("enableWebsocket");
+			httpServerConfig.messagePostFormat = napcatHttpServerConfigJson.getString("messagePostFormat");
+			return httpServerConfig;
+		}
+		catch (Exception e)
+		{
+			LOGGER.error("Napcat之Http服务端配置读取失败！");
+			return new NapcatConfig.HttpServerConfig();
+		}
+	}
+
+	public static NapcatConfig.WsClientConfig getNapcatWsClientConfig(Path napcatConfigPath, long botId)
+	{
+		try
+		{
+			if (napcatConfigPath == null) napcatConfigPath = Path.of("napcat", "config", "onebot11_" + botId + ".json");
+			if (!Files.exists(napcatConfigPath)) return new NapcatConfig.WsClientConfig();
+			String fileContent = Files.readString(napcatConfigPath);
+			JSONObject napcatConfigJson = new JSONObject(fileContent);
+			JSONObject napcatNetworkConfigJson = napcatConfigJson.getJSONObject("network");
+			JSONObject napcatWsClientConfigJson = napcatNetworkConfigJson.getJSONArray("websocketClients").getJSONObject(0);
+			NapcatConfig.WsClientConfig wsClientConfig = new NapcatConfig.WsClientConfig();
+			wsClientConfig.url = napcatWsClientConfigJson.getString("url");
+			wsClientConfig.name = napcatWsClientConfigJson.getString("name");
+			wsClientConfig.token = napcatWsClientConfigJson.getString("token");
+			wsClientConfig.debug = napcatWsClientConfigJson.getBoolean("debug");
+			wsClientConfig.enable = napcatWsClientConfigJson.getBoolean("enable");
+			wsClientConfig.heartInterval = napcatWsClientConfigJson.getInt("heartInterval");
+			wsClientConfig.reconnectInterval = napcatWsClientConfigJson.getInt("reconnectInterval");
+			wsClientConfig.messagePostFormat = napcatWsClientConfigJson.getString("messagePostFormat");
+			wsClientConfig.reportSelfMessage = napcatWsClientConfigJson.getBoolean("reportSelfMessage");
+			return wsClientConfig;
+		}
+		catch (Exception e)
+		{
+			LOGGER.error("Napcat之Ws客户端配置读取失败！");
+			return new NapcatConfig.WsClientConfig();
+		}
+	}
+
+	public static NapcatConfig getNapcatConfig(long botId)
+	{
+		Path napcatConfigPath = Path.of("napcat", "config", "onebot11_" + botId + ".json");
+		NapcatConfig.WsClientConfig wsClientConfig = getNapcatWsClientConfig(napcatConfigPath, botId);
+		NapcatConfig.HttpServerConfig httpServerConfig = getNapcatHttpServerConfig(napcatConfigPath, botId);
+		NapcatConfig napcatConfig = new NapcatConfig();
+		napcatConfig.wsClientConfig = wsClientConfig;
+		napcatConfig.httpServerConfig = httpServerConfig;
+		return napcatConfig;
+	}
+
+	public static void saveBotConfig(BotConfig botConfig)
+	{
+		saveSkybotConfig(botConfig.skybotConfig);
+		saveNapcatConfig(botConfig.napcatConfig, botConfig.skybotConfig.botId);
+	}
+
+	public static void saveSkybotConfig(SkybotConfig skybotConfig)
+	{
+		try
+		{
+			if (skybotConfig.botId == -1)
 			{
-				Files.createFile(SKYBOT_BOT_CONFIG_PATH);
+				LOGGER.warn("无法保存Skybot配置文件, BotId未配置！");
+				return;
+			}
+			if (!Files.exists(SKYBOT_CONFIG_PATH))
+			{
+				Path parentPath = SKYBOT_CONFIG_PATH.getParent();
+				if (!Files.exists(parentPath)) Files.createDirectories(parentPath);
+				Files.createFile(SKYBOT_CONFIG_PATH);
 				JSONObject rootObject = new JSONObject();
-				rootObject.put("bot_id", botConfig.botId);
-				Files.writeString(SKYBOT_BOT_CONFIG_PATH, rootObject.toString());
-			}
-			catch (IOException e)
-			{
-				LOGGER.error("无法创建/写入SkyBot配置文件");
+				rootObject.put("bot_id", skybotConfig.botId);
+				Files.writeString(SKYBOT_CONFIG_PATH, rootObject.toString(4));
 			}
 		}
-		napcatBotConfigPath = Path.of("napcat",  "config", "onebot11_" + botConfig.botId + ".json");
-		if (!Files.exists(BotConfig.napcatBotConfigPath))
+		catch (IOException e)
+		{
+			LOGGER.error("无法创建/写入SkyBot配置文件");
+		}
+	}
+
+	public static void saveNapcatConfig(NapcatConfig napcatConfig, long botId)
+	{
+		Path napcatConfigPath = Path.of("napcat",  "config", "onebot11_" + botId + ".json");
+		if (!Files.exists(napcatConfigPath))
 		{
 			try
 			{
-				Files.createFile(napcatBotConfigPath);
+				Files.createFile(napcatConfigPath);
 				JSONObject rootObject = new JSONObject();
 				JSONObject network = new JSONObject();
 				rootObject.put("network", network);
@@ -276,46 +293,49 @@ public class BotConfig
 				network.put("httpServers", httpServers);
 				JSONArray wsClients = new JSONArray();
 				network.put("websocketClients", wsClients);
-				if (botConfig.httpServerConfig != null)
+				if (napcatConfig.wsClientConfig != null)
 				{
-					JSONObject httpServer = botConfig.httpServerConfig.toJSONObject();
-					httpServers.put(httpServer);
-				}
-				if (botConfig.wsClientConfig != null)
-				{
-					JSONObject wsClient = botConfig.wsClientConfig.toJSONObject();
+					JSONObject wsClient = napcatConfig.wsClientConfig.toJSONObject();
 					wsClients.put(wsClient);
 				}
-				Gson gson = new GsonBuilder()
-					.setPrettyPrinting()
-					.registerTypeAdapter(Number.class, (JsonDeserializer<Number>)(json, typeOfT, context) ->
-					{
-
-						JsonPrimitive element = json.getAsJsonPrimitive();
-						if (element.isNumber())
-						{
-							Number num = element.getAsNumber();
-							if (num.doubleValue() == num.longValue()) return num.longValue();
-							return num;
-						}
-						return null;
-					})
-					.create();
-				String uglyJson = rootObject.toString();
-				JsonElement jsonElement = gson.fromJson(uglyJson, JsonElement.class);
-				StringWriter writer = new StringWriter();
-				JsonWriter jsonWriter = new JsonWriter(writer);
-				jsonWriter.setIndent(" ".repeat(4));
-				jsonWriter.setLenient(true);
-				gson.toJson(jsonElement, jsonWriter);
-				jsonWriter.close();
-				String prettyJson = writer.toString();
-				Files.writeString(napcatBotConfigPath, prettyJson);
+				if (napcatConfig.httpServerConfig != null)
+				{
+					JSONObject httpServer = napcatConfig.httpServerConfig.toJSONObject();
+					httpServers.put(httpServer);
+				}
+				Files.writeString(napcatConfigPath, rootObject.toString(4));
 			}
 			catch (IOException e)
 			{
-				LOGGER.error("创建/写入/格式化Napcat配置文件异常！", e);
+				LOGGER.error("创建/写入Napcat配置文件异常！", e);
 			}
+		}
+	}
+
+	public static boolean deleteSkybotConfig()
+	{
+		try
+		{
+			return Files.deleteIfExists(SKYBOT_CONFIG_PATH);
+		}
+		catch (IOException e)
+		{
+			LOGGER.error("Skybot配置文件删除异常！", e);
+			return false;
+		}
+	}
+
+	public static boolean deleteNapcatConfig(long botId)
+	{
+		try
+		{
+			Path napcatConfigPath = Path.of("napcat", "config", "onebot11_" + botId + ".json");
+			return Files.deleteIfExists(napcatConfigPath);
+		}
+		catch (IOException e)
+		{
+			LOGGER.error("Napcat配置文件删除异常！", e);
+			return false;
 		}
 	}
 }

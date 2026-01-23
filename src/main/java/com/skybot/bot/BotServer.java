@@ -35,9 +35,10 @@ public class BotServer
 				return;
 			}
 			this.botConfig = Bot.config;
-			this.port = botConfig.httpServerConfig.port;
-			this.host = botConfig.httpServerConfig.host;
+			this.port = botConfig.napcatConfig.httpServerConfig.port;
+			this.host = botConfig.napcatConfig.httpServerConfig.host;
 			uri = new URI(scheme, null, host, port, path, null, null);
+			System.out.println(botConfig.napcatConfig.httpServerConfig.toString());
 		}
 		catch (URISyntaxException e)
 		{
@@ -83,6 +84,11 @@ public class BotServer
 
 	public APIRequestResult sendRequest(String requestBody)
 	{
+		if (uri == null)
+		{
+			LOGGER.error("URI未创建，无法发送API请求！");
+			return null;
+		}
 		try (HttpClient httpClient = HttpClient.newBuilder().build())
 		{
 			HttpRequest httpRequest = HttpRequest

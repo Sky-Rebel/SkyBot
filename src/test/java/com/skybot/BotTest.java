@@ -1,13 +1,20 @@
-import com.skybot.OB11MessageEventListenerImpl;
-import com.skybot.OB11NoticeEventListenerImpl;
-import com.skybot.bot.Bot;
-import com.skybot.bot.event.handling.manage.OB11MessageEventListenerManage;
-import com.skybot.bot.event.handling.manage.OB11NoticeEventListenerManage;
+package com.skybot;
 
-public static void main() throws InterruptedException
+import com.skybot.bot.Bot;
+import com.skybot.event.handling.manage.OB11MessageEventListenerManage;
+import com.skybot.event.handling.manage.OB11MessageSentEventListenerManage;
+import com.skybot.event.handling.manage.OB11MetaEventListenerManage;
+import com.skybot.event.handling.manage.OB11NoticeEventListenerManage;
+
+public class BotTest
 {
-	OB11NoticeEventListenerManage.registerListener(new OB11NoticeEventListenerImpl());
-	OB11MessageEventListenerManage.registerListener(new OB11MessageEventListenerImpl());
-	Bot bot = new Bot();
-	bot.start();
+	public static void main()
+	{
+		OB11NoticeEventListenerManage.registerListener(new OB11NoticeEventListenerImpl());
+		OB11MessageEventListenerManage.registerListener(new OB11MessageEventListenerImpl());
+		OB11MetaEventListenerManage.registerListener(new OB11MetaEventListenerImpl());
+		OB11MessageSentEventListenerManage.registerListener(new OB11MessageSentEventListenerImpl());
+		Bot bot = new Bot();
+		bot.start();
+	}
 }
