@@ -12,8 +12,6 @@ public class CMDExecutor
 {
 	private static final Logger LOGGER = LoggerFactory.getLogger(CMDExecutor.class);
 
-	private static final Map<String, Process> STRING_PROCESS_MAP = new HashMap<>();
-
 	private static final int TASK_SUBMITTED = 0;
 
 	private static final int ERROR_FILE_NOT_EXIST = -1;

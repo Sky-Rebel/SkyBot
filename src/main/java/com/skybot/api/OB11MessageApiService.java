@@ -1,8 +1,8 @@
 package com.skybot.api;
 
 import com.skybot.bot.BotServer;
-import com.skybot.bot.msg.OB11MsgElement;
-import com.skybot.bot.msg.OB11TextMsgElement;
+import com.skybot.bot.msg.element.OB11MsgElement;
+import com.skybot.bot.msg.element.OB11TextMsgElement;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -11,13 +11,13 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OB11MessageService
+public class OB11MessageApiService
 {
 	public static final String API_PATH_SEND_GROUP_MSG = "/send_group_msg";
 
 	public static final String API_PATH_SEND_PRIVATE_MSG = "/send_private_msg";
 
-	public static final Logger LOGGER = LoggerFactory.getLogger(OB11MessageService.class);
+	public static final Logger LOGGER = LoggerFactory.getLogger(OB11MessageApiService.class);
 
 	public enum MessageSendType
 	{
@@ -77,14 +77,16 @@ public class OB11MessageService
 		BotServer.APIRequestResult apiRequestResult = botServer.sendRequest(rootObject.toString());
 		if (apiRequestResult != null)
 		{
-
-			JSONObject dataObject = apiRequestResult.data;
-			if (apiRequestResult.isSuccess) return dataObject.getLong("message_id");
-			else
+			if (apiRequestResult.data != null)
 			{
-				int retCode = apiRequestResult.retcode;
-				String errorMsg = apiRequestResult.message;
-				LOGGER.error("消息发送API调用失败 -> ".concat(String.valueOf(retCode)).concat(":").concat(errorMsg));
+				JSONObject dataObject = (JSONObject) apiRequestResult.data;
+				if (apiRequestResult.isSuccess) return dataObject.getLong("message_id");
+				else
+				{
+					int retCode = apiRequestResult.retcode;
+					String errorMsg = apiRequestResult.message;
+					LOGGER.error("消息发送API调用失败 -> ".concat(String.valueOf(retCode)).concat(":").concat(errorMsg));
+				}
 			}
 		}
 		return -1;

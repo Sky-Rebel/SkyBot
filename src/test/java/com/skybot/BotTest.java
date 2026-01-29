@@ -1,6 +1,7 @@
 package com.skybot;
 
 import com.skybot.bot.Bot;
+import com.skybot.bot.BotConfig;
 import com.skybot.event.handling.manage.OB11MessageEventListenerManage;
 import com.skybot.event.handling.manage.OB11MessageSentEventListenerManage;
 import com.skybot.event.handling.manage.OB11MetaEventListenerManage;
@@ -14,7 +15,6 @@ public class BotTest
 		OB11MessageEventListenerManage.registerListener(new OB11MessageEventListenerImpl());
 		OB11MetaEventListenerManage.registerListener(new OB11MetaEventListenerImpl());
 		OB11MessageSentEventListenerManage.registerListener(new OB11MessageSentEventListenerImpl());
-		Bot bot = new Bot();
-		bot.start();
+		new Bot().start();
 	}
 }

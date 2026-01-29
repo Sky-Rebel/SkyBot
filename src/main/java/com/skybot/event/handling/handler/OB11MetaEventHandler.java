@@ -39,7 +39,7 @@ public class OB11MetaEventHandler
 			JSONObject status = ob11EventPostData.getJSONObject("status");
 			OB11HeartbeatEvent.HeartbeatStatus heartbeatStatus = new OB11HeartbeatEvent.HeartbeatStatus();
 			heartbeatStatus.good = status.getBoolean("good");
-			heartbeatStatus.undefined = status.getBoolean("online");
+			heartbeatStatus.online = status.getBoolean("online");
 			ob11HeartbeatEvent.heartbeatStatus = heartbeatStatus;
 			OB11MateEventDispatcher.onHeartbeat(ob11HeartbeatEvent);
 		}

@@ -1,4 +1,4 @@
-package com.skybot.bot.msg;
+package com.skybot.bot.msg.element;
 
 import org.json.JSONObject;
 
@@ -29,8 +29,7 @@ public abstract class OB11MsgElement
 		MARKDOWN,
 		LIGHTAPP
 	}
-
-	public abstract String getElementName();
+	public abstract ElementType getElementType();
 
 	public abstract JSONObject toJSONObject();
 }

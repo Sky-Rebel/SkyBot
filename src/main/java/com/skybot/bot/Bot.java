@@ -26,21 +26,25 @@ public class Bot
 
 	public Bot(BotConfig botConfig)
 	{
-		NapcatInstall.checkInstall();
+		if (!NapcatInstall.checkAndInstallNapcat()) return;
+		if (botConfig.skybotConfig.botId == -1)
+		{
+			LOGGER.error("BotId未配置，无法获取配置！");
+			return;
+		}
 		BotConfig.saveBotConfig(botConfig);
 		config = botConfig;
 	}
 
 	public void start()
 	{
-		if (config.skybotConfig.botId == -1)
+		if (config == null)
 		{
-			LOGGER.warn("BotId未配置，无法启动Bot!");
+			LOGGER.error("Bot配置为空，无法启动Bot！");
 			return;
 		}
 		CMDExecutor.startBat(LAUNCHER_USER_BAT, true, NAPCAT_WORK_DIR, LAUNCHER_USER_BAT, String.valueOf(config.skybotConfig.botId));
-		OB11EventListener OB11EventListener = new OB11EventListener();
-		OB11EventListener.start();
+		new OB11EventListener().start();
 		isStart = true;
 	}
 }

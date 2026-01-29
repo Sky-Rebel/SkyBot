@@ -1,10 +1,10 @@
-package com.skybot.bot.msg;
+package com.skybot.bot.msg.element;
 
 import org.json.JSONObject;
 
 public class OB11TextMsgElement extends OB11MsgElement
 {
-	private static final OB11MsgElement.ElementType ELEMENT_TYPE = OB11MsgElement.ElementType.TEXT;
+	public static final OB11MsgElement.ElementType ELEMENT_TYPE = OB11MsgElement.ElementType.TEXT;
 
 	private String text;
 
@@ -27,9 +27,9 @@ public class OB11TextMsgElement extends OB11MsgElement
 	}
 
 	@Override
-	public String getElementName()
+	public ElementType getElementType()
 	{
-		return ELEMENT_TYPE.name().toLowerCase();
+		return ELEMENT_TYPE;
 	}
 
 	@Override

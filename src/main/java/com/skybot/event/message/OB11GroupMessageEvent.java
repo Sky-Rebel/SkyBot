@@ -2,6 +2,8 @@ package com.skybot.event.message;
 
 import com.skybot.event.OB11BaseMessageEvent;
 
+import java.util.List;
+
 public class OB11GroupMessageEvent extends OB11BaseMessageEvent
 {
 	public static final String MESSAGE_EVENT_TYPE = "group";
@@ -9,6 +11,8 @@ public class OB11GroupMessageEvent extends OB11BaseMessageEvent
 	public long groupId;
 
 	public Sender sender;
+
+	public List<Long> atList;
 
 	public static class Sender
 	{

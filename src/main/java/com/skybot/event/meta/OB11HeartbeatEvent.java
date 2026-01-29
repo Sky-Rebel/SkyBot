@@ -12,7 +12,7 @@ public class OB11HeartbeatEvent extends OB11BaseMetaEvent
 
 	public static class HeartbeatStatus
 	{
-		public boolean undefined;
+		public boolean online;
 
 		public boolean good;
 	}

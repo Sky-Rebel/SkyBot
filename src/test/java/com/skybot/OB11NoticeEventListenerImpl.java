@@ -1,6 +1,6 @@
 package com.skybot;
 
-import com.skybot.api.OB11MessageService;
+import com.skybot.api.OB11MessageApiService;
 import com.skybot.event.handling.listener.OB11NoticeEventListener;
 import com.skybot.event.notice.*;
 import com.skybot.event.notice.notify.OB11GroupTitleNotifyNoticeEvent;
@@ -75,7 +75,7 @@ public class OB11NoticeEventListenerImpl implements OB11NoticeEventListener
 	@Override
 	public void onGroupNameUpdated(OB11GroupNameNoticeEvent ob11GroupNameNoticeEvent)
 	{
-		OB11MessageService.sendGroupTextMessage(ob11GroupNameNoticeEvent.groupId, ob11GroupNameNoticeEvent.userId + "为本群更改了新的名字 -> " + ob11GroupNameNoticeEvent.newName);
+		OB11MessageApiService.sendGroupTextMessage(ob11GroupNameNoticeEvent.groupId, ob11GroupNameNoticeEvent.userId + "为本群更改了新的名字 -> " + ob11GroupNameNoticeEvent.newName);
 	}
 
 	@Override
@@ -93,25 +93,47 @@ public class OB11NoticeEventListenerImpl implements OB11NoticeEventListener
 	@Override
 	public void onGroupMemberApproved(OB11GroupIncreaseNoticeEvent ob11GroupIncreaseNoticeEvent)
 	{
-
+		String message =
+			"""
+			群组同意入群事件
+			
+			机器自身: %d
+			所处群组: %d
+			处理管理: %d
+			入群用户: %d
+			
+			时间戳: %d
+			""".formatted(ob11GroupIncreaseNoticeEvent.selfId, ob11GroupIncreaseNoticeEvent.groupId, ob11GroupIncreaseNoticeEvent.operatorId, ob11GroupIncreaseNoticeEvent.userId, ob11GroupIncreaseNoticeEvent.time);
+		OB11MessageApiService.sendGroupTextMessage(ob11GroupIncreaseNoticeEvent.groupId, message);
 	}
 
 	@Override
 	public void onGroupMemberInvited(OB11GroupIncreaseNoticeEvent ob11GroupIncreaseNoticeEvent)
 	{
-
+		String message =
+			"""
+			群组邀请入群事件
+			
+			机器自身: %d
+			所处群组: %d
+			邀请群员: %d
+			入群用户: %d
+			
+			时间戳: %d
+			""".formatted(ob11GroupIncreaseNoticeEvent.selfId, ob11GroupIncreaseNoticeEvent.groupId, ob11GroupIncreaseNoticeEvent.operatorId, ob11GroupIncreaseNoticeEvent.userId, ob11GroupIncreaseNoticeEvent.time);
+		OB11MessageApiService.sendGroupTextMessage(ob11GroupIncreaseNoticeEvent.groupId, message);
 	}
 
 	@Override
 	public void onGroupMemberQuit(OB11GroupDecreaseNoticeEvent ob11GroupDecreaseNoticeEvent)
 	{
-
+		OB11MessageApiService.sendGroupTextMessage(ob11GroupDecreaseNoticeEvent.groupId, ob11GroupDecreaseNoticeEvent.toString());
 	}
 
 	@Override
 	public void onGroupMemberKicked(OB11GroupDecreaseNoticeEvent ob11GroupDecreaseNoticeEvent)
 	{
-
+		OB11MessageApiService.sendGroupTextMessage(ob11GroupDecreaseNoticeEvent.groupId, ob11GroupDecreaseNoticeEvent.toString());
 	}
 
 	@Override
@@ -154,6 +176,6 @@ public class OB11NoticeEventListenerImpl implements OB11NoticeEventListener
 	@Override
 	public void onGroupPoke(OB11GroupPokeNotifyNoticeEvent ob11GroupPokeNoticeEvent)
 	{
-		OB11MessageService.sendGroupTextMessage(ob11GroupPokeNoticeEvent.groupId, "请不要戳我！");
+		OB11MessageApiService.sendGroupTextMessage(ob11GroupPokeNoticeEvent.groupId, "请不要戳我！");
 	}
 }

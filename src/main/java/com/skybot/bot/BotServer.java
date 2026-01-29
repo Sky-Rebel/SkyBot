@@ -10,6 +10,7 @@ import java.net.URISyntaxException;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.StringJoiner;
 
 public class BotServer
 {
@@ -56,29 +57,29 @@ public class BotServer
 
 		public String wording;
 
-		public JSONObject data;
+		public Object data;
 
 		public static APIRequestResult getInstance(JSONObject requestResult)
 		{
-			APIRequestResult APIRequestResult = new APIRequestResult();
-			APIRequestResult.isSuccess = requestResult.optString("status").equals("ok");
-			APIRequestResult.retcode = requestResult.optInt("retcode");
-			APIRequestResult.message = requestResult.optString("message");
-			APIRequestResult.wording = requestResult.optString("wording");
-			APIRequestResult.data = requestResult.optJSONObject("data", new JSONObject());
-			return APIRequestResult;
+			APIRequestResult apiRequestResult = new APIRequestResult();
+			apiRequestResult.isSuccess = requestResult.optString("status").equals("ok");
+			apiRequestResult.retcode = requestResult.optInt("retcode");
+			apiRequestResult.message = requestResult.optString("message");
+			apiRequestResult.wording = requestResult.optString("wording");
+			apiRequestResult.data = requestResult.opt("data");
+			return apiRequestResult;
 		}
 
 		@Override
 		public String toString()
 		{
-			return "BotRequestResult{" +
-				"isSuccess=" + isSuccess +
-				", returnCode=" + retcode +
-				", message='" + message + '\'' +
-				", wording='" + wording + '\'' +
-				", data=" + data +
-				'}';
+			return new StringJoiner(", ", APIRequestResult.class.getSimpleName() + "[", "]")
+				.add("isSuccess=" + isSuccess)
+				.add("retcode=" + retcode)
+				.add("message='" + message + "'")
+				.add("wording='" + wording + "'")
+				.add("data=" + data)
+				.toString();
 		}
 	}
 

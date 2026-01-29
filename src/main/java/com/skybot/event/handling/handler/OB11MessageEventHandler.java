@@ -1,9 +1,13 @@
 package com.skybot.event.handling.handler;
 
+import com.skybot.bot.msg.OB11MessageSegment;
+import com.skybot.bot.msg.element.OB11MsgElement;
 import com.skybot.event.handling.dispatcher.OB11MessageEventDispatcher;
 import com.skybot.event.message.OB11GroupMessageEvent;
 import com.skybot.event.message.OB11PrivateMessageEvent;
 import org.json.JSONObject;
+
+import java.util.List;
 
 import static com.skybot.event.handling.handler.OB11EventHandler.LOGGER;
 
@@ -26,6 +30,8 @@ public class OB11MessageEventHandler
 			ob11GroupMessageEvent.time = ob11EventPostData.getLong("time");
 			ob11GroupMessageEvent.userId = ob11EventPostData.getLong("user_id");
 			ob11GroupMessageEvent.messageArray = ob11EventPostData.getJSONArray("message");
+			List<OB11MsgElement> messageElementArray = OB11MessageSegment.getMessageElementArray(ob11GroupMessageEvent.messageArray);
+			ob11GroupMessageEvent.atList = OB11MessageSegment.getAtList(messageElementArray);
 			OB11GroupMessageEvent.Sender sender = new OB11GroupMessageEvent.Sender();
 			JSONObject senderJson = ob11EventPostData.getJSONObject("sender");
 			sender.card = senderJson.getString("card");
