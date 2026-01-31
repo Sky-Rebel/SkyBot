@@ -3,10 +3,16 @@
     <words>
       <w>busi</w>
       <w>busid</w>
+      <w>iccn</w>
+      <w>inauthor</w>
+      <w>inpublisher</w>
+      <w>intitle</w>
       <w>lightapp</w>
       <w>mface</w>
       <w>napcat</w>
+      <w>oclc</w>
       <w>onebot</w>
+      <w>panelization</w>
       <w>retcode</w>
       <w>skybot</w>
     </words>

@@ -2,7 +2,9 @@ package com.skybot;
 
 import com.skybot.api.OB11GroupApiService;
 import com.skybot.api.OB11MessageApiService;
-import com.skybot.api.data.*;
+import com.skybot.api.extend.google_book.GB1ApiService;
+import com.skybot.api.extend.google_book.GB1ResponseInfo;
+import com.skybot.bot.Bot;
 import com.skybot.bot.BotServer;
 import com.skybot.event.handling.listener.message.OB11MessageEventListener;
 import com.skybot.event.message.OB11GroupMessageEvent;
@@ -15,6 +17,75 @@ public class OB11MessageEventListenerImpl implements OB11MessageEventListener
 	@Override
 	public void onGroupMessage(OB11GroupMessageEvent ob11GroupMessageEvent)
 	{
+		if (ob11GroupMessageEvent.rawMessage.startsWith("查找图书"))
+		{
+			String[] command = ob11GroupMessageEvent.rawMessage.split(" ");
+			String volumeName = command[1];
+			int macResults = Integer.parseInt(command[2]);
+			GB1ApiService gb1ApiService = new GB1ApiService("APIKEY");
+			GB1ResponseInfo gb1ResponseInfo = gb1ApiService.searchBook
+			(
+				command[1],
+				false,
+				null,
+				false,
+				null,
+				false,
+				null,
+				false,
+				null,
+				false,
+				null,
+				false,
+				null,
+				false,
+				null,
+				false,
+				-1,
+				macResults,
+				null,
+				null,
+				null
+			);
+			StringBuilder result = null;
+			long totalItems = gb1ResponseInfo.totalItems;
+			if (totalItems == 0) result = new StringBuilder("未查找到相关书籍 -> " + volumeName);
+			else
+			{
+				result = new StringBuilder(String.format("查询到%d个结果 展示%d个结果", totalItems, macResults)).append("\n".repeat(2));
+				if (gb1ResponseInfo.gb1ItemInfoList != null)
+				{
+					var ref = new Object()
+					{
+						int i = 0;
+					};
+					StringBuilder finalResult = result;
+					gb1ResponseInfo.gb1ItemInfoList.forEach(gb1ItemInfo ->
+					{
+						ref.i++;
+						finalResult
+						.append("【序列】")
+						.append(ref.i)
+						.append("\n")
+						.append("【书名】")
+						.append(gb1ItemInfo.gb1VolumeInfo.title)
+						.append("\n")
+						.append("【作者】")
+						.append(gb1ItemInfo.gb1VolumeInfo.authors  == null ? "未知作者" : gb1ItemInfo.gb1VolumeInfo.authors)
+						.append("\n")
+						.append("【页数】")
+						.append(gb1ItemInfo.gb1VolumeInfo.pageCount).append("\n");
+						if (gb1ItemInfo.gb1SearchInfo != null)
+						{
+							finalResult.append("【简介】");
+							finalResult.append(gb1ItemInfo.gb1SearchInfo.textSnippet).append("\n");
+						}
+						finalResult.append("\n");
+					});
+					OB11MessageApiService.sendGroupTextMessage(ob11GroupMessageEvent.groupId, finalResult.toString());
+				}
+			}
+		}
 		if (ob11GroupMessageEvent.rawMessage.startsWith("设置群头衔"))
 		{
 			String[] commands = ob11GroupMessageEvent.rawMessage.split(" ");

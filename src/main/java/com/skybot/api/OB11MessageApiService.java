@@ -1,5 +1,6 @@
 package com.skybot.api;
 
+import com.google.gson.JsonNull;
 import com.skybot.bot.BotServer;
 import com.skybot.bot.msg.element.OB11MsgElement;
 import com.skybot.bot.msg.element.OB11TextMsgElement;
@@ -77,15 +78,18 @@ public class OB11MessageApiService
 		BotServer.APIRequestResult apiRequestResult = botServer.sendRequest(rootObject.toString());
 		if (apiRequestResult != null)
 		{
+			System.out.println(apiRequestResult);
 			if (apiRequestResult.data != null)
 			{
-				JSONObject dataObject = (JSONObject) apiRequestResult.data;
-				if (apiRequestResult.isSuccess) return dataObject.getLong("message_id");
-				else
+				if (apiRequestResult.data instanceof JSONObject dataObject)
 				{
-					int retCode = apiRequestResult.retcode;
-					String errorMsg = apiRequestResult.message;
-					LOGGER.error("消息发送API调用失败 -> ".concat(String.valueOf(retCode)).concat(":").concat(errorMsg));
+					if (apiRequestResult.isSuccess) return dataObject.getLong("message_id");
+					else
+					{
+						int retCode = apiRequestResult.retcode;
+						String errorMsg = apiRequestResult.message;
+						LOGGER.error("消息发送API调用失败 -> ".concat(String.valueOf(retCode)).concat(":").concat(errorMsg));
+					}
 				}
 			}
 		}
