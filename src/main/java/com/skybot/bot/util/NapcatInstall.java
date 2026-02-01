@@ -30,7 +30,7 @@ public class NapcatInstall
 
 	public static final String NAPCAT_LATEST_RELEASE_URL = "https://api.github.com/repos/NapNeko/NapCatQQ/releases/latest";
 
-	private static boolean isNapcatInstalled()
+	public static boolean isNapcatInstalled()
 	{
 		try
 		{
@@ -135,7 +135,7 @@ public class NapcatInstall
 		}
 	}
 
-	private static void unzipNapcatArchiveToDir(File zipFile, File targetDir)
+	private static boolean unzipNapcatArchiveToDir(File zipFile, File targetDir)
 	{
 		try
 		{
@@ -156,15 +156,12 @@ public class NapcatInstall
 				bufferedOutputStream.write(zipInputStream.readAllBytes());
 				zipInputStream.closeEntry();
 			}
+			return true;
 		}
 		catch (IOException e)
 		{
 			LOGGER.error("Napcat解压失败！", e);
+			return false;
 		}
-	}
-
-	public static void main()
-	{
-		checkAndInstallNapcat();
 	}
 }

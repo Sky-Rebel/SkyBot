@@ -1,6 +1,5 @@
 package com.skybot.api;
 
-import com.google.gson.JsonNull;
 import com.skybot.bot.BotServer;
 import com.skybot.bot.msg.element.OB11MsgElement;
 import com.skybot.bot.msg.element.OB11TextMsgElement;
@@ -14,18 +13,41 @@ import java.util.List;
 
 public class OB11MessageApiService
 {
-	public static final String API_PATH_SEND_GROUP_MSG = "/send_group_msg";
+	private static final Logger LOGGER = LoggerFactory.getLogger(OB11MessageApiService.class);
 
-	public static final String API_PATH_SEND_PRIVATE_MSG = "/send_private_msg";
-
-	public static final Logger LOGGER = LoggerFactory.getLogger(OB11MessageApiService.class);
-
-	public enum MessageSendType
+	/**
+	 * Message API Path Enum
+	 */
+	private enum OB11MessageApiPath
 	{
-		GROUP_MESSAGE,
-		PRIVATE_MESSAGE
+		SEND_POKE("/send_poke"),
+		DELETE_MSG("/delete_msg"),
+		SEND_GROUP_MSG("/send_group_msg"),
+		SEND_PRIVATE_MSG("/send_private_msg"),
+		FORWARD_GROUP_SINGLE_MSG("/forward_group_single_msg"),
+		FORWARD_FRIEND_SINGLE_MSG("/forward_friend_single_msg"),
+		MARK_GROUP_MSG_AS_READ("/mark_group_msg_as_read"),
+		MARK_PRIVATE_MSG_AS_READ("/mark_private_msg_as_read");
+
+		private final String value;
+
+		OB11MessageApiPath(String value)
+		{
+			this.value = value;
+		}
+
+		public String getValue()
+		{
+			return this.value;
+		}
 	}
 
+	/**
+	 * 发送群聊文本消息
+	 * @param groupId 群聊ID
+	 * @param text 文本内容
+	 * @return 消息ID
+	 */
 	public static long sendGroupTextMessage(long groupId, String text)
 	{
 		List<OB11MsgElement> msgElementArray = new ArrayList<>();
@@ -35,6 +57,23 @@ public class OB11MessageApiService
 		return sendGroupMessage(groupId, msgElementArray);
 	}
 
+	/**
+	 * 发送群聊消息
+	 * @param groupId 群聊ID
+	 * @param msgElementArray 消息元素数组
+	 * @return 消息ID
+	 */
+	public static long sendGroupMessage(long groupId, List<? extends OB11MsgElement> msgElementArray)
+	{
+		return sendMessage("group", groupId, 0, msgElementArray);
+	}
+
+	/**
+	 * 发送私聊文本消息
+	 * @param userId 私聊ID
+	 * @param text 文本内容
+	 * @return 消息ID
+	 */
 	public static long sendPrivateTextMessage(long userId, String text)
 	{
 		List<OB11MsgElement> msgElementArray = new ArrayList<>();
@@ -44,55 +83,228 @@ public class OB11MessageApiService
 		return sendPrivateMessage(userId, msgElementArray);
 	}
 
-	public static long sendGroupMessage(long groupId, List<? extends OB11MsgElement> msgElementArray)
-	{
-		return sendMessage(MessageSendType.GROUP_MESSAGE, groupId, 0, msgElementArray);
-	}
-
+	/**
+	 * 发送私聊消息
+	 * @param userId 私聊ID
+	 * @param msgElementArray 消息元素数组
+	 * @return 消息ID
+	 */
 	public static long sendPrivateMessage(long userId, List<? extends OB11MsgElement> msgElementArray)
 	{
-		return sendMessage(MessageSendType.PRIVATE_MESSAGE, 0, userId, msgElementArray);
+		return sendMessage("private", 0, userId, msgElementArray);
 	}
 
-	public static long sendMessage(MessageSendType messageSendType, long groupId, long userId, List<? extends OB11MsgElement> msgElementArray)
+	/**
+	 * 发送消息
+	 * @param messageType 消息类型
+	 * @param groupId 群聊ID
+	 * @param userId 私聊ID
+	 * @param msgElementArray 消息元素数组
+	 * @return 消息ID
+	 */
+	public static long sendMessage(String messageType, long groupId, long userId, List<? extends OB11MsgElement> msgElementArray)
 	{
 		BotServer botServer = null;
 		JSONObject rootObject = new JSONObject();
-		switch (messageSendType)
+		if (messageType.equals("group"))
 		{
-			case GROUP_MESSAGE ->
-			{
-				botServer = new BotServer(API_PATH_SEND_GROUP_MSG);
-				rootObject.put("group_id", groupId);
-			}
-			case PRIVATE_MESSAGE ->
-			{
-				botServer = new BotServer(API_PATH_SEND_PRIVATE_MSG);
-				rootObject.put("user_id", userId);
-			}
+			botServer = new BotServer(OB11MessageApiPath.SEND_GROUP_MSG.getValue());
+			rootObject.put("group_id", groupId);
 		}
+		else if (messageType.equals("private"))
+		{
+			botServer = new BotServer(OB11MessageApiPath.SEND_PRIVATE_MSG.getValue());
+			rootObject.put("user_id", userId);
+		}
+		else LOGGER.error("未知消息发送类型");
 		JSONArray messageArray = new JSONArray();
 		msgElementArray.forEach(ob11MsgElement -> messageArray.put(ob11MsgElement.toJSONObject()));
 		rootObject.put("message", messageArray);
-		System.out.println(rootObject.toString(4));
-		BotServer.APIRequestResult apiRequestResult = botServer.sendRequest(rootObject.toString());
-		if (apiRequestResult != null)
+		BotServer.APIRequestResult apiRequestResult = null;
+		if (botServer != null)
 		{
-			System.out.println(apiRequestResult);
-			if (apiRequestResult.data != null)
+			apiRequestResult = botServer.sendRequest(rootObject.toString());
+			if (apiRequestResult != null)
 			{
-				if (apiRequestResult.data instanceof JSONObject dataObject)
+				if (apiRequestResult.data != null)
 				{
-					if (apiRequestResult.isSuccess) return dataObject.getLong("message_id");
-					else
+					if (apiRequestResult.data instanceof JSONObject dataObject)
 					{
-						int retCode = apiRequestResult.retcode;
-						String errorMsg = apiRequestResult.message;
-						LOGGER.error("消息发送API调用失败 -> ".concat(String.valueOf(retCode)).concat(":").concat(errorMsg));
+						if (apiRequestResult.isSuccess) return dataObject.getLong("message_id");
+						else
+						{
+							int retCode = apiRequestResult.retcode;
+							String errorMsg = apiRequestResult.message;
+							LOGGER.error("sendMessage -> ".concat(String.valueOf(retCode)).concat(":").concat(errorMsg));
+						}
 					}
 				}
 			}
 		}
 		return -1;
+	}
+
+	/**
+	 * 转发群聊消息到群聊
+	 * @param groupId 群聊ID
+	 * @param messageId 消息ID
+	 * @return API响应结果数据类
+	 */
+	public static BotServer.APIRequestResult forwardGroupMessageToGroup(long groupId, long messageId)
+	{
+		return forwardGroupMessage("group", groupId, 0, messageId);
+	}
+
+	/**
+	 * 转发私聊消息到群聊
+	 * @param userId 私聊ID
+	 * @param messageId 消息ID
+	 * @return API响应结果数据类
+	 */
+	public static BotServer.APIRequestResult forwardGroupMessageToPrivate(long userId, long messageId)
+	{
+		return forwardGroupMessage("group", 0, userId, messageId);
+	}
+
+	/**
+	 * 转发群聊消息
+	 * @param forwardTargetType 转发目标类型
+	 * @param groupId 群聊ID
+	 * @param userId 私聊ID
+	 * @param messageId 消息ID
+	 * @return API响应结果数据类
+	 */
+	public static BotServer.APIRequestResult forwardGroupMessage(String forwardTargetType, long groupId, long userId, long messageId)
+	{
+		return forwardMessage("group", forwardTargetType, groupId, userId, messageId);
+	}
+
+	/**
+	 * 转发私聊消息到群聊
+	 * @param groupId 群聊ID
+	 * @param messageId 消息ID
+	 * @return API响应结果数据类
+	 */
+	public static BotServer.APIRequestResult forwardPrivateMessageToGroup(long groupId, long messageId)
+	{
+		return forwardPrivateMessage("group", groupId, 0, messageId);
+	}
+
+	/**
+	 * 转发私聊消息到私聊
+	 * @param userId 私聊ID
+	 * @param messageId 消息ID
+	 * @return API响应结果数据类
+	 */
+	public static BotServer.APIRequestResult forwardPrivateMessageToPrivate(long userId, long messageId)
+	{
+		return forwardPrivateMessage("private", 0, userId, messageId);
+	}
+
+	/**
+	 * 转发私聊消息
+	 * @param forwardTargetType 转发目标类型
+	 * @param groupId 群聊ID
+	 * @param userId 私聊ID
+	 * @param messageId 消息ID
+	 * @return API响应结果数据类
+	 */
+	public static BotServer.APIRequestResult forwardPrivateMessage(String forwardTargetType, long groupId, long userId, long messageId)
+	{
+		return forwardMessage("private", forwardTargetType, groupId, userId, messageId);
+	}
+
+	/**
+	 * 转发消息
+	 * @param forwardMessageType 转发消息类型
+	 * @param forwardTargetType 转发目标类型
+	 * @param groupId 群聊ID
+	 * @param userId 私聊ID
+	 * @param messageId 消息ID
+	 * @return API响应结果数据类
+	 */
+	public static BotServer.APIRequestResult forwardMessage(String forwardMessageType, String forwardTargetType, long groupId, long userId, long messageId)
+	{
+		BotServer botServer = null;
+		JSONObject rootObject = new JSONObject();
+		if (forwardMessageType.equals("group"))
+		{
+			botServer = new BotServer(OB11MessageApiPath.FORWARD_GROUP_SINGLE_MSG.getValue());
+			if (forwardTargetType.equals("group")) rootObject.put("group_id", groupId);
+			else if (forwardTargetType.equals("private")) rootObject.put("user_id", userId);
+			else LOGGER.error("未知群聊消息转发类型 -> {}", forwardTargetType);
+		}
+		else if (forwardMessageType.equals("private"))
+		{
+			botServer = new BotServer(OB11MessageApiPath.FORWARD_FRIEND_SINGLE_MSG.getValue());
+			if (forwardTargetType.equals("group")) rootObject.put("group_id", groupId);
+			else if (forwardTargetType.equals("private")) rootObject.put("user_id", userId);
+			else LOGGER.error("未知私聊消息转发类型 -> {}", forwardTargetType);
+		}
+		else LOGGER.error("未知转发消息类型 -> {}", forwardMessageType);
+		rootObject.put("message_id", messageId);
+		if (botServer != null)
+		{
+			return botServer.sendRequest(rootObject.toString());
+		}
+		return new BotServer.APIRequestResult();
+	}
+
+	/**
+	 * 发送群聊戳一戳
+	 * @param groupId 群聊ID
+	 * @param userId 用户ID
+	 * @return API响应结果数据类
+	 */
+	public static BotServer.APIRequestResult sendGroupPoke(long groupId, long userId)
+	{
+		return sendPoke("group", groupId, userId);
+	}
+
+	/**
+	 * 发送私聊戳一戳
+	 * @param userId 私聊ID
+	 * @return API响应结果数据类
+	 */
+	public static BotServer.APIRequestResult sendPrivatePoke(long userId)
+	{
+		return sendPoke("private", 0, userId);
+	}
+
+	/**
+	 * 发送戳一戳
+	 * @param pokeType 戳戳类型
+	 * @param groupId 群聊ID
+	 * @param userId 用户ID
+	 * @return API响应结果数据类
+	 */
+	public static BotServer.APIRequestResult sendPoke(String pokeType, long groupId, long userId)
+	{
+		BotServer botServer = new BotServer(OB11MessageApiPath.SEND_POKE.getValue());
+		JSONObject rootObject = new JSONObject();
+		if (pokeType.equals("group"))
+		{
+			rootObject.put("group_id", groupId);
+			rootObject.put("user_id", userId);
+		}
+		else if (pokeType.equals("private"))
+		{
+			rootObject.put("user_id", userId);
+		}
+		else LOGGER.error("未知戳一戳类型 -> {}", pokeType);
+		return botServer.sendRequest(rootObject.toString());
+	}
+
+	/**
+	 * 撤回消息
+	 * @param messageId 消息ID
+	 * @return API响应结果数据类
+	 */
+	public static BotServer.APIRequestResult deleteMessage(long messageId)
+	{
+		BotServer botServer = new BotServer(OB11MessageApiPath.DELETE_MSG.getValue());
+		JSONObject rootObject = new JSONObject();
+		rootObject.put("message_id", messageId);
+		return botServer.sendRequest(rootObject.toString());
 	}
 }

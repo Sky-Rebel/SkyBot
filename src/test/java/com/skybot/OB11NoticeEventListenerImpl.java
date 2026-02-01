@@ -176,6 +176,9 @@ public class OB11NoticeEventListenerImpl implements OB11NoticeEventListener
 	@Override
 	public void onGroupPoke(OB11GroupPokeNotifyNoticeEvent ob11GroupPokeNoticeEvent)
 	{
-		OB11MessageApiService.sendGroupTextMessage(ob11GroupPokeNoticeEvent.groupId, "请不要戳我！");
+		if (ob11GroupPokeNoticeEvent.targetId == ob11GroupPokeNoticeEvent.selfId)
+		{
+			OB11MessageApiService.sendGroupTextMessage(ob11GroupPokeNoticeEvent.groupId, "请不要戳我！");
+		}
 	}
 }

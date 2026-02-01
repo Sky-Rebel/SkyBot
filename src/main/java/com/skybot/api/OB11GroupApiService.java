@@ -1,6 +1,6 @@
 package com.skybot.api;
 
-import com.skybot.api.data.*;
+import com.skybot.api.data.group.*;
 import com.skybot.bot.BotServer;
 import org.json.JSONArray;
 import org.json.JSONObject;

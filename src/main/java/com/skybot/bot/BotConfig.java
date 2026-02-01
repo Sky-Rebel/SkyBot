@@ -18,9 +18,9 @@ public class BotConfig
 
 	private static final String SKYBOT_CONFIG_NAME = "config.json";
 
-	private static final Path SKYBOT_CONFIG_PATH = Path.of("config", SKYBOT_CONFIG_NAME);
-
 	private static final Logger LOGGER = LoggerFactory.getLogger(BotConfig.class);
+
+	private static final Path SKYBOT_CONFIG_PATH = Path.of("config", SKYBOT_CONFIG_NAME);
 
 	public BotConfig()
 	{
@@ -336,5 +336,10 @@ public class BotConfig
 			LOGGER.error("Napcat配置文件删除异常！", e);
 			return false;
 		}
+	}
+
+	public static boolean deleteConfig(long botId)
+	{
+		return deleteSkybotConfig() && deleteNapcatConfig(botId);
 	}
 }

@@ -17,6 +17,38 @@ public class OB11MessageEventListenerImpl implements OB11MessageEventListener
 	@Override
 	public void onGroupMessage(OB11GroupMessageEvent ob11GroupMessageEvent)
 	{
+		if (ob11GroupMessageEvent.rawMessage.equals("撤回我的消息"))
+		{
+			BotServer.APIRequestResult apiRequestResult =
+			OB11MessageApiService.deleteMessage(ob11GroupMessageEvent.messageId);
+			OB11MessageApiService.sendGroupTextMessage(ob11GroupMessageEvent.userId, apiRequestResult.toString());
+		}
+		if (ob11GroupMessageEvent.rawMessage.startsWith("戳我"))
+		{
+			String[] command = ob11GroupMessageEvent.rawMessage.split(" ");
+			BotServer.APIRequestResult apiRequestResult = OB11MessageApiService.sendPoke
+			(
+				"group",
+				ob11GroupMessageEvent.groupId,
+				ob11GroupMessageEvent.userId
+			);
+			OB11MessageApiService.sendGroupTextMessage(ob11GroupMessageEvent.groupId, apiRequestResult.toString());
+		}
+
+		if (ob11GroupMessageEvent.rawMessage.startsWith("转发群聊消息"))
+		{
+			String[] command = ob11GroupMessageEvent.rawMessage.split(" ");
+			String messageId = command[1];
+			BotServer.APIRequestResult apiRequestResult = OB11MessageApiService.forwardMessage
+			(
+				"group",
+				"group",
+			ob11GroupMessageEvent.groupId,
+				0,
+				Long.parseLong(messageId)
+			);
+			OB11MessageApiService.sendGroupTextMessage(ob11GroupMessageEvent.groupId, apiRequestResult.toString());
+		}
 		if (ob11GroupMessageEvent.rawMessage.startsWith("查找图书"))
 		{
 			String[] command = ob11GroupMessageEvent.rawMessage.split(" ");
@@ -147,5 +179,45 @@ public class OB11MessageEventListenerImpl implements OB11MessageEventListener
 	{
 		if (ob11PrivateMessageEvent.rawMessage.equals("test"))
 			OB11MessageApiService.sendPrivateTextMessage(ob11PrivateMessageEvent.userId, "Skybot Test Success");
+
+		if (ob11PrivateMessageEvent.rawMessage.startsWith("戳我"))
+		{
+			String[] command = ob11PrivateMessageEvent.rawMessage.split(" ");
+			BotServer.APIRequestResult apiRequestResult = OB11MessageApiService.sendPoke
+			(
+			"private",
+			0,
+			ob11PrivateMessageEvent.userId
+			);
+			OB11MessageApiService.sendPrivateTextMessage(ob11PrivateMessageEvent.userId, apiRequestResult.toString());
+		}
+
+		if (ob11PrivateMessageEvent.rawMessage.startsWith("转发私聊消息"))
+		{
+			String[] command = ob11PrivateMessageEvent.rawMessage.split(" ");
+			String messageId = command[1];
+			BotServer.APIRequestResult apiRequestResult = OB11MessageApiService.forwardMessage
+			(
+			"friend",
+			"friend",
+			Long.parseLong(messageId),
+			0,
+			ob11PrivateMessageEvent.userId
+			);
+		}
+
+		if (ob11PrivateMessageEvent.rawMessage.startsWith("转发群聊消息"))
+		{
+			String[] command = ob11PrivateMessageEvent.rawMessage.split(" ");
+			String messageId = command[1];
+			BotServer.APIRequestResult apiRequestResult = OB11MessageApiService.forwardMessage
+			(
+			"group",
+			"friend",
+			Long.parseLong(messageId),
+			0,
+			ob11PrivateMessageEvent.userId
+			);
+		}
 	}
 }
