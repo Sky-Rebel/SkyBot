@@ -177,6 +177,15 @@ public class OB11GroupApiService
 
 	/**
 	 * 获取群列表
+	 * @return 群聊信息数据类列表
+	 */
+	public static List<OB11GroupInfo> getGroupList()
+	{
+		return getGroupList(true);
+	}
+
+	/**
+	 * 获取群列表
 	 * @param noCache 不缓存
 	 * @return 群聊信息数据类列表
 	 */

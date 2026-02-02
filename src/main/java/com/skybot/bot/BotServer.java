@@ -99,6 +99,7 @@ public class BotServer
 				.POST(HttpRequest.BodyPublishers.ofString(requestBody))
 				.build();
 			HttpResponse<String> httpResponse = httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());
+			System.out.println(httpResponse.body());
 			JSONObject requestResult = new JSONObject(httpResponse.body());
 			return APIRequestResult.getInstance(requestResult);
 		}

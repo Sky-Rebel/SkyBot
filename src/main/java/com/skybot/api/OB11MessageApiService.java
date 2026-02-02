@@ -1,6 +1,7 @@
 package com.skybot.api;
 
 import com.skybot.bot.BotServer;
+import com.skybot.bot.msg.element.OB11JsonMsgElement;
 import com.skybot.bot.msg.element.OB11MsgElement;
 import com.skybot.bot.msg.element.OB11TextMsgElement;
 import org.json.JSONArray;
@@ -43,6 +44,21 @@ public class OB11MessageApiService
 	}
 
 	/**
+	 * 发送群聊JSON消息
+	 * @param groupId 群聊ID
+	 * @param json json内容
+	 * @return 消息ID
+	 */
+	public static long sendGroupJsonMessage(long groupId, JSONObject json)
+	{
+		List<OB11MsgElement> msgElementArray = new ArrayList<>();
+		OB11JsonMsgElement ob11JsonMsgElement = new OB11JsonMsgElement();
+		ob11JsonMsgElement.setJson(json);
+		msgElementArray.add(ob11JsonMsgElement);
+		return sendGroupMessage(groupId, msgElementArray);
+	}
+
+	/**
 	 * 发送群聊文本消息
 	 * @param groupId 群聊ID
 	 * @param text 文本内容
@@ -66,6 +82,21 @@ public class OB11MessageApiService
 	public static long sendGroupMessage(long groupId, List<? extends OB11MsgElement> msgElementArray)
 	{
 		return sendMessage("group", groupId, 0, msgElementArray);
+	}
+
+	/**
+	 * 发送私聊JSON消息
+	 * @param userId 私聊ID
+	 * @param json json内容
+	 * @return 消息ID
+	 */
+	public static long sendPrivateJsonMessage(long userId, JSONObject json)
+	{
+		List<OB11MsgElement> msgElementArray = new ArrayList<>();
+		OB11JsonMsgElement ob11JsonMsgElement = new OB11JsonMsgElement();
+		ob11JsonMsgElement.setJson(json);
+		msgElementArray.add(ob11JsonMsgElement);
+		return sendPrivateMessage(userId, msgElementArray);
 	}
 
 	/**

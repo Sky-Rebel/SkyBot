@@ -77,10 +77,10 @@ public class CMDExecutor
 				String batAbsolutePath = batFilePath.toString();
 				String startCmd = String.format
 				(
-					"start \"SkyBot-BAT-%s\" /wait cmd.exe /k \"%s %s\"",
-					batFile,
-					batAbsolutePath,
-					argsJoin
+				"start \"SkyBot-BAT-%s\" /wait cmd.exe /k \"%s %s\"",
+				batFile,
+				batAbsolutePath,
+				argsJoin
 				);
 				startCmd = startCmd.replace("  ", " ").trim();
 				command.add(startCmd);
@@ -144,7 +144,7 @@ public class CMDExecutor
 				if (command != null)
 					arrayList.add(command);
 				if (args != null)
-					arrayList.addAll(Arrays.stream(args).collect(Collectors.toList()));
+					arrayList.addAll(Arrays.stream(args).toList());
 				ProcessBuilder processBuilder = new ProcessBuilder(arrayList);
 				processBuilder.directory(file);
 				processBuilder.redirectErrorStream(true);

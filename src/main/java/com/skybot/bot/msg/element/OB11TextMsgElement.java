@@ -4,7 +4,7 @@ import org.json.JSONObject;
 
 public class OB11TextMsgElement extends OB11MsgElement
 {
-	public static final OB11MsgElement.ElementType ELEMENT_TYPE = OB11MsgElement.ElementType.TEXT;
+	private static final OB11MsgElement.ElementType ELEMENT_TYPE = OB11MsgElement.ElementType.TEXT;
 
 	private String text;
 

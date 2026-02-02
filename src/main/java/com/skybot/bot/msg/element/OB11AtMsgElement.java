@@ -13,6 +13,11 @@ public class OB11AtMsgElement extends OB11MsgElement
 		return qq;
 	}
 
+	public void setQQ(long qq)
+	{
+		this.qq = String.valueOf(qq);
+	}
+
 	public void setQQ(String qq)
 	{
 		this.qq = qq;

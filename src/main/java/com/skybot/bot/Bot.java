@@ -6,6 +6,9 @@ import com.skybot.bot.util.NapcatInstall;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+
 public class Bot
 {
 	private static final Logger LOGGER = LoggerFactory.getLogger(Bot.class);
@@ -18,9 +21,18 @@ public class Bot
 
 	public static boolean isStart;
 
+	private static final Path NAPCAT_PATH = Path.of("napcat");
+
 	public Bot()
 	{
 		BotConfig botConfig = BotConfig.getBotConfig();
+		this(botConfig);
+	}
+
+	public Bot(long botId)
+	{
+		BotConfig botConfig = new BotConfig();
+		botConfig.skybotConfig.botId = botId;
 		this(botConfig);
 	}
 
@@ -43,7 +55,13 @@ public class Bot
 			LOGGER.error("Bot配置为空，无法启动Bot！");
 			return;
 		}
-		CMDExecutor.startBat(LAUNCHER_USER_BAT, true, NAPCAT_WORK_DIR, LAUNCHER_USER_BAT, String.valueOf(config.skybotConfig.botId));
+		CMDExecutor.startBatProcess("napcat", LAUNCHER_USER_BAT, String.valueOf(config.skybotConfig.botId));
+		// CMDExecutor.startBat(LAUNCHER_USER_BAT, true, NAPCAT_WORK_DIR, LAUNCHER_USER_BAT, String.valueOf(config.skybotConfig.botId);
+		Runtime.getRuntime().addShutdownHook(new Thread(() ->
+		{
+			CMDExecutor.shutdownExecutor();
+			CMDExecutor.forceCleanInvalidProcess("napcat", LAUNCHER_USER_BAT, String.valueOf(config.skybotConfig.botId));
+		}));
 		new OB11EventListener().start();
 		isStart = true;
 	}

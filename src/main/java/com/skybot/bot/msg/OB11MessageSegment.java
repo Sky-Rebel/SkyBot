@@ -53,7 +53,7 @@ public class OB11MessageSegment
 		ob11MsgElementList.forEach(messageElementObject ->
 		{
 			OB11MsgElement.ElementType elementType = messageElementObject.getElementType();
-			if (elementType.equals(OB11AtMsgElement.ELEMENT_TYPE))
+			if (elementType.equals(OB11MsgElement.ElementType.JSON))
 			{
 				OB11AtMsgElement ob11AtMsgElement = (OB11AtMsgElement) messageElementObject;
 				if (!ob11AtMsgElement.getQQ().equals("all")) atList.add(Long.valueOf(ob11AtMsgElement.getQQ()));
