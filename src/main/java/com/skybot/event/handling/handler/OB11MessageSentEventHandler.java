@@ -1,5 +1,6 @@
 package com.skybot.event.handling.handler;
 
+import com.skybot.bot.Bot;
 import com.skybot.event.handling.dispatcher.OB11MessageSentEventDispatcher;
 import com.skybot.event.message_sent.OB11GroupMessageSentEvent;
 import com.skybot.event.message_sent.OB11PrivateMessageSentEvent;
@@ -13,12 +14,13 @@ public class OB11MessageSentEventHandler
 	 * 分发自发消息事件
 	 * @param ob11EventPostData Napcat客户端上报的原始数据
 	 */
-	public static void dispatch(JSONObject ob11EventPostData)
+	public static void dispatch(Bot bot, JSONObject ob11EventPostData)
 	{
 		final String messageType = ob11EventPostData.getString("message_type");
 		if (messageType.equals("group"))
 		{
 			OB11GroupMessageSentEvent ob11GroupMessageSentEvent = new OB11GroupMessageSentEvent();
+			ob11GroupMessageSentEvent.bot = bot;
 			ob11GroupMessageSentEvent.time = ob11EventPostData.getLong("time");
 			ob11GroupMessageSentEvent.selfId = ob11EventPostData.getLong("self_id");
 			ob11GroupMessageSentEvent.groupId = ob11EventPostData.getLong("group_id");
@@ -35,11 +37,12 @@ public class OB11MessageSentEventHandler
 			sender.nickname = senderJson.getString("nickname");
 			sender.userId = senderJson.getLong("user_id");
 			ob11GroupMessageSentEvent.sender = sender;
-			OB11MessageSentEventDispatcher.onGroupSentMessage(ob11GroupMessageSentEvent);
+			OB11MessageSentEventDispatcher.onGroupSentMessage(bot, ob11GroupMessageSentEvent);
 		}
 		else if (messageType.equals("private"))
 		{
 			OB11PrivateMessageSentEvent ob11PrivateMessageSentEvent = new OB11PrivateMessageSentEvent();
+			ob11PrivateMessageSentEvent.bot = bot;
 			ob11PrivateMessageSentEvent.time = ob11EventPostData.getLong("time");
 			ob11PrivateMessageSentEvent.selfId = ob11EventPostData.getLong("self_id");
 			ob11PrivateMessageSentEvent.messageId = ob11EventPostData.getLong("message_id");
@@ -53,7 +56,7 @@ public class OB11MessageSentEventHandler
 			sender.nickname = senderJson.getString("nickname");
 			sender.userId = senderJson.getLong("user_id");
 			ob11PrivateMessageSentEvent.sender = sender;
-			OB11MessageSentEventDispatcher.onPrivateSentMessage(ob11PrivateMessageSentEvent);
+			OB11MessageSentEventDispatcher.onPrivateSentMessage(bot, ob11PrivateMessageSentEvent);
 
 		}
 		else LOGGER.warn("未知自发消息事件类型 -> {}", messageType);

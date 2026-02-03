@@ -1,5 +1,7 @@
 package com.skybot.bot;
 
+import com.skybot.api.OB11AccountApiService;
+import com.skybot.api.OB11GroupApiService;
 import com.skybot.api.OB11MessageApiService;
 import com.skybot.event.handling.listener.OB11EventListener;
 import com.skybot.bot.util.CMDExecutor;
@@ -14,40 +16,57 @@ import java.util.Map;
 
 public class Bot
 {
-	private BotConfig botConfig;
+	private long botId;
 
 	private boolean isStart;
 
-	private long botId;
+	private BotConfig botConfig;
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(Bot.class);
-
-	public static final String LAUNCHER_USER_BAT = "launcher-user.bat";
+	private static boolean isUseDefConfig = false;
 
 	private static final Map<Long, Bot> botMap = new HashMap<>();
 
-	public Bot(long botId)
+	public static final String LAUNCHER_USER_BAT = "launcher-user.bat";
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(Bot.class);
+
+	private Bot() {}
+
+	public static Bot createBot(long botId)
 	{
+		if (isUseDefConfig)
+		{
+			LOGGER.error("默认配置既已使用，请通过BotConfig创建Bot实例！");
+			return null;
+		}
 		BotConfig botConfig = new BotConfig();
 		botConfig.skybotConfig.botId = botId;
-		this(botConfig);
+		return createBot(botConfig);
 	}
 
-	public Bot(BotConfig botConfig)
+	public static Bot createBot(BotConfig botConfig)
 	{
-		if (!NapcatInstall.checkAndInstallNapcat()) return;
+		if (!NapcatInstall.checkAndInstallNapcat())
+		{
+			LOGGER.error("Napcat未下载，无法创建实例！");
+			return null;
+		}
 		if (botConfig.skybotConfig.botId == -1)
 		{
 			LOGGER.error("BotId未配置，无法获取配置！");
-			return;
+			return null;
 		}
 		if (botMap.containsKey(botConfig.skybotConfig.botId))
 		{
-			LOGGER.error("Bot({})既已启动，请勿重复启动！", botConfig.skybotConfig.botId);
+			LOGGER.error("Bot实例({})既已创建，请勿重复创建！", botConfig.skybotConfig.botId);
+			return null;
 		}
 		BotConfig.saveBotConfig(botConfig);
-		this.botConfig = botConfig;
-		botMap.put(botConfig.skybotConfig.botId, this);
+		Bot bot = new Bot();
+		bot.botConfig = botConfig;
+		bot.botId = botConfig.skybotConfig.botId;
+		botMap.put(botConfig.skybotConfig.botId, bot);
+		return bot;
 	}
 
 	public void start()
@@ -58,7 +77,6 @@ public class Bot
 			return;
 		}
 		CMDExecutor.startBatProcess("napcat", LAUNCHER_USER_BAT, String.valueOf(botConfig.skybotConfig.botId));
-		// CMDExecutor.startBat(LAUNCHER_USER_BAT, true, NAPCAT_WORK_DIR, LAUNCHER_USER_BAT, String.valueOf(config.skybotConfig.botId);
 		Runtime.getRuntime().addShutdownHook(new Thread(() ->
 		{
 			CMDExecutor.shutdownExecutor();
@@ -68,28 +86,9 @@ public class Bot
 		isStart = true;
 	}
 
-	public static Bot getBot(long botId)
+	public long getBotId()
 	{
-		if (botMap.containsKey(botId))
-		{
-			Bot bot = botMap.get(botId);
-			return bot;
-		}
-		return null;
-	}
-
-	public Object getApiService(Class<?> apiServiceClass)
-	{
-		if (apiServiceClass == OB11MessageApiService.class)
-		{
-			return new OB11MessageApiService(this);
-		}
-		return null;
-	}
-
-	public BotConfig getBotConfig()
-	{
-		return botConfig;
+		return botId;
 	}
 
 	public boolean isStart()
@@ -97,8 +96,49 @@ public class Bot
 		return isStart;
 	}
 
-	public long getBotId()
+	public BotConfig getBotConfig()
 	{
-		return botId;
+		return botConfig;
+	}
+
+	public static Bot getBot(long botId)
+	{
+		if (botMap.containsKey(botId))
+		{
+			return botMap.get(botId);
+		}
+		return null;
+	}
+
+	public OB11GroupApiService getOB11GroupApiService()
+	{
+		return (OB11GroupApiService) getApiService(OB11GroupApiService.class);
+	}
+
+	public OB11MessageApiService getOB11MessageApiService()
+	{
+		return (OB11MessageApiService) getApiService(OB11MessageApiService.class);
+	}
+
+	public OB11AccountApiService getOB11AccountApiService()
+	{
+		return (OB11AccountApiService) getApiService(OB11AccountApiService.class);
+	}
+
+	public Object getApiService(Class<?> apiServiceClass)
+	{
+		if (apiServiceClass == OB11GroupApiService.class)
+		{
+			return new OB11GroupApiService(this);
+		}
+		else if (apiServiceClass == OB11MessageApiService.class)
+		{
+			return new OB11MessageApiService(this);
+		}
+		else if (apiServiceClass == OB11AccountApiService.class)
+		{
+			return new OB11AccountApiService(this);
+		}
+		return null;
 	}
 }

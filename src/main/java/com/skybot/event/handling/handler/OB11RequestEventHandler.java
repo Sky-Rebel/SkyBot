@@ -1,5 +1,6 @@
 package com.skybot.event.handling.handler;
 
+import com.skybot.bot.Bot;
 import com.skybot.event.handling.dispatcher.OB11RequestEventDispatcher;
 import com.skybot.event.request.OB11FriendAddRequestEvent;
 import com.skybot.event.request.OB11GroupAddRequestEvent;
@@ -14,18 +15,19 @@ public class OB11RequestEventHandler
 	 * 分发请求事件
 	 * @param ob11EventPostData Napcat客户端上报的原始数据
 	 */
-	public static void dispatch(JSONObject ob11EventPostData)
+	public static void dispatch(Bot bot, JSONObject ob11EventPostData)
 	{
 		final String requestEventType = ob11EventPostData.getString("request_type");
 		if (requestEventType.equals("friend"))
 		{
 			OB11FriendAddRequestEvent ob11FriendAddRequestEvent = new OB11FriendAddRequestEvent();
+			ob11FriendAddRequestEvent.bot = bot;
 			ob11FriendAddRequestEvent.comment = ob11EventPostData.getString("comment");
 			ob11FriendAddRequestEvent.userId = ob11EventPostData.getLong("user_id");
 			ob11FriendAddRequestEvent.flag = ob11EventPostData.getString("flag");
 			ob11FriendAddRequestEvent.time = ob11EventPostData.getLong("time");
 			ob11FriendAddRequestEvent.selfId = ob11EventPostData.getLong("self_id");
-			OB11RequestEventDispatcher.onFriendRequest(ob11FriendAddRequestEvent);
+			OB11RequestEventDispatcher.onFriendRequest(bot, ob11FriendAddRequestEvent);
 		}
 		else if (requestEventType.equals("group"))
 		{
@@ -33,24 +35,26 @@ public class OB11RequestEventHandler
 			if (subType.equals("add"))
 			{
 				OB11GroupAddRequestEvent ob11GroupAddRequestEvent = new OB11GroupAddRequestEvent();
+				ob11GroupAddRequestEvent.bot = bot;
 				ob11GroupAddRequestEvent.time = ob11EventPostData.getLong("time");
 				ob11GroupAddRequestEvent.comment = ob11EventPostData.getString("comment");
 				ob11GroupAddRequestEvent.groupId = ob11EventPostData.getLong("group_id");
 				ob11GroupAddRequestEvent.flag = ob11EventPostData.getString("flag");
 				ob11GroupAddRequestEvent.selfId = ob11EventPostData.getLong("self_id");
 				ob11GroupAddRequestEvent.userId = ob11EventPostData.getLong("user_id");
-				OB11RequestEventDispatcher.onGroupAddRequest(ob11GroupAddRequestEvent);
+				OB11RequestEventDispatcher.onGroupAddRequest(bot, ob11GroupAddRequestEvent);
 			}
 			else if (subType.equals("invite"))
 			{
 				OB11GroupInviteRequestEvent ob11GroupInviteRequestEvent = new OB11GroupInviteRequestEvent();
+				ob11GroupInviteRequestEvent.bot = bot;
 				ob11GroupInviteRequestEvent.time = ob11EventPostData.getLong("time");
 				ob11GroupInviteRequestEvent.selfId = ob11EventPostData.getLong("self_id");
 				ob11GroupInviteRequestEvent.groupId = ob11EventPostData.getLong("group_id");
 				ob11GroupInviteRequestEvent.userId = ob11EventPostData.getLong("user_id");
 				ob11GroupInviteRequestEvent.flag = ob11EventPostData.getString("flag");
 				ob11GroupInviteRequestEvent.comment = ob11EventPostData.getString("comment");
-				OB11RequestEventDispatcher.onGroupInviteRequest(ob11GroupInviteRequestEvent);
+				OB11RequestEventDispatcher.onGroupInviteRequest(bot, ob11GroupInviteRequestEvent);
 			}
 			else LOGGER.warn("未知群组请求事件类型！");
 		}

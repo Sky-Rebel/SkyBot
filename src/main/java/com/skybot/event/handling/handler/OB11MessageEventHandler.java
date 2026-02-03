@@ -24,6 +24,7 @@ public class OB11MessageEventHandler
 		if (messageEventType.equals(OB11GroupMessageEvent.MESSAGE_EVENT_TYPE))
 		{
 			OB11GroupMessageEvent ob11GroupMessageEvent = new OB11GroupMessageEvent();
+			ob11GroupMessageEvent.bot = bot;
 			ob11GroupMessageEvent.groupId = ob11EventPostData.getLong("group_id");
 			ob11GroupMessageEvent.messageId = ob11EventPostData.getLong("message_id");
 			ob11GroupMessageEvent.rawMessage = ob11EventPostData.getString("raw_message");
@@ -45,6 +46,7 @@ public class OB11MessageEventHandler
 		else if (messageEventType.equals(OB11PrivateMessageEvent.MESSAGE_EVENT_TYPE))
 		{
 			OB11PrivateMessageEvent ob11PrivateMessageEvent = new OB11PrivateMessageEvent();
+			ob11PrivateMessageEvent.bot = bot;
 			ob11PrivateMessageEvent.messageId = ob11EventPostData.getLong("message_id");
 			ob11PrivateMessageEvent.rawMessage = ob11EventPostData.getString("raw_message");
 			ob11PrivateMessageEvent.selfId = ob11EventPostData.getLong("self_id");

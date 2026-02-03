@@ -4,6 +4,7 @@ import com.skybot.bot.Bot;
 import com.skybot.bot.BotServer;
 import com.skybot.bot.msg.element.OB11JsonMsgElement;
 import com.skybot.bot.msg.element.OB11MsgElement;
+import com.skybot.bot.msg.element.OB11ReplyMsgElement;
 import com.skybot.bot.msg.element.OB11TextMsgElement;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -62,6 +63,24 @@ public class OB11MessageApiService
 		OB11JsonMsgElement ob11JsonMsgElement = new OB11JsonMsgElement();
 		ob11JsonMsgElement.setJson(json);
 		msgElementArray.add(ob11JsonMsgElement);
+		return sendGroupMessage(groupId, msgElementArray);
+	}
+
+	/**
+	 * 发送群聊回复文本消息
+	 * @param groupId 群聊ID
+	 * @param text 文本内容
+	 * @return 消息ID
+	 */
+	public long sendGroupReplyTextMessage(long groupId, long messageId, String text)
+	{
+		List<OB11MsgElement> msgElementArray = new ArrayList<>();
+		OB11ReplyMsgElement ob11ReplyMsgElement = new OB11ReplyMsgElement();
+		ob11ReplyMsgElement.setId(messageId);
+		msgElementArray.add(ob11ReplyMsgElement);
+		OB11TextMsgElement ob11TextMsgElement = new OB11TextMsgElement();
+		ob11TextMsgElement.setText(text);
+		msgElementArray.add(ob11TextMsgElement);
 		return sendGroupMessage(groupId, msgElementArray);
 	}
 

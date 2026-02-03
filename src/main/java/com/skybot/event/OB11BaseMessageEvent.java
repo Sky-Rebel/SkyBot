@@ -24,4 +24,5 @@ public class OB11BaseMessageEvent extends OB11BaseEvent
 			", selfId=" + selfId +
 			'}';
 	}
+
 }

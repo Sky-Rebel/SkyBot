@@ -45,7 +45,7 @@ public class OB11EventListener extends WebSocketServer
 	@Override
 	public void onClose(WebSocket webSocket, int i, String s, boolean b)
 	{
-		LOGGER.info("Bot WS客户端既已关闭！");
+		LOGGER.info("Bot({})WS客户端既已关闭！", bot.getBotId());
 	}
 
 	@Override
@@ -65,6 +65,6 @@ public class OB11EventListener extends WebSocketServer
 	@Override
 	public void onStart()
 	{
-		LOGGER.info("Bot WS客户端启动成功！");
+		LOGGER.info("Bot({})WS客户端启动成功！", bot.getBotId());
 	}
 }

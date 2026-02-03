@@ -1,7 +1,11 @@
 package com.skybot.event;
 
+import com.skybot.bot.Bot;
+
 public class OB11BaseEvent
 {
+	public Bot bot;
+
 	public long time;
 
 	public long selfId;

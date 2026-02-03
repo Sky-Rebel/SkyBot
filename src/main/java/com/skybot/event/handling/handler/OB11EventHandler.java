@@ -24,11 +24,11 @@ public class OB11EventHandler
 			eventType = OB11BaseEvent.EventType.valueOf(postType.toUpperCase());
 		switch (eventType)
 		{
-			case META -> OB11MetaEventHandler.dispatch(ob11EventPostData);
-			case NOTICE -> OB11NoticeEventHandler.dispatch(ob11EventPostData);
+			case META -> OB11MetaEventHandler.dispatch(bot, ob11EventPostData);
+			case NOTICE -> OB11NoticeEventHandler.dispatch(bot, ob11EventPostData);
 			case MESSAGE -> OB11MessageEventHandler.dispatch(bot, ob11EventPostData);
-			case REQUEST -> OB11RequestEventHandler.dispatch(ob11EventPostData);
-			case MESSAGE_SENT -> OB11MessageSentEventHandler.dispatch(ob11EventPostData);
+			case REQUEST -> OB11RequestEventHandler.dispatch(bot, ob11EventPostData);
+			case MESSAGE_SENT -> OB11MessageSentEventHandler.dispatch(bot, ob11EventPostData);
 			default -> LOGGER.warn("未知基础事件类型！");
 		}
 	}

@@ -7,86 +7,6 @@ import java.util.*;
 
 public class GB1VolumeInfo
 {
-	public static GB1VolumeInfo getInstance(JSONObject data)
-	{
-		GB1VolumeInfo gb1VolumeInfo = new GB1VolumeInfo();
-		gb1VolumeInfo.title = data.optString("title");
-		JSONArray authorArray = data.optJSONArray("authors");
-		if (authorArray != null)
-		{
-			if (!authorArray.isEmpty())
-			{
-				List<String> authorList = new ArrayList<>();
-				authorArray.forEach(obj ->
-				{
-					if (obj instanceof String author)
-					{
-						authorList.add(author);
-					}
-				});
-				gb1VolumeInfo.authors = authorList;
-			}
-		}
-		gb1VolumeInfo.publisher = data.optString("publisher");
-		gb1VolumeInfo.publishedDate = data.optString("publishedDate");
-		gb1VolumeInfo.description = data.optString("description");
-		JSONArray industryIdentifierArray = data.optJSONArray("industryIdentifiers");
-		Map<String, String> industryIdentifierMap = new HashMap<>();
-		if (industryIdentifierArray != null)
-		{
-			if (!industryIdentifierArray.isEmpty())
-			{
-				industryIdentifierArray.forEach(obj ->
-				{
-					if (obj instanceof JSONObject industryIdentifier)
-					{
-						String type = industryIdentifier.optString("type");
-						String identifier = industryIdentifier.optString("identifier");
-						industryIdentifierMap.put(type, identifier);
-					}
-				});
-			}
-			gb1VolumeInfo.industryIdentifiers = industryIdentifierMap;
-		}
-		JSONObject readingModeObject = data.optJSONObject("readingModes");
-		gb1VolumeInfo.gb1ReadingModeInfo = GB1ReadingModeInfo.getInstance(readingModeObject);
-		gb1VolumeInfo.pageCount = data.optInt("pageCount");;
-		gb1VolumeInfo.printType = data.optString("printType");
-		JSONArray categoryArray = data.optJSONArray("categories");
-		if (categoryArray != null)
-		{
-			if (!categoryArray.isEmpty())
-			{
-				List<String> categoryList = new ArrayList<>();
-				categoryArray.forEach(obj ->
-				{
-					if (obj instanceof String category)
-					{
-						categoryList.add(category);
-					}
-				});
-				gb1VolumeInfo.categories = categoryList;
-			}
-		}
-		gb1VolumeInfo.maturityRating = data.optString("maturityRating");
-		gb1VolumeInfo.allowAnonLogging = data.optBoolean("allowAnonLogging");
-		gb1VolumeInfo.contentVersion = data.optString("contentVersion");
-		JSONObject panelizationSummaryObject = data.optJSONObject("panelizationSummary");
-		if (panelizationSummaryObject != null)
-		{
-			gb1VolumeInfo.panelizationSummaryInfo = GB1PanelizationSummaryInfo.getInstance(panelizationSummaryObject);
-		}
-		JSONObject imageLinkObject = data.optJSONObject("imageLinks");
-		if (imageLinkObject != null)
-		{
-			gb1VolumeInfo.imageLinkInfo = GB1ImageLinkInfo.getInstance(imageLinkObject);
-		}
-		gb1VolumeInfo.language = data.optString("language");
-		gb1VolumeInfo.previewLink = data.optString("previewLink");
-		gb1VolumeInfo.infoLink = data.optString("infoLink");
-		gb1VolumeInfo.canonicalVolumeLink = data.optString("canonicalVolumeLink");
-		return gb1VolumeInfo;
-	}
 	/**
 	 * 图书名字
 	 */
@@ -205,5 +125,86 @@ public class GB1VolumeInfo
 		.add("infoLink='" + infoLink + "'")
 		.add("canonicalVolumeLink='" + canonicalVolumeLink + "'")
 		.toString();
+	}
+
+	public static GB1VolumeInfo getInstance(JSONObject data)
+	{
+		GB1VolumeInfo gb1VolumeInfo = new GB1VolumeInfo();
+		gb1VolumeInfo.title = data.optString("title");
+		JSONArray authorArray = data.optJSONArray("authors");
+		if (authorArray != null)
+		{
+			if (!authorArray.isEmpty())
+			{
+				List<String> authorList = new ArrayList<>();
+				authorArray.forEach(obj ->
+				{
+					if (obj instanceof String author)
+					{
+						authorList.add(author);
+					}
+				});
+				gb1VolumeInfo.authors = authorList;
+			}
+		}
+		gb1VolumeInfo.publisher = data.optString("publisher");
+		gb1VolumeInfo.publishedDate = data.optString("publishedDate");
+		gb1VolumeInfo.description = data.optString("description");
+		JSONArray industryIdentifierArray = data.optJSONArray("industryIdentifiers");
+		Map<String, String> industryIdentifierMap = new HashMap<>();
+		if (industryIdentifierArray != null)
+		{
+			if (!industryIdentifierArray.isEmpty())
+			{
+				industryIdentifierArray.forEach(obj ->
+				{
+					if (obj instanceof JSONObject industryIdentifier)
+					{
+						String type = industryIdentifier.optString("type");
+						String identifier = industryIdentifier.optString("identifier");
+						industryIdentifierMap.put(type, identifier);
+					}
+				});
+			}
+			gb1VolumeInfo.industryIdentifiers = industryIdentifierMap;
+		}
+		JSONObject readingModeObject = data.optJSONObject("readingModes");
+		gb1VolumeInfo.gb1ReadingModeInfo = GB1ReadingModeInfo.getInstance(readingModeObject);
+		gb1VolumeInfo.pageCount = data.optInt("pageCount");;
+		gb1VolumeInfo.printType = data.optString("printType");
+		JSONArray categoryArray = data.optJSONArray("categories");
+		if (categoryArray != null)
+		{
+			if (!categoryArray.isEmpty())
+			{
+				List<String> categoryList = new ArrayList<>();
+				categoryArray.forEach(obj ->
+				{
+					if (obj instanceof String category)
+					{
+						categoryList.add(category);
+					}
+				});
+				gb1VolumeInfo.categories = categoryList;
+			}
+		}
+		gb1VolumeInfo.maturityRating = data.optString("maturityRating");
+		gb1VolumeInfo.allowAnonLogging = data.optBoolean("allowAnonLogging");
+		gb1VolumeInfo.contentVersion = data.optString("contentVersion");
+		JSONObject panelizationSummaryObject = data.optJSONObject("panelizationSummary");
+		if (panelizationSummaryObject != null)
+		{
+			gb1VolumeInfo.panelizationSummaryInfo = GB1PanelizationSummaryInfo.getInstance(panelizationSummaryObject);
+		}
+		JSONObject imageLinkObject = data.optJSONObject("imageLinks");
+		if (imageLinkObject != null)
+		{
+			gb1VolumeInfo.imageLinkInfo = GB1ImageLinkInfo.getInstance(imageLinkObject);
+		}
+		gb1VolumeInfo.language = data.optString("language");
+		gb1VolumeInfo.previewLink = data.optString("previewLink");
+		gb1VolumeInfo.infoLink = data.optString("infoLink");
+		gb1VolumeInfo.canonicalVolumeLink = data.optString("canonicalVolumeLink");
+		return gb1VolumeInfo;
 	}
 }
