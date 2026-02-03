@@ -1,5 +1,6 @@
 package com.skybot.event.handling.handler;
 
+import com.skybot.bot.Bot;
 import com.skybot.bot.msg.OB11MessageSegment;
 import com.skybot.bot.msg.element.OB11MsgElement;
 import com.skybot.event.handling.dispatcher.OB11MessageEventDispatcher;
@@ -17,7 +18,7 @@ public class OB11MessageEventHandler
 	 * 分发消息事件
 	 * @param ob11EventPostData Napcat客户端上报的原始数据
 	 */
-	public static void dispatch(JSONObject ob11EventPostData)
+	public static void dispatch(Bot bot, JSONObject ob11EventPostData)
 	{
 		final String messageEventType = ob11EventPostData.getString("message_type");
 		if (messageEventType.equals(OB11GroupMessageEvent.MESSAGE_EVENT_TYPE))
@@ -39,7 +40,7 @@ public class OB11MessageEventHandler
 			sender.nickname = senderJson.getString("nickname");
 			sender.role = senderJson.getString("role");
 			ob11GroupMessageEvent.sender = sender;
-			OB11MessageEventDispatcher.onGroupMessage(ob11GroupMessageEvent);
+			OB11MessageEventDispatcher.onGroupMessage(bot, ob11GroupMessageEvent);
 		}
 		else if (messageEventType.equals(OB11PrivateMessageEvent.MESSAGE_EVENT_TYPE))
 		{
@@ -55,7 +56,7 @@ public class OB11MessageEventHandler
 			sender.userId = senderJson.getLong("user_id");
 			sender.nickname = senderJson.getString("nickname");
 			ob11PrivateMessageEvent.sender = sender;
-			OB11MessageEventDispatcher.onPrivateMessage(ob11PrivateMessageEvent);
+			OB11MessageEventDispatcher.onPrivateMessage(bot, ob11PrivateMessageEvent);
 		}
 		else LOGGER.warn("未知消息事件类型！");
 	}

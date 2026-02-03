@@ -12,9 +12,7 @@ public class BotTest
 	public static void main()
 	{
 		OB11NoticeEventListenerManage.registerListener(new OB11NoticeEventListenerImpl());
-		OB11MessageEventListenerManage.registerListener(new OB11MessageEventListenerImpl());
+//		OB11MessageEventListenerManage.registerListener(new OB11MessageEventListenerImpl());
 		OB11MetaEventListenerManage.registerListener(new OB11MetaEventListenerImpl());
-		OB11MessageSentEventListenerManage.registerListener(new OB11MessageSentEventListenerImpl());
-		new Bot().start();
 	}
 }

@@ -16,11 +16,7 @@ public class BotConfig
 
 	public NapcatConfig napcatConfig;
 
-	private static final String SKYBOT_CONFIG_NAME = "config.json";
-
 	private static final Logger LOGGER = LoggerFactory.getLogger(BotConfig.class);
-
-	private static final Path SKYBOT_CONFIG_PATH = Path.of("config", SKYBOT_CONFIG_NAME);
 
 	public BotConfig()
 	{
@@ -148,10 +144,11 @@ public class BotConfig
 		}
 	}
 
-	public static BotConfig getBotConfig()
+	public static BotConfig getBotConfig(Bot bot)
 	{
-		SkybotConfig skybotConfig = getSkybotConfig();
-		if (skybotConfig.botId == -1) LOGGER.warn("BotId未配置，将返回默认配置！");
+
+		if (bot.getBotId() == -1) LOGGER.warn("BotId未配置，将返回默认配置！");
+		SkybotConfig skybotConfig = getSkybotConfig(bot.getBotId());
 		NapcatConfig napcatConfig = getNapcatConfig(skybotConfig.botId);
 		BotConfig botConfig = new BotConfig();
 		botConfig.skybotConfig = skybotConfig;
@@ -159,12 +156,13 @@ public class BotConfig
 		return botConfig;
 	}
 
-	public static SkybotConfig getSkybotConfig()
+	public static SkybotConfig getSkybotConfig(long botId)
 	{
 		try
 		{
-			if (!Files.exists(SKYBOT_CONFIG_PATH)) return new SkybotConfig();
-			String fileContent = Files.readString(SKYBOT_CONFIG_PATH);
+			Path skybotConfigPath = Path.of("config", "bot_config_" + botId + ".json");
+			if (!Files.exists(skybotConfigPath)) return new SkybotConfig();
+			String fileContent = Files.readString(skybotConfigPath);
 			JSONObject skybotConfigJson = new JSONObject(fileContent);
 			SkybotConfig skybotConfig = new SkybotConfig();
 			skybotConfig.botId = skybotConfigJson.getLong("bot_id");
@@ -248,12 +246,13 @@ public class BotConfig
 
 	public static void saveBotConfig(BotConfig botConfig)
 	{
-		saveSkybotConfig(botConfig.skybotConfig);
+		saveSkybotConfig(botConfig.skybotConfig, botConfig.skybotConfig.botId);
 		saveNapcatConfig(botConfig.napcatConfig, botConfig.skybotConfig.botId);
 	}
 
-	public static void saveSkybotConfig(SkybotConfig skybotConfig)
+	public static void saveSkybotConfig(SkybotConfig skybotConfig, long botId)
 	{
+		Path skybotConfigPath = Path.of("config", "bot_config_" + botId + ".json");
 		try
 		{
 			if (skybotConfig.botId == -1)
@@ -261,14 +260,14 @@ public class BotConfig
 				LOGGER.warn("无法保存Skybot配置文件, BotId未配置！");
 				return;
 			}
-			if (!Files.exists(SKYBOT_CONFIG_PATH))
+			if (!Files.exists(skybotConfigPath))
 			{
-				Path parentPath = SKYBOT_CONFIG_PATH.getParent();
+				Path parentPath = skybotConfigPath.getParent();
 				if (!Files.exists(parentPath)) Files.createDirectories(parentPath);
-				Files.createFile(SKYBOT_CONFIG_PATH);
+				Files.createFile(skybotConfigPath);
 				JSONObject rootObject = new JSONObject();
 				rootObject.put("bot_id", skybotConfig.botId);
-				Files.writeString(SKYBOT_CONFIG_PATH, rootObject.toString(4));
+				Files.writeString(skybotConfigPath, rootObject.toString(4));
 			}
 		}
 		catch (IOException e)
@@ -311,11 +310,12 @@ public class BotConfig
 		}
 	}
 
-	public static boolean deleteSkybotConfig()
+	public static boolean deleteSkybotConfig(long botId)
 	{
 		try
 		{
-			return Files.deleteIfExists(SKYBOT_CONFIG_PATH);
+			Path skybotConfigPath = Path.of("config", "bot_config_" + botId + ".json");
+			return Files.deleteIfExists(skybotConfigPath);
 		}
 		catch (IOException e)
 		{
@@ -340,6 +340,6 @@ public class BotConfig
 
 	public static boolean deleteConfig(long botId)
 	{
-		return deleteSkybotConfig() && deleteNapcatConfig(botId);
+		return deleteSkybotConfig(botId) && deleteNapcatConfig(botId);
 	}
 }

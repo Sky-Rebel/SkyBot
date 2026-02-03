@@ -23,7 +23,7 @@ public class OB11MetaEventListenerImpl implements OB11MetaEventListener
 	public void onConnect(OB11LifeCycleEvent ob11LifeCycleEvent)
 	{
 		long MAIN_GROUP = 634447585;
-		OB11MessageApiService.sendGroupTextMessage(MAIN_GROUP, "WS Client Connect Event -> " + ob11LifeCycleEvent.time);
+		//OB11MessageApiService.sendGroupTextMessage(MAIN_GROUP, "WS Client Connect Event -> " + ob11LifeCycleEvent.time);
 	}
 
 	@Override

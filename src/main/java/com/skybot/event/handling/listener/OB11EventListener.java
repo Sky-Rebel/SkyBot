@@ -18,12 +18,15 @@ public class OB11EventListener extends WebSocketServer
 {
 	public static final Logger LOGGER = LoggerFactory.getLogger(OB11EventListener.class);
 
-	public OB11EventListener()
+	private final Bot bot;
+
+	public OB11EventListener(Bot bot)
 	{
+		this.bot = bot;
 		InetSocketAddress inetSocketAddress = null;
 		try
 		{
-			BotConfig botConfig = Bot.config;
+			BotConfig botConfig = bot.getBotConfig();
 			BotConfig.NapcatConfig.WsClientConfig wsClient = botConfig.napcatConfig.wsClientConfig;
 			String url = wsClient.url;
 			URI uri = new URI(url);
@@ -50,7 +53,7 @@ public class OB11EventListener extends WebSocketServer
 	{
 		JSONObject jsonObject = new JSONObject(s);
 		System.out.println(jsonObject.toString(4) + "\n".repeat(5));
-		OB11EventHandler.dispatch(jsonObject);
+		OB11EventHandler.dispatch(bot, jsonObject);
 	}
 
 	@Override

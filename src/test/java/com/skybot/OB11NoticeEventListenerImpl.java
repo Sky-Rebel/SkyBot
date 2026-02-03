@@ -75,7 +75,6 @@ public class OB11NoticeEventListenerImpl implements OB11NoticeEventListener
 	@Override
 	public void onGroupNameUpdated(OB11GroupNameNoticeEvent ob11GroupNameNoticeEvent)
 	{
-		OB11MessageApiService.sendGroupTextMessage(ob11GroupNameNoticeEvent.groupId, ob11GroupNameNoticeEvent.userId + "为本群更改了新的名字 -> " + ob11GroupNameNoticeEvent.newName);
 	}
 
 	@Override
@@ -104,7 +103,7 @@ public class OB11NoticeEventListenerImpl implements OB11NoticeEventListener
 			
 			时间戳: %d
 			""".formatted(ob11GroupIncreaseNoticeEvent.selfId, ob11GroupIncreaseNoticeEvent.groupId, ob11GroupIncreaseNoticeEvent.operatorId, ob11GroupIncreaseNoticeEvent.userId, ob11GroupIncreaseNoticeEvent.time);
-		OB11MessageApiService.sendGroupTextMessage(ob11GroupIncreaseNoticeEvent.groupId, message);
+		//OB11MessageApiService.sendGroupTextMessage(ob11GroupIncreaseNoticeEvent.groupId, message);
 	}
 
 	@Override
@@ -121,19 +120,19 @@ public class OB11NoticeEventListenerImpl implements OB11NoticeEventListener
 			
 			时间戳: %d
 			""".formatted(ob11GroupIncreaseNoticeEvent.selfId, ob11GroupIncreaseNoticeEvent.groupId, ob11GroupIncreaseNoticeEvent.operatorId, ob11GroupIncreaseNoticeEvent.userId, ob11GroupIncreaseNoticeEvent.time);
-		OB11MessageApiService.sendGroupTextMessage(ob11GroupIncreaseNoticeEvent.groupId, message);
+		//OB11MessageApiService.sendGroupTextMessage(ob11GroupIncreaseNoticeEvent.groupId, message);
 	}
 
 	@Override
 	public void onGroupMemberQuit(OB11GroupDecreaseNoticeEvent ob11GroupDecreaseNoticeEvent)
 	{
-		OB11MessageApiService.sendGroupTextMessage(ob11GroupDecreaseNoticeEvent.groupId, ob11GroupDecreaseNoticeEvent.toString());
+		//OB11MessageApiService.sendGroupTextMessage(ob11GroupDecreaseNoticeEvent.groupId, ob11GroupDecreaseNoticeEvent.toString());
 	}
 
 	@Override
 	public void onGroupMemberKicked(OB11GroupDecreaseNoticeEvent ob11GroupDecreaseNoticeEvent)
 	{
-		OB11MessageApiService.sendGroupTextMessage(ob11GroupDecreaseNoticeEvent.groupId, ob11GroupDecreaseNoticeEvent.toString());
+		//OB11MessageApiService.sendGroupTextMessage(ob11GroupDecreaseNoticeEvent.groupId, ob11GroupDecreaseNoticeEvent.toString());
 	}
 
 	@Override
@@ -178,7 +177,7 @@ public class OB11NoticeEventListenerImpl implements OB11NoticeEventListener
 	{
 		if (ob11GroupPokeNoticeEvent.targetId == ob11GroupPokeNoticeEvent.selfId)
 		{
-			OB11MessageApiService.sendGroupTextMessage(ob11GroupPokeNoticeEvent.groupId, "请不要戳我！");
+			//OB11MessageApiService.sendGroupTextMessage(ob11GroupPokeNoticeEvent.groupId, "请不要戳我！");
 		}
 	}
 }

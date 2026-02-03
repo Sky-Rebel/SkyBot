@@ -26,16 +26,16 @@ public class BotServer
 
 	public String host;
 
-	public BotServer(String path)
+	public BotServer(Bot bot, String path)
 	{
 		try
 		{
-			if (!Bot.isStart)
+			if (!bot.isStart())
 			{
 				LOGGER.warn("Bot未启动，无法调用Api功能！");
 				return;
 			}
-			this.botConfig = Bot.config;
+			this.botConfig = bot.getBotConfig();
 			this.port = botConfig.napcatConfig.httpServerConfig.port;
 			this.host = botConfig.napcatConfig.httpServerConfig.host;
 			uri = new URI(scheme, null, host, port, path, null, null);
@@ -104,7 +104,7 @@ public class BotServer
 			return APIRequestResult.getInstance(requestResult);
 		}
 		catch (InterruptedException | IOException e) {
-			LOGGER.error("请求Api发生异常 -> {}", e.getMessage());
+			LOGGER.error("请求Api发生异常", e);
 			return null;
 		}
 	}

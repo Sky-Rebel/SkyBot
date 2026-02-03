@@ -1,6 +1,7 @@
 package com.skybot.api;
 
 import com.skybot.api.data.account.OB11FriendInfo;
+import com.skybot.bot.Bot;
 import com.skybot.bot.BotServer;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -10,7 +11,14 @@ import java.util.List;
 
 public class OB11AccountApiService
 {
-	private enum OB11UserApiPath
+	private final Bot bot;
+
+	public OB11AccountApiService(Bot bot)
+	{
+		this.bot = bot;
+	}
+
+	private enum OB11AccountApiPath
 	{
 
 		GET_FRIEND_LIST("/get_friend_list"),
@@ -19,7 +27,7 @@ public class OB11AccountApiService
 
 		private final String value;
 
-		OB11UserApiPath(String value)
+		OB11AccountApiPath(String value)
 		{
 			this.value = value;
 		}
@@ -34,7 +42,7 @@ public class OB11AccountApiService
 	 * 获取好友列表
 	 * @return 好友信息数据类列表
 	 */
-	public static List<OB11FriendInfo> getFriendList()
+	public List<OB11FriendInfo> getFriendList()
 	{
 		return getFriendList(true);
 	}
@@ -44,9 +52,9 @@ public class OB11AccountApiService
 	 * @param noCache 是否不使用缓存
 	 * @return 好友信息数据类列表
 	 */
-	public static List<OB11FriendInfo> getFriendList(boolean noCache)
+	public List<OB11FriendInfo> getFriendList(boolean noCache)
 	{
-		BotServer botServer = new BotServer(OB11UserApiPath.GET_FRIEND_LIST.getValue());
+		BotServer botServer = new BotServer(bot, OB11AccountApiPath.GET_FRIEND_LIST.getValue());
 		JSONObject data = new JSONObject().put("no_cache", noCache);
 		BotServer.APIRequestResult apiRequestResult = botServer.sendRequest(data.toString());
 		if (apiRequestResult.isSuccess)
@@ -80,9 +88,9 @@ public class OB11AccountApiService
 	 * @param rawArkData 是否返回原始ARK数据
 	 * @return JSON卡片代码
 	 */
-	public static JSONObject getMiniAppArk(String type, String title, String desc, String picUrl, String jumpUrl, String webUrl, boolean rawArkData)
+	public JSONObject getMiniAppArk(String type, String title, String desc, String picUrl, String jumpUrl, String webUrl, boolean rawArkData)
 	{
-		BotServer botServer = new BotServer(OB11UserApiPath.GET_MINI_APP_ARK.getValue());
+		BotServer botServer = new BotServer(bot, OB11AccountApiPath.GET_MINI_APP_ARK.getValue());
 		JSONObject data = new JSONObject()
 		.put("type", type)
 		.put("title", title)

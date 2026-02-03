@@ -20,11 +20,13 @@ public interface OB11MetaEventListener
 	 */
 	@Deprecated
 	void onDisable(OB11LifeCycleEvent ob11LifeCycleEvent);
+
 	/**
 	 * Bot连接事件
 	 * @param ob11LifeCycleEvent Bot连接事件数据类
 	 */
 	void onConnect(OB11LifeCycleEvent ob11LifeCycleEvent);
+
 	/**
 	 * Bot心跳事件
 	 * @param ob11HeartbeatEvent Bot心跳事件数据类
