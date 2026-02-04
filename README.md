@@ -1,6 +1,6 @@
 # 项目简介 #
 
-基于Napcat框架由Java编写的QQ机器人SDk项目
+基于Napcat框架由Java编写的QQ机器人SDK项目
 
 # 项目使用 #
 
@@ -19,8 +19,18 @@
 6. 选中 **`SkyBot的jar`**
 
 ### Maven：
-    mvn install:install-file -Dfile=JAR文件地址 -DgroupId=com.github.sky-rebel -DartifactId=SkyBot -Dversion=1.0.0-SNAPSHOT -Dpackaging=jar
-
-## 贡献名单 ##
+将Jar安装至本地Maven仓库
+```bash
+mvn install:install-file -Dfile=Jar_Adress -DgroupId=com.github.sky-rebel -DartifactId=SkyBot -Dversion=1.0.0-SNAPSHOT -Dpackaging=jar
+```
+在你的项目中引入依赖
+```xml
+<dependency>
+    <groupId>com.github.sky-rebel</groupId>
+    <artifactId>SkyBot</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+</dependency>
+```
+# 项目贡献 #
 - Sky_Rebel
-- 虚位待坐
+- 虚位以待
