@@ -1,9 +1,9 @@
 package com.github.sky_rebel.bot;
 
-import com.github.sky_rebel.api.OB11AccountApiService;
-import com.github.sky_rebel.api.OB11GroupApiService;
-import com.github.sky_rebel.api.OB11MessageApiService;
-import com.github.sky_rebel.event.handling.listener.OB11EventListener;
+import com.github.sky_rebel.bot.api.OB11AccountApiService;
+import com.github.sky_rebel.bot.api.OB11GroupApiService;
+import com.github.sky_rebel.bot.api.OB11MessageApiService;
+import com.github.sky_rebel.bot.event.handling.listener.OB11EventListener;
 import com.github.sky_rebel.bot.util.CMDExecutor;
 import com.github.sky_rebel.bot.util.NapcatInstall;
 import org.slf4j.Logger;

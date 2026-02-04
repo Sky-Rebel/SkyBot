@@ -146,7 +146,6 @@ public class BotConfig
 
 	public static BotConfig getBotConfig(Bot bot)
 	{
-
 		if (bot.getBotId() == -1) LOGGER.warn("BotId未配置，将返回默认配置！");
 		SkybotConfig skybotConfig = getSkybotConfig(bot.getBotId());
 		NapcatConfig napcatConfig = getNapcatConfig(skybotConfig.botId);
@@ -160,7 +159,7 @@ public class BotConfig
 	{
 		try
 		{
-			Path skybotConfigPath = Path.of("config", "bot_config_" + botId + ".json");
+			Path skybotConfigPath = Path.of("data", "bot_config_" + botId + ".json");
 			if (!Files.exists(skybotConfigPath)) return new SkybotConfig();
 			String fileContent = Files.readString(skybotConfigPath);
 			JSONObject skybotConfigJson = new JSONObject(fileContent);
@@ -252,7 +251,7 @@ public class BotConfig
 
 	public static void saveSkybotConfig(SkybotConfig skybotConfig, long botId)
 	{
-		Path skybotConfigPath = Path.of("config", "bot_config_" + botId + ".json");
+		Path skybotConfigPath = Path.of("data", "bot_config_" + botId + ".json");
 		try
 		{
 			if (skybotConfig.botId == -1)
@@ -314,7 +313,7 @@ public class BotConfig
 	{
 		try
 		{
-			Path skybotConfigPath = Path.of("config", "bot_config_" + botId + ".json");
+			Path skybotConfigPath = Path.of("data", "bot_config_" + botId + ".json");
 			return Files.deleteIfExists(skybotConfigPath);
 		}
 		catch (IOException e)

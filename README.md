@@ -1,16 +1,20 @@
-# 项目简介 #
+# SkyBot #
+
+## 项目简介 ##
 
 基于Napcat框架由Java编写的QQ机器人SDK项目
 
-# 项目使用 #
+## 项目使用 ##
 
-## 1.下载
+### 1.下载
 前往 [Releases](https://github.com/Sky-Rebel/SkyBot/releases) 页面，下载最新版本SkyBot的Jar文件。
 
-## 2.引用
+### 2.引用
 
-### IDEA：
+#### IDEA：
+
 在你的项目界面
+
 1. 键入 **`Alt + \`**
 2. 键入 **`Ctrl + Alt + Shift + S`**
 3. 点击 **`Libraries`**
@@ -18,12 +22,15 @@
 5. 点击 **`Java`**
 6. 选中 **`SkyBot的jar`**
 
-### Maven：
+#### Maven：
+
 将Jar安装至本地Maven仓库
+
 ```bash
 mvn install:install-file -Dfile=Jar_Adress -DgroupId=com.github.sky-rebel -DartifactId=SkyBot -Dversion=1.0.0-SNAPSHOT -Dpackaging=jar
 ```
 在你的项目中引入依赖
+
 ```xml
 <dependency>
     <groupId>com.github.sky-rebel</groupId>
@@ -31,11 +38,13 @@ mvn install:install-file -Dfile=Jar_Adress -DgroupId=com.github.sky-rebel -Darti
     <version>1.0.0-SNAPSHOT</version>
 </dependency>
 ```
-# 项目贡献 #
+## 项目贡献 ##
+
 - Sky_Rebel
 - 虚位以待
 
-# 开源协议 #
+## 开源协议 ##
+
     Copyright 2026 Sky_Rebel
 
     Licensed under the Apache License, Version 2.0 (the "License");
