@@ -1,14 +1,14 @@
 package com.github.sky_rebel.bot.api;
 
-
-import com.github.sky_rebel.bot.api.data.account.OB11FriendInfo;
 import com.github.sky_rebel.bot.Bot;
 import com.github.sky_rebel.bot.BotServer;
+import com.github.sky_rebel.bot.api.data.account.OB11FriendInfo;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class OB11AccountApiService
 {
@@ -24,7 +24,9 @@ public class OB11AccountApiService
 
 		GET_FRIEND_LIST("/get_friend_list"),
 
-		GET_MINI_APP_ARK("/get_mini_app_ark");
+		GET_MINI_APP_ARK("/get_mini_app_ark"),
+
+		SEND_LIKE("/send_like");
 
 		private final String value;
 
@@ -40,20 +42,171 @@ public class OB11AccountApiService
 	}
 
 	/**
-	 * 获取好友列表
-	 * @return 好友信息数据类列表
+	 * 点赞所有好友并且发送消息（如果点赞成功）
+	 * @return API响应结果列表
 	 */
-	public List<OB11FriendInfo> getFriendList()
+	public List<BotServer.APIRequestResult> sendLikeAndMessageToFriendListIfSuccess(String text)
 	{
-		return getFriendList(true);
+		return sendLikeAndMessageToFriendList(20, true, text);
 	}
 
 	/**
-	 * 获取好友列表
+	 * 点赞所有好友并且发送消息（如果点赞成功）
+	 * @param times 点赞次数
+	 * @return API响应结果列表
+	 */
+	public List<BotServer.APIRequestResult> sendLikeAndMessageToFriendListIfSuccess(int times, String text)
+	{
+		return sendLikeAndMessageToFriendList(times, true, text);
+	}
+
+	/**
+	 * 点赞所有好友
+	 * @return API响应结果列表
+	 */
+	public List<BotServer.APIRequestResult> sendLikeToFriendList()
+	{
+		return sendLikeAndToFriendList(20);
+	}
+
+	/**
+	 * 点赞所有好友
+	 * @param times 点赞次数
+	 * @return API响应结果列表
+	 */
+	public List<BotServer.APIRequestResult> sendLikeAndToFriendList(int times)
+	{
+		return sendLikeAndMessageToFriendList(times, false, null);
+	}
+
+	/**
+	 * 点赞并且发送消息向所有好友
+	 * @param times 点赞次数
+	 * @return API响应结果列表
+	 */
+	public List<BotServer.APIRequestResult> sendLikeAndMessageToFriendList(int times, boolean isSuccessSend, String text)
+	{
+		List<Long> friendIdList = getFriendIdList();
+		List<BotServer.APIRequestResult> apiRequestResultList = new ArrayList<>();
+		AtomicReference<OB11MessageApiService> atomicReference = new AtomicReference<>();
+		if (isSuccessSend)
+		{
+			atomicReference.set(bot.getOB11MessageApiService());
+		}
+		if (!friendIdList.isEmpty())
+		{
+			friendIdList.forEach(friendId ->
+			{
+				BotServer.APIRequestResult apiRequestResult = sendLike(friendId, times);
+				if (apiRequestResult.isSuccess)
+				{
+					atomicReference.get().sendPrivateTextMessage(friendId, text);
+				}
+				apiRequestResultList.add(apiRequestResult);
+			});
+		}
+		return apiRequestResultList;
+	}
+
+	/**
+	 * 点赞好友并且发送消息（如果点赞成功）
+	 * @param userId 用户ID
+	 * @return API响应结果
+	 */
+	public BotServer.APIRequestResult sendLikeAndMessageIfSuccess(long userId, String text)
+	{
+		return sendLikeAndMessageIfSuccess(userId, 20, text);
+	}
+
+	/**
+	 * 点赞好友并且发送消息（如果点赞成功）
+	 * @param userId 用户ID
+	 * @param times 点赞次数
+	 * @return API响应结果
+	 */
+	public BotServer.APIRequestResult sendLikeAndMessageIfSuccess(long userId, int times, String text)
+	{
+		OB11MessageApiService ob11MessageApiService = bot.getOB11MessageApiService();
+		BotServer.APIRequestResult apiRequestResult = sendLike(userId, times);
+		if (apiRequestResult.isSuccess)
+		{
+			if (text != null)
+			{
+				ob11MessageApiService.sendPrivateTextMessage(userId, text);
+			}
+		}
+		return apiRequestResult;
+	}
+
+	/**
+	 * 点赞好友
+	 * @param userId 用户ID
+	 * @return API响应结果
+	 */
+	public BotServer.APIRequestResult sendLike(long userId)
+	{
+		return sendLike(userId, 20);
+	}
+
+	/**
+	 * 点赞好友
+	 * @param userId 用户ID
+	 * @param times 点赞次数
+	 * @return API响应结果
+	 */
+	public BotServer.APIRequestResult sendLike(long userId, int times)
+	{
+		BotServer botServer = new BotServer(bot, OB11AccountApiPath.SEND_LIKE.getValue());
+		JSONObject rootObject = new JSONObject();
+		rootObject.put("user_id", userId);
+		rootObject.put("times", times);
+		return botServer.sendRequest(rootObject.toString());
+	}
+
+	/**
+	 * 获取好友ID列表
+	 * @return 好友ID列表
+	 */
+	public List<Long> getFriendIdList()
+	{
+		return getFriendIdList(true);
+	}
+
+	/**
+	 * 获取好友ID列表
+	 * @param noCache 是否不使用缓存
+	 * @return 好友ID列表
+	 */
+	public List<Long> getFriendIdList(boolean noCache)
+	{
+		List<Long> friendIdList = new ArrayList<>();
+		List<OB11FriendInfo> ob11FriendInfoList = getFriendInfoList(noCache);
+		if (!ob11FriendInfoList.isEmpty())
+		{
+			ob11FriendInfoList.forEach(ob11FriendInfo ->
+			{
+				friendIdList.add(ob11FriendInfo.userId);
+			});
+			return friendIdList;
+		}
+		return new ArrayList<>();
+	}
+
+	/**
+	 * 获取好友信息列表
+	 * @return 好友信息数据类列表
+	 */
+	public List<OB11FriendInfo> getFriendInfoList()
+	{
+		return getFriendInfoList(true);
+	}
+
+	/**
+	 * 获取好友信息列表
 	 * @param noCache 是否不使用缓存
 	 * @return 好友信息数据类列表
 	 */
-	public List<OB11FriendInfo> getFriendList(boolean noCache)
+	public List<OB11FriendInfo> getFriendInfoList(boolean noCache)
 	{
 		BotServer botServer = new BotServer(bot, OB11AccountApiPath.GET_FRIEND_LIST.getValue());
 		JSONObject data = new JSONObject().put("no_cache", noCache);
@@ -72,6 +225,7 @@ public class OB11AccountApiService
 							ob11FriendInfoList.add(OB11FriendInfo.getInstance(friendInfo));
 						}
 					});
+					return ob11FriendInfoList;
 				}
 			}
 		}

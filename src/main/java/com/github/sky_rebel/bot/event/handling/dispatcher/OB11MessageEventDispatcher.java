@@ -1,8 +1,8 @@
 package com.github.sky_rebel.bot.event.handling.dispatcher;
 
 import com.github.sky_rebel.bot.Bot;
-import com.github.sky_rebel.bot.event.handling.listener.message.OB11MessageEventListener;
 import com.github.sky_rebel.bot.event.handling.listener.message.OB11GroupMessageEventListener;
+import com.github.sky_rebel.bot.event.handling.listener.message.OB11MessageEventListener;
 import com.github.sky_rebel.bot.event.handling.listener.message.OB11PrivateMessageEventListener;
 import com.github.sky_rebel.bot.event.handling.manage.OB11MessageEventListenerManage;
 import com.github.sky_rebel.bot.event.message.OB11GroupMessageEvent;

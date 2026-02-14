@@ -17,8 +17,7 @@ public class OB11MateEventDispatcher
 	public static void onEnable(Bot bot, OB11LifeCycleEvent ob11LifeCycleEvent)
 	{
 		List<OB11MetaEventListener> ob11MetaEventListenerList = OB11MetaEventListenerManage.getMetaEventListenerList();
-		ob11MetaEventListenerList.forEach(ob11MetaEventListener -> ob11MetaEventListener.onEnable(bot,
-		ob11LifeCycleEvent));
+		ob11MetaEventListenerList.forEach(ob11MetaEventListener -> ob11MetaEventListener.onEnable(bot, ob11LifeCycleEvent));
 	}
 
 	/**

@@ -1,6 +1,7 @@
 package com.github.sky_rebel.bot.api.data.group;
 
 import org.json.JSONObject;
+
 import java.util.StringJoiner;
 
 public class OB11GroupMemberInfo

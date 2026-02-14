@@ -1,11 +1,11 @@
 package com.github.sky_rebel.bot.event.handling.handler;
 
 import com.github.sky_rebel.bot.Bot;
-import com.github.sky_rebel.bot.msg.OB11MessageSegment;
-import com.github.sky_rebel.bot.msg.element.OB11MsgElement;
 import com.github.sky_rebel.bot.event.handling.dispatcher.OB11MessageEventDispatcher;
 import com.github.sky_rebel.bot.event.message.OB11GroupMessageEvent;
 import com.github.sky_rebel.bot.event.message.OB11PrivateMessageEvent;
+import com.github.sky_rebel.bot.msg.OB11MessageSegment;
+import com.github.sky_rebel.bot.msg.element.OB11MsgElement;
 import org.json.JSONObject;
 
 import java.util.List;

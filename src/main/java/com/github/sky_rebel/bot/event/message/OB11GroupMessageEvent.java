@@ -1,10 +1,10 @@
 package com.github.sky_rebel.bot.event.message;
 
+import com.github.sky_rebel.bot.BotServer;
 import com.github.sky_rebel.bot.api.OB11GroupApiService;
 import com.github.sky_rebel.bot.api.OB11MessageApiService;
-import com.github.sky_rebel.bot.BotServer;
-import com.github.sky_rebel.bot.msg.element.OB11MsgElement;
 import com.github.sky_rebel.bot.event.OB11BaseMessageEvent;
+import com.github.sky_rebel.bot.msg.element.OB11MsgElement;
 
 import java.util.List;
 

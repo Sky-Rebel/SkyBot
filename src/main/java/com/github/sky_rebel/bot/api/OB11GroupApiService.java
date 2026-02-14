@@ -2,7 +2,17 @@ package com.github.sky_rebel.bot.api;
 
 import com.github.sky_rebel.bot.Bot;
 import com.github.sky_rebel.bot.BotServer;
-import com.github.sky_rebel.bot.api.data.group.*;
+import com.github.sky_rebel.bot.api.data.account.OB11FriendInfo;
+import com.github.sky_rebel.bot.api.data.group.OB11EssenceMsgInfo;
+import com.github.sky_rebel.bot.api.data.group.OB11GroupAtAllRemainInfo;
+import com.github.sky_rebel.bot.api.data.group.OB11GroupDetailInfo;
+import com.github.sky_rebel.bot.api.data.group.OB11GroupExInfo;
+import com.github.sky_rebel.bot.api.data.group.OB11GroupHonorInfo;
+import com.github.sky_rebel.bot.api.data.group.OB11GroupInfo;
+import com.github.sky_rebel.bot.api.data.group.OB11GroupMemberInfo;
+import com.github.sky_rebel.bot.api.data.group.OB11GroupNoticeInfo;
+import com.github.sky_rebel.bot.api.data.group.OB11GroupRequestMsgInfo;
+import com.github.sky_rebel.bot.api.data.group.OB11GroupShutInfo;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -184,29 +194,58 @@ public class OB11GroupApiService
 	}
 
 	/**
-	 * 获取群列表
-	 * @return 群聊信息数据类列表
+	 * 获取群组ID列表
+	 * @return 消息ID列表
 	 */
-	public List<OB11GroupInfo> getGroupList()
+	public List<Long> getGroupIdList()
 	{
-		return getGroupList(true);
+		return getGroupIdList(true);
 	}
 
 	/**
-	 * 获取群列表
-	 * @param noCache 不缓存
+	 * 获取群组ID列表
+	 * @param noCache
+	 * @return 消息ID列表
+	 */
+	public List<Long> getGroupIdList(boolean noCache)
+	{
+		List<Long> groupIdList = new ArrayList<>();
+		List<OB11GroupInfo> ob11GroupInfoList = getGroupInfoList(noCache);
+		if (!ob11GroupInfoList.isEmpty())
+		{
+			ob11GroupInfoList.forEach(ob11GroupInfo ->
+			{
+				groupIdList.add(ob11GroupInfo.groupId);
+			});
+			return groupIdList;
+		}
+		return new ArrayList<>();
+	}
+
+	/**
+	 * 获取群信息列表
 	 * @return 群聊信息数据类列表
 	 */
-	public List<OB11GroupInfo> getGroupList(boolean noCache)
+	public List<OB11GroupInfo> getGroupInfoList()
+	{
+		return getGroupInfoList(true);
+	}
+
+	/**
+	 * 获取群信息列表
+	 * @param noCache 是否不使用缓存
+	 * @return 群聊信息数据类列表
+	 */
+	public List<OB11GroupInfo> getGroupInfoList(boolean noCache)
 	{
 		BotServer botServer = new BotServer(bot, OB11GroupApiPath.GET_GROUP_LIST.getValue());
 		JSONObject rootObject = new JSONObject().put("no_cache", noCache);
 		BotServer.APIRequestResult apiRequestResult = botServer.sendRequest(rootObject.toString());
+		List<OB11GroupInfo> ob11GroupInfoList = new ArrayList<>();
 		if (apiRequestResult.isSuccess)
 		{
 			if (apiRequestResult.data != null)
 			{
-				List<OB11GroupInfo> ob11GroupInfoList = new ArrayList<>();
 				if (apiRequestResult.data instanceof JSONArray groupInfoListArray)
 				{
 					if (!groupInfoListArray.isEmpty())
@@ -218,13 +257,12 @@ public class OB11GroupApiService
 								ob11GroupInfoList.add(OB11GroupInfo.getInstance(groupInfo));
 							}
 						});
-						return ob11GroupInfoList;
 					}
 				}
 			}
 		}
 		LOGGER.error("getGroupList -> {}", apiRequestResult);
-		return new ArrayList<>();
+		return ob11GroupInfoList;
 	}
 
 	/**

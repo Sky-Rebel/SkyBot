@@ -19,7 +19,7 @@ public class OB11MessageSegment
 	{
 		if (messageArray == null || messageArray.isEmpty())
 		{
-			LOGGER.error("无法解析为消息元素数组，消息段为空！");
+			LOGGER.error("无法解析消息元素数组，消息段为空！");
 			return null;
 		}
 		List<OB11MsgElement> ob11MsgElementList = new ArrayList<>();

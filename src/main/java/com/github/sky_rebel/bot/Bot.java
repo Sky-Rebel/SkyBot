@@ -9,7 +9,7 @@ import com.github.sky_rebel.bot.util.NapcatInstall;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class Bot
@@ -22,7 +22,7 @@ public class Bot
 
 	private static boolean isUseDefConfig = false;
 
-	private static final Map<Long, Bot> botMap = new HashMap<>();
+	private static final Map<Long, Bot> botMap = new LinkedHashMap<>();
 
 	public static final String LAUNCHER_USER_BAT = "launcher-user.bat";
 
@@ -39,6 +39,7 @@ public class Bot
 		}
 		BotConfig botConfig = new BotConfig();
 		botConfig.skybotConfig.botId = botId;
+		isUseDefConfig = true;
 		return createBot(botConfig);
 	}
 
@@ -104,6 +105,16 @@ public class Bot
 		if (botMap.containsKey(botId))
 		{
 			return botMap.get(botId);
+		}
+		return null;
+	}
+
+	public static Bot getFirstBot()
+	{
+		if (!botMap.isEmpty())
+		{
+			long botId = botMap.keySet().stream().findFirst().get();
+			return getBot(botId);
 		}
 		return null;
 	}

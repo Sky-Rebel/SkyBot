@@ -49,7 +49,7 @@ public class BotServer
 
 	public static class APIRequestResult
 	{
-		public boolean isSuccess;
+		public boolean isSuccess = false;
 
 		public int retcode;
 

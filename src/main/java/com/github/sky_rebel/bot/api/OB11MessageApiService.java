@@ -24,9 +24,7 @@ public class OB11MessageApiService
 	{
 		this.bot = bot;
 	}
-	/**
-	 * Message API Path Enum
-	 */
+
 	private enum OB11MessageApiPath
 	{
 		SEND_POKE("/send_poke"),
@@ -153,6 +151,116 @@ public class OB11MessageApiService
 	}
 
 	/**
+	 * 发送文本消息到好友列表
+	 * @param text 文本内容
+	 * @return 消息ID列表
+	 */
+	public List<Long> sendTextMessageToFriendList(String text)
+	{
+		return sendTextMessageToFriendList(text, true);
+	}
+
+	/**
+	 * 发送文本消息到好友列表
+	 * @param text 文本内容
+	 * @param noCache 获取好友ID列表是否不使用缓存
+	 * @return 消息ID列表
+	 */
+	public List<Long> sendTextMessageToFriendList(String text, boolean noCache)
+	{
+		List<OB11MsgElement> msgElementArray = new ArrayList<>();
+		OB11TextMsgElement ob11TextMsgElement = new OB11TextMsgElement();
+		ob11TextMsgElement.setText(text);
+		msgElementArray.add(ob11TextMsgElement);
+		return sendMessageToFriendList(msgElementArray, noCache);
+	}
+
+	/**
+	 * 发送消息到好友列表
+	 * @param msgElementArray 消息元素数组
+	 * @return 消息ID列表
+	 */
+	public List<Long> sendMessageToFriendList(List<? extends OB11MsgElement> msgElementArray)
+	{
+		return sendMessageToFriendList(msgElementArray, true);
+	}
+
+	/**
+	 * 发送消息到好友列表
+	 * @param msgElementArray 消息元素数组
+	 * @param noCache 获取好友ID列表是否不使用缓存
+	 * @return 消息ID列表
+	 */
+	public List<Long> sendMessageToFriendList(List<? extends OB11MsgElement> msgElementArray, boolean noCache)
+	{
+		List<Long> messageIdList = new ArrayList<>();
+		List<Long> friendIdList = bot.getOB11AccountApiService().getFriendIdList(noCache);
+		if (!friendIdList.isEmpty())
+		{
+			friendIdList.forEach(friendId ->
+			{
+				messageIdList.add(sendPrivateMessage(friendId, msgElementArray));
+			});
+		}
+		return messageIdList;
+	}
+
+	/**
+	 * 发送文本消息到群组列表
+	 * @param text 文本内容
+	 * @return 消息ID列表
+	 */
+	public List<Long> sendTextMessageToGroupList(String text)
+	{
+		return sendTextMessageToGroupList(text, true);
+	}
+
+	/**
+	 * 发送文本消息到从群组列表
+	 * @param text 文本内容
+	 * @param noCache 获取群组ID列表是否不使用缓存
+	 * @return 消息ID列表
+	 */
+	public List<Long> sendTextMessageToGroupList(String text, boolean noCache)
+	{
+		List<OB11MsgElement> msgElementArray = new ArrayList<>();
+		OB11TextMsgElement ob11TextMsgElement = new OB11TextMsgElement();
+		ob11TextMsgElement.setText(text);
+		msgElementArray.add(ob11TextMsgElement);
+		return sendMessageToGroupList(msgElementArray, noCache);
+	}
+
+	/**
+	 * 发送消息到群组列表
+	 * @param msgElementArray 消息元素数组
+	 * @return 消息ID列表
+	 */
+	public List<Long> sendMessageToGroupList(List<? extends OB11MsgElement> msgElementArray)
+	{
+		return sendMessageToGroupList(msgElementArray, true);
+	}
+
+	/**
+	 * 发送消息到群组列表
+	 * @param msgElementArray 消息元素数组
+	 * @param noCache 获取群组ID列表是否不使用缓存
+	 * @return 消息ID列表
+	 */
+	public List<Long> sendMessageToGroupList(List<? extends OB11MsgElement> msgElementArray, boolean noCache)
+	{
+		List<Long> messageIdList = new ArrayList<>();
+		List<Long> groupIdList = bot.getOB11GroupApiService().getGroupIdList(noCache);
+		if (!groupIdList.isEmpty())
+		{
+			groupIdList.forEach(groupId ->
+			{
+				messageIdList.add(sendGroupMessage(groupId, msgElementArray));
+			});
+		}
+		return messageIdList;
+	}
+
+	/**
 	 * 发送消息
 	 * @param messageType 消息类型
 	 * @param groupId 群聊ID
@@ -174,7 +282,11 @@ public class OB11MessageApiService
 			botServer = new BotServer(bot, OB11MessageApiPath.SEND_PRIVATE_MSG.getValue());
 			rootObject.put("user_id", userId);
 		}
-		else LOGGER.error("未知消息发送类型");
+		else
+		{
+			LOGGER.error("未知消息发送类型");
+			return -1;
+		}
 		JSONArray messageArray = new JSONArray();
 		msgElementArray.forEach(ob11MsgElement -> messageArray.put(ob11MsgElement.toJSONObject()));
 		rootObject.put("message", messageArray);
@@ -349,7 +461,11 @@ public class OB11MessageApiService
 		{
 			rootObject.put("user_id", userId);
 		}
-		else LOGGER.error("未知戳一戳类型 -> {}", pokeType);
+		else
+		{
+			LOGGER.error("未知戳一戳类型 -> {}", pokeType);
+			return new BotServer.APIRequestResult();
+		}
 		return botServer.sendRequest(rootObject.toString());
 	}
 
@@ -364,5 +480,23 @@ public class OB11MessageApiService
 		JSONObject rootObject = new JSONObject();
 		rootObject.put("message_id", messageId);
 		return botServer.sendRequest(rootObject.toString());
+	}
+
+	/**
+	 * 撤回消息（批量）
+	 * @param messageIdList 消息ID列表
+	 * @return API响应结果数据类
+	 */
+	public List<BotServer.APIRequestResult> deleteMessage(List<Long> messageIdList)
+	{
+		List<BotServer.APIRequestResult> apiRequestResultList = new ArrayList<>();
+		if (!messageIdList.isEmpty())
+		{
+			messageIdList.forEach(messageId ->
+			{
+				apiRequestResultList.add(deleteMessage(messageId));
+			});
+		}
+		return apiRequestResultList;
 	}
 }

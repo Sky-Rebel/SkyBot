@@ -1,7 +1,7 @@
 package com.github.sky_rebel.bot.event.handling.manage;
 
-import com.github.sky_rebel.bot.event.handling.listener.message.OB11MessageEventListener;
 import com.github.sky_rebel.bot.event.handling.listener.message.OB11GroupMessageEventListener;
+import com.github.sky_rebel.bot.event.handling.listener.message.OB11MessageEventListener;
 import com.github.sky_rebel.bot.event.handling.listener.message.OB11PrivateMessageEventListener;
 
 import java.util.ArrayList;
