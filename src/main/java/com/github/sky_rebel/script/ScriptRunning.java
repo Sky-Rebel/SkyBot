@@ -1,8 +1,9 @@
 package com.github.sky_rebel.script;
 
-import com.github.sky_rebel.bot.Bot;
-import com.github.sky_rebel.bot.api.OB11MessageApiService;
-import com.github.sky_rebel.bot.event.message.OB11GroupMessageEvent;
+import com.github.sky_rebel.skybot.Bot;
+import com.github.sky_rebel.skybot.api.OB11MessageApiService;
+import com.github.sky_rebel.skybot.event.message.OB11GroupMessageEvent;
+import com.github.sky_rebel.script.compile.ScriptCompiling;
 
 import java.util.List;
 import java.util.Map;

@@ -1,8 +1,9 @@
 package com.github.sky_rebel.script.compile;
 
-import com.github.sky_rebel.bot.util.logger.Logger;
+import com.github.sky_rebel.skybot.util.logger.SkybotLogger;
 import com.github.sky_rebel.script.CodeBlock;
 import com.github.sky_rebel.script.CompileResult;
+import com.github.sky_rebel.skybot.util.logger.Logger;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -13,12 +14,10 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.OptionalInt;
-import java.util.stream.IntStream;
 
 public class ScriptCompiling
 {
-	private static final Logger LOGGER = new Logger(ScriptCompiling.class);
+	private static final Logger LOGGER = SkybotLogger.getLogger(ScriptCompiling.class);
 
 	private static final String PRIVATE_TAG_START = "#私聊";
 

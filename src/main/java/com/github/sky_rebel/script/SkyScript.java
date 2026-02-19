@@ -1,8 +1,9 @@
 package com.github.sky_rebel.script;
 
-import com.github.sky_rebel.bot.Bot;
-import com.github.sky_rebel.bot.util.logger.Logger;
+import com.github.sky_rebel.skybot.Bot;
+import com.github.sky_rebel.skybot.util.logger.SkybotLogger;
 import com.github.sky_rebel.script.compile.ScriptCompiling;
+import com.github.sky_rebel.skybot.util.logger.Logger;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -23,7 +24,7 @@ public class SkyScript
 
 	private static final Path PRIVATE_MESSAGE_EVENT_SCRIPT_PATH = Path.of(SCRIPT_DIR, PRIVATE_MESSAGE_EVENT_SCRIPT);
 
-	private static final Logger LOGGER = new Logger(SkyScript.class);
+	private static final Logger LOGGER = SkybotLogger.getLogger(SkyScript.class);
 
 	public static void main(String[] args)
 	{

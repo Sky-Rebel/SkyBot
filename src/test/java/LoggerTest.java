@@ -1,9 +1,10 @@
-import com.github.sky_rebel.bot.Bot;
-import com.github.sky_rebel.bot.util.logger.Logger;
+import com.github.sky_rebel.skybot.Bot;
+import com.github.sky_rebel.skybot.util.logger.SkybotLogger;
+import com.github.sky_rebel.skybot.util.logger.Logger;
 
 public static void main()
 {
-	Logger logger = new Logger(Bot.class);
+	Logger logger = SkybotLogger.getLogger(Bot.class);
 	logger.debug("debug test");
 	logger.info("info test");
 	logger.warn("warn test");
