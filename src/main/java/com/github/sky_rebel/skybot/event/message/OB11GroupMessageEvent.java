@@ -1,17 +1,12 @@
 package com.github.sky_rebel.skybot.event.message;
 
-import com.github.sky_rebel.skybot.Bot;
 import com.github.sky_rebel.skybot.BotServer;
 import com.github.sky_rebel.skybot.api.OB11GroupApiService;
 import com.github.sky_rebel.skybot.api.OB11MessageApiService;
 import com.github.sky_rebel.skybot.event.OB11BaseMessageEvent;
-import com.github.sky_rebel.skybot.msg.OB11MessageSegment;
 import com.github.sky_rebel.skybot.msg.element.OB11MsgElement;
-import org.json.JSONObject;
 
 import java.util.List;
-
-import static com.github.sky_rebel.skybot.msg.OB11MessageSegment.getMessageElementArray;
 
 public class OB11GroupMessageEvent extends OB11BaseMessageEvent
 {

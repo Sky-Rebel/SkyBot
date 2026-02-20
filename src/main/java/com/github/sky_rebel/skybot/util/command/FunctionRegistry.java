@@ -1,11 +1,11 @@
 package com.github.sky_rebel.skybot.util.command;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
-public class GroupFunctionRegistry
+public class FunctionRegistry
 {
-	private static List<FunctionInfo> functionInfoList = new ArrayList<>();
+	private static List<FunctionInfo> functionInfoList = new LinkedList<>();
 
 	public static void registerCommand(FunctionInfo functionInfo)
 	{

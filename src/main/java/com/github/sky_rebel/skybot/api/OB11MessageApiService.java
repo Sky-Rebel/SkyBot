@@ -18,7 +18,7 @@ public class OB11MessageApiService
 {
 	private static final Logger LOGGER = LoggerFactory.getLogger(OB11MessageApiService.class);
 
-	private final Bot bot;
+	private Bot bot;
 
 	public OB11MessageApiService(Bot bot)
 	{
@@ -261,60 +261,6 @@ public class OB11MessageApiService
 	}
 
 	/**
-	 * 发送消息
-	 * @param messageType 消息类型
-	 * @param groupId 群聊ID
-	 * @param userId 私聊ID
-	 * @param msgElementArray 消息元素数组
-	 * @return 消息ID
-	 */
-	public long sendMessage(String messageType, long groupId, long userId, List<? extends OB11MsgElement> msgElementArray)
-	{
-		BotServer botServer = null;
-		JSONObject rootObject = new JSONObject();
-		if (messageType.equals("group"))
-		{
-			botServer = new BotServer(bot, OB11MessageApiPath.SEND_GROUP_MSG.getValue());
-			rootObject.put("group_id", groupId);
-		}
-		else if (messageType.equals("private"))
-		{
-			botServer = new BotServer(bot, OB11MessageApiPath.SEND_PRIVATE_MSG.getValue());
-			rootObject.put("user_id", userId);
-		}
-		else
-		{
-			LOGGER.error("未知消息发送类型");
-			return -1;
-		}
-		JSONArray messageArray = new JSONArray();
-		msgElementArray.forEach(ob11MsgElement -> messageArray.put(ob11MsgElement.toJSONObject()));
-		rootObject.put("message", messageArray);
-		BotServer.APIRequestResult apiRequestResult = null;
-		if (botServer != null)
-		{
-			apiRequestResult = botServer.sendRequest(rootObject.toString());
-			if (apiRequestResult != null)
-			{
-				if (apiRequestResult.data != null)
-				{
-					if (apiRequestResult.data instanceof JSONObject dataObject)
-					{
-						if (apiRequestResult.isSuccess) return dataObject.getLong("message_id");
-						else
-						{
-							int retCode = apiRequestResult.retcode;
-							String errorMsg = apiRequestResult.message;
-							LOGGER.error("sendMessage -> ".concat(String.valueOf(retCode)).concat(":").concat(errorMsg));
-						}
-					}
-				}
-			}
-		}
-		return -1;
-	}
-
-	/**
 	 * 转发群聊消息到群聊
 	 * @param groupId 群聊ID
 	 * @param messageId 消息ID
@@ -467,6 +413,60 @@ public class OB11MessageApiService
 			return new BotServer.APIRequestResult();
 		}
 		return botServer.sendRequest(rootObject.toString());
+	}
+
+	/**
+	 * 发送消息
+	 * @param messageType 消息类型
+	 * @param groupId 群聊ID
+	 * @param userId 私聊ID
+	 * @param msgElementArray 消息元素数组
+	 * @return 消息ID
+	 */
+	public long sendMessage(String messageType, long groupId, long userId, List<? extends OB11MsgElement> msgElementArray)
+	{
+		BotServer botServer = null;
+		JSONObject rootObject = new JSONObject();
+		if (messageType.equals("group"))
+		{
+			botServer = new BotServer(bot, OB11MessageApiService.OB11MessageApiPath.SEND_GROUP_MSG.getValue());
+			rootObject.put("group_id", groupId);
+		}
+		else if (messageType.equals("private"))
+		{
+			botServer = new BotServer(bot, OB11MessageApiService.OB11MessageApiPath.SEND_PRIVATE_MSG.getValue());
+			rootObject.put("user_id", userId);
+		}
+		else
+		{
+			LOGGER.error("未知消息发送类型");
+			return -1;
+		}
+		JSONArray messageArray = new JSONArray();
+		msgElementArray.forEach(ob11MsgElement -> messageArray.put(ob11MsgElement.toJSONObject()));
+		rootObject.put("message", messageArray);
+		BotServer.APIRequestResult apiRequestResult = null;
+		if (botServer != null)
+		{
+			apiRequestResult = botServer.sendRequest(rootObject.toString());
+			if (apiRequestResult != null)
+			{
+				if (apiRequestResult.data != null)
+				{
+					if (apiRequestResult.data instanceof JSONObject dataObject)
+					{
+						if (apiRequestResult.isSuccess) return dataObject.getLong("message_id");
+						else
+						{
+							int retCode = apiRequestResult.retcode;
+							String errorMsg = apiRequestResult.message;
+							LOGGER.error("sendMessage -> ".concat(String.valueOf(retCode)).concat(":").concat(errorMsg));
+						}
+					}
+				}
+			}
+		}
+		return -1;
 	}
 
 	/**
