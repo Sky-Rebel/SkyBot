@@ -91,7 +91,7 @@ public class OB11AccountApiService
 		AtomicReference<OB11MessageApiService> atomicReference = new AtomicReference<>();
 		if (isSuccessSend)
 		{
-			atomicReference.set(bot.getOB11MessageApiService());
+			atomicReference.set(bot.getMessageApiService());
 		}
 		if (!friendIdList.isEmpty())
 		{
@@ -126,7 +126,7 @@ public class OB11AccountApiService
 	 */
 	public BotServer.APIRequestResult sendLikeAndMessageIfSuccess(long userId, int times, String text)
 	{
-		OB11MessageApiService ob11MessageApiService = bot.getOB11MessageApiService();
+		OB11MessageApiService ob11MessageApiService = bot.getMessageApiService();
 		BotServer.APIRequestResult apiRequestResult = sendLike(userId, times);
 		if (apiRequestResult.isSuccess)
 		{

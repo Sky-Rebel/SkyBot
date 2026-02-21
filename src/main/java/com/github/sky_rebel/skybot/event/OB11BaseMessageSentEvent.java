@@ -17,24 +17,24 @@ public class OB11BaseMessageSentEvent extends OB11GroupMessageEvent
 	public enum Type
 	{
 		GROUP,
-		FRIEND
+		PRIVATE
 	}
 
 	public static OB11BaseMessageSentEvent getInstance(Bot bot, JSONObject json)
 	{
-		final String subType = json.optString("subType");
+		final String messageType = json.optString("message_type");
 		try
 		{
-			Type type = Type.valueOf(subType.toUpperCase());
+			Type type = Type.valueOf(messageType.toUpperCase());
 			return switch (type)
 			{
 				case GROUP -> createGroupMessageSentEvent(bot, json);
-				case FRIEND -> createPrivateMessageSentEvent(bot, json);
+				case PRIVATE -> createPrivateMessageSentEvent(bot, json);
 			};
 		}
 		catch (IllegalArgumentException e)
 		{
-			LOGGER.error("未知消息自发事件类型 -> {}", subType);
+			LOGGER.error("未知消息自发事件类型 -> {}", messageType);
 			return null;
 		}
 	}

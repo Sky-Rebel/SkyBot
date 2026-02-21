@@ -66,7 +66,7 @@ public class OB11FriendInfo
 		friendInfo.phoneNum = data.optString("phone_num");
 		friendInfo.email = data.optString("email");
 		friendInfo.categoryId = data.optInt("category_id", 0);
-		friendInfo.userId = data.optLong("user_id", 0L); // long 类型注意默认值用 0L
+		friendInfo.userId = data.optLong("user_id", 0L);
 		friendInfo.nickname = data.optString("nickname");
 		friendInfo.remark = data.optString("remark");
 		friendInfo.sex = data.optString("sex");

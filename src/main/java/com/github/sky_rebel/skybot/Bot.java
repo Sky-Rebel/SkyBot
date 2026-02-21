@@ -9,7 +9,7 @@ import com.github.sky_rebel.skybot.util.NapcatInstall;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.LinkedHashMap;
+import java.util.HashMap;
 import java.util.Map;
 
 public class Bot
@@ -22,7 +22,7 @@ public class Bot
 
 	private static boolean isUseDefConfig = false;
 
-	private static final Map<Long, Bot> botMap = new LinkedHashMap<>();
+	private static final Map<Long, Bot> botMap = new HashMap<>();
 
 	public static final String LAUNCHER_USER_BAT = "launcher-user.bat";
 
@@ -119,17 +119,17 @@ public class Bot
 		return null;
 	}
 
-	public OB11GroupApiService getOB11GroupApiService()
+	public OB11GroupApiService getGroupApiService()
 	{
 		return (OB11GroupApiService) getApiService(OB11GroupApiService.class);
 	}
 
-	public OB11MessageApiService getOB11MessageApiService()
+	public OB11MessageApiService getMessageApiService()
 	{
 		return (OB11MessageApiService) getApiService(OB11MessageApiService.class);
 	}
 
-	public OB11AccountApiService getOB11AccountApiService()
+	public OB11AccountApiService getAccountApiService()
 	{
 		return (OB11AccountApiService) getApiService(OB11AccountApiService.class);
 	}

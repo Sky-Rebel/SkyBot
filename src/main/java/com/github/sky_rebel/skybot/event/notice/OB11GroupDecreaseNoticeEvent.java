@@ -12,18 +12,10 @@ public class OB11GroupDecreaseNoticeEvent extends OB11BaseNoticeEvent
 
 	public enum DecreaseSubType
 	{
-		/**
-		 * 主动退群
-		 */
 		LEAVE,
 
-		/**
-		 * 被动退群
-		 */
 		KICK,
-		/**
-		 * Bot自身被动退群
-		 */
+
 		KICK_ME
 	}
 }

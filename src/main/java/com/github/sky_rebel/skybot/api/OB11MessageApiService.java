@@ -6,17 +6,18 @@ import com.github.sky_rebel.skybot.msg.element.OB11JsonMsgElement;
 import com.github.sky_rebel.skybot.msg.element.OB11MsgElement;
 import com.github.sky_rebel.skybot.msg.element.OB11ReplyMsgElement;
 import com.github.sky_rebel.skybot.msg.element.OB11TextMsgElement;
+import com.github.sky_rebel.skybot.util.command.MessageArrayEdit;
+import com.github.sky_rebel.skybot.util.logger.Logger;
+import com.github.sky_rebel.skybot.util.logger.SkybotLogger;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class OB11MessageApiService
 {
-	private static final Logger LOGGER = LoggerFactory.getLogger(OB11MessageApiService.class);
+	private static final Logger LOGGER = SkybotLogger.getLogger(OB11MessageApiService.class);
 
 	private Bot bot;
 
@@ -101,6 +102,17 @@ public class OB11MessageApiService
 	/**
 	 * 发送群聊消息
 	 * @param groupId 群聊ID
+	 * @param messageArrayEdit 消息元素数组编辑实例
+	 * @return 消息ID
+	 */
+	public long sendGroupMessage(long groupId, MessageArrayEdit messageArrayEdit)
+	{
+		return sendMessage("group", groupId, 0, messageArrayEdit);
+	}
+
+	/**
+	 * 发送群聊消息
+	 * @param groupId 群聊ID
 	 * @param msgElementArray 消息元素数组
 	 * @return 消息ID
 	 */
@@ -142,6 +154,17 @@ public class OB11MessageApiService
 	/**
 	 * 发送私聊消息
 	 * @param userId 私聊ID
+	 * @param messageArrayEdit 消息元素数组编辑实例
+	 * @return 消息ID
+	 */
+	public long sendPrivateMessage(long userId, MessageArrayEdit messageArrayEdit)
+	{
+		return sendMessage("private", 0, userId, messageArrayEdit);
+	}
+
+	/**
+	 * 发送私聊消息
+	 * @param userId 私聊ID
 	 * @param msgElementArray 消息元素数组
 	 * @return 消息ID
 	 */
@@ -155,9 +178,9 @@ public class OB11MessageApiService
 	 * @param text 文本内容
 	 * @return 消息ID列表
 	 */
-	public List<Long> sendTextMessageToFriendList(String text)
+	public List<Long> sendFriendListTextMessage(String text)
 	{
-		return sendTextMessageToFriendList(text, true);
+		return sendFriendListTextMessage(text, true);
 	}
 
 	/**
@@ -166,13 +189,23 @@ public class OB11MessageApiService
 	 * @param noCache 获取好友ID列表是否不使用缓存
 	 * @return 消息ID列表
 	 */
-	public List<Long> sendTextMessageToFriendList(String text, boolean noCache)
+	public List<Long> sendFriendListTextMessage(String text, boolean noCache)
 	{
 		List<OB11MsgElement> msgElementArray = new ArrayList<>();
 		OB11TextMsgElement ob11TextMsgElement = new OB11TextMsgElement();
 		ob11TextMsgElement.setText(text);
 		msgElementArray.add(ob11TextMsgElement);
-		return sendMessageToFriendList(msgElementArray, noCache);
+		return sendFriendListMessage(msgElementArray, noCache);
+	}
+
+	/**
+	 * 发送消息到好友列表
+	 * @param messageArrayEdit 消息元素数组编辑实例
+	 * @return 消息ID列表
+	 */
+	public List<Long> sendFriendListMessage(MessageArrayEdit messageArrayEdit)
+	{
+		return sendFriendListMessage(messageArrayEdit, true);
 	}
 
 	/**
@@ -180,9 +213,20 @@ public class OB11MessageApiService
 	 * @param msgElementArray 消息元素数组
 	 * @return 消息ID列表
 	 */
-	public List<Long> sendMessageToFriendList(List<? extends OB11MsgElement> msgElementArray)
+	public List<Long> sendFriendListMessage(List<? extends OB11MsgElement> msgElementArray)
 	{
-		return sendMessageToFriendList(msgElementArray, true);
+		return sendFriendListMessage(msgElementArray, true);
+	}
+
+	/**
+	 * 发送消息到好友列表
+	 * @param messageArrayEdit 消息元素数组编辑实例
+	 * @param noCache 获取好友ID列表是否不使用缓存
+	 * @return 消息ID列表
+	 */
+	public List<Long> sendFriendListMessage(MessageArrayEdit messageArrayEdit, boolean noCache)
+	{
+		return sendFriendListMessage(messageArrayEdit.getMessageElementList(), noCache);
 	}
 
 	/**
@@ -191,10 +235,10 @@ public class OB11MessageApiService
 	 * @param noCache 获取好友ID列表是否不使用缓存
 	 * @return 消息ID列表
 	 */
-	public List<Long> sendMessageToFriendList(List<? extends OB11MsgElement> msgElementArray, boolean noCache)
+	public List<Long> sendFriendListMessage(List<? extends OB11MsgElement> msgElementArray, boolean noCache)
 	{
 		List<Long> messageIdList = new ArrayList<>();
-		List<Long> friendIdList = bot.getOB11AccountApiService().getFriendIdList(noCache);
+		List<Long> friendIdList = bot.getAccountApiService().getFriendIdList(noCache);
 		if (!friendIdList.isEmpty())
 		{
 			friendIdList.forEach(friendId ->
@@ -210,9 +254,9 @@ public class OB11MessageApiService
 	 * @param text 文本内容
 	 * @return 消息ID列表
 	 */
-	public List<Long> sendTextMessageToGroupList(String text)
+	public List<Long> sendGroupListTextMessage(String text)
 	{
-		return sendTextMessageToGroupList(text, true);
+		return sendGroupListTextMessage(text, true);
 	}
 
 	/**
@@ -221,13 +265,23 @@ public class OB11MessageApiService
 	 * @param noCache 获取群组ID列表是否不使用缓存
 	 * @return 消息ID列表
 	 */
-	public List<Long> sendTextMessageToGroupList(String text, boolean noCache)
+	public List<Long> sendGroupListTextMessage(String text, boolean noCache)
 	{
 		List<OB11MsgElement> msgElementArray = new ArrayList<>();
 		OB11TextMsgElement ob11TextMsgElement = new OB11TextMsgElement();
 		ob11TextMsgElement.setText(text);
 		msgElementArray.add(ob11TextMsgElement);
-		return sendMessageToGroupList(msgElementArray, noCache);
+		return sendGroupListMessage(msgElementArray, noCache);
+	}
+
+	/**
+	 * 发送消息到群组列表
+	 * @param messageArrayEdit 消息元素数组编辑实例
+	 * @return 消息ID列表
+	 */
+	public List<Long> sendGroupListMessage(MessageArrayEdit messageArrayEdit)
+	{
+		return sendGroupListMessage(messageArrayEdit, true);
 	}
 
 	/**
@@ -235,9 +289,20 @@ public class OB11MessageApiService
 	 * @param msgElementArray 消息元素数组
 	 * @return 消息ID列表
 	 */
-	public List<Long> sendMessageToGroupList(List<? extends OB11MsgElement> msgElementArray)
+	public List<Long> sendGroupListMessage(List<? extends OB11MsgElement> msgElementArray)
 	{
-		return sendMessageToGroupList(msgElementArray, true);
+		return sendGroupListMessage(msgElementArray, true);
+	}
+
+	/**
+	 * 发送消息到群组列表
+	 * @param messageArrayEdit 消息元素数组编辑实例
+	 * @param noCache 获取群组ID列表是否不使用缓存
+	 * @return 消息ID列表
+	 */
+	public List<Long> sendGroupListMessage(MessageArrayEdit messageArrayEdit, boolean noCache)
+	{
+		return sendGroupListMessage(messageArrayEdit.getMessageElementList(), noCache);
 	}
 
 	/**
@@ -246,10 +311,10 @@ public class OB11MessageApiService
 	 * @param noCache 获取群组ID列表是否不使用缓存
 	 * @return 消息ID列表
 	 */
-	public List<Long> sendMessageToGroupList(List<? extends OB11MsgElement> msgElementArray, boolean noCache)
+	public List<Long> sendGroupListMessage(List<? extends OB11MsgElement> msgElementArray, boolean noCache)
 	{
 		List<Long> messageIdList = new ArrayList<>();
-		List<Long> groupIdList = bot.getOB11GroupApiService().getGroupIdList(noCache);
+		List<Long> groupIdList = bot.getGroupApiService().getGroupIdList(noCache);
 		if (!groupIdList.isEmpty())
 		{
 			groupIdList.forEach(groupId ->
@@ -258,6 +323,73 @@ public class OB11MessageApiService
 			});
 		}
 		return messageIdList;
+	}
+
+	/**
+	 * 发送消息
+	 * @param messageType 消息类型
+	 * @param groupId 群聊ID
+	 * @param userId 私聊ID
+	 * @param messageArrayEdit 消息元素数组编辑实例
+	 * @return 消息ID
+	 */
+	public long sendMessage(String messageType, long groupId, long userId, MessageArrayEdit messageArrayEdit)
+	{
+		return sendMessage(messageType, groupId, userId, messageArrayEdit.getMessageElementList());
+	}
+
+	/**
+	 * 发送消息
+	 * @param messageType 消息类型
+	 * @param groupId 群聊ID
+	 * @param userId 私聊ID
+	 * @param msgElementArray 消息元素数组
+	 * @return 消息ID
+	 */
+	public long sendMessage(String messageType, long groupId, long userId, List<? extends OB11MsgElement> msgElementArray)
+	{
+		BotServer botServer = null;
+		JSONObject rootObject = new JSONObject();
+		if (messageType.equals("group"))
+		{
+			botServer = new BotServer(bot, OB11MessageApiService.OB11MessageApiPath.SEND_GROUP_MSG.getValue());
+			rootObject.put("group_id", groupId);
+		}
+		else if (messageType.equals("private"))
+		{
+			botServer = new BotServer(bot, OB11MessageApiService.OB11MessageApiPath.SEND_PRIVATE_MSG.getValue());
+			rootObject.put("user_id", userId);
+		}
+		else
+		{
+			LOGGER.error("未知消息发送类型");
+			return -1;
+		}
+		JSONArray messageArray = new JSONArray();
+		msgElementArray.forEach(ob11MsgElement -> messageArray.put(ob11MsgElement.toJSONObject()));
+		rootObject.put("message", messageArray);
+		BotServer.APIRequestResult apiRequestResult = null;
+		if (botServer != null)
+		{
+			apiRequestResult = botServer.sendRequest(rootObject.toString());
+			if (apiRequestResult != null)
+			{
+				if (apiRequestResult.data != null)
+				{
+					if (apiRequestResult.data instanceof JSONObject dataObject)
+					{
+						if (apiRequestResult.isSuccess) return dataObject.getLong("message_id");
+						else
+						{
+							int retCode = apiRequestResult.retcode;
+							String errorMsg = apiRequestResult.message;
+							LOGGER.error("sendMessage -> ".concat(String.valueOf(retCode)).concat(":").concat(errorMsg));
+						}
+					}
+				}
+			}
+		}
+		return -1;
 	}
 
 	/**
@@ -413,60 +545,6 @@ public class OB11MessageApiService
 			return new BotServer.APIRequestResult();
 		}
 		return botServer.sendRequest(rootObject.toString());
-	}
-
-	/**
-	 * 发送消息
-	 * @param messageType 消息类型
-	 * @param groupId 群聊ID
-	 * @param userId 私聊ID
-	 * @param msgElementArray 消息元素数组
-	 * @return 消息ID
-	 */
-	public long sendMessage(String messageType, long groupId, long userId, List<? extends OB11MsgElement> msgElementArray)
-	{
-		BotServer botServer = null;
-		JSONObject rootObject = new JSONObject();
-		if (messageType.equals("group"))
-		{
-			botServer = new BotServer(bot, OB11MessageApiService.OB11MessageApiPath.SEND_GROUP_MSG.getValue());
-			rootObject.put("group_id", groupId);
-		}
-		else if (messageType.equals("private"))
-		{
-			botServer = new BotServer(bot, OB11MessageApiService.OB11MessageApiPath.SEND_PRIVATE_MSG.getValue());
-			rootObject.put("user_id", userId);
-		}
-		else
-		{
-			LOGGER.error("未知消息发送类型");
-			return -1;
-		}
-		JSONArray messageArray = new JSONArray();
-		msgElementArray.forEach(ob11MsgElement -> messageArray.put(ob11MsgElement.toJSONObject()));
-		rootObject.put("message", messageArray);
-		BotServer.APIRequestResult apiRequestResult = null;
-		if (botServer != null)
-		{
-			apiRequestResult = botServer.sendRequest(rootObject.toString());
-			if (apiRequestResult != null)
-			{
-				if (apiRequestResult.data != null)
-				{
-					if (apiRequestResult.data instanceof JSONObject dataObject)
-					{
-						if (apiRequestResult.isSuccess) return dataObject.getLong("message_id");
-						else
-						{
-							int retCode = apiRequestResult.retcode;
-							String errorMsg = apiRequestResult.message;
-							LOGGER.error("sendMessage -> ".concat(String.valueOf(retCode)).concat(":").concat(errorMsg));
-						}
-					}
-				}
-			}
-		}
-		return -1;
 	}
 
 	/**

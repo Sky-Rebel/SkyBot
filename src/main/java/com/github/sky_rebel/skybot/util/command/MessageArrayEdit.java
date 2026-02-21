@@ -1,5 +1,6 @@
 package com.github.sky_rebel.skybot.util.command;
 
+import com.github.sky_rebel.skybot.Bot;
 import com.github.sky_rebel.skybot.event.OB11BaseMessageEvent;
 import com.github.sky_rebel.skybot.event.message.OB11GroupMessageEvent;
 import com.github.sky_rebel.skybot.event.message.OB11PrivateMessageEvent;
@@ -10,6 +11,7 @@ import com.github.sky_rebel.skybot.util.logger.Logger;
 import com.github.sky_rebel.skybot.util.logger.SkybotLogger;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -22,11 +24,18 @@ public class MessageArrayEdit
 
 	private static final List<OB11MsgElement> MESSAGE_ELEMENT_LIST = new LinkedList<>();
 
-	private final OB11BaseMessageEvent ob11BaseMessageEvent;
+	private OB11BaseMessageEvent ob11BaseMessageEvent;
+
+	private Bot bot;
+
+	public MessageArrayEdit(Bot bot)
+	{
+		this.bot = bot;
+	}
 
 	public MessageArrayEdit(OB11BaseMessageEvent event)
 	{
-		ob11BaseMessageEvent = event;
+		this.ob11BaseMessageEvent = event;
 	}
 
 	public MessageArrayEdit addAtAll()
@@ -72,7 +81,7 @@ public class MessageArrayEdit
 
 	public MessageArrayEdit addTab(int count)
 	{
-		addText("-".repeat(count));
+		addText("-".repeat(count)).addLine();
 		return this;
 	}
 
@@ -92,32 +101,98 @@ public class MessageArrayEdit
 		return addText(SIMPLE_DATE_FORMAT.format(new Date()));
 	}
 
-
 	public long sendMessage()
 	{
 		return sendMessage(ob11BaseMessageEvent);
+	}
+
+	public long sendGroupMessage(long groupId)
+	{
+		return sendMessage(bot, true, groupId, 0);
+	}
+
+	public long sendPrivateMessage(long userId)
+	{
+		return sendMessage(bot, false, 0, userId);
+	}
+
+	public long sendMessageToMaster()
+	{
+		if (bot == null)
+		{
+			LOGGER.error("Bot实例为空，无法获取主人ID");
+			return -1;
+		}
+		long masterId = bot.getBotConfig().skybotConfig.master;
+		if (masterId == -1)
+		{
+			LOGGER.error("主人ID未配置，无法发送消息");
+			return -1;
+		}
+		return sendMessage(bot, false, 0, masterId);
+	}
+
+	public long sendMessageToMainGroup()
+	{
+		if (bot == null)
+		{
+			LOGGER.error("Bot实例为空，无法获取主群ID");
+			return -1;
+		}
+		long mainGroupId = bot.getBotConfig().skybotConfig.mainGroup;
+		if (mainGroupId == -1)
+		{
+			LOGGER.error("主群ID未配置，无法发送消息");
+			return -1;
+		}
+		return sendMessage(bot, true, mainGroupId, 0);
+	}
+
+	private long sendMessage(Bot bot, boolean isGroup, long groupId, long userId)
+	{
+		if (bot == null)
+		{
+			LOGGER.error("Bot实例为空，无法发送消息");
+			return -1;
+		}
+		if (isGroup)
+		{
+			return bot.getMessageApiService().sendGroupMessage(groupId, MESSAGE_ELEMENT_LIST);
+		}
+		else
+		{
+			return bot.getMessageApiService().sendPrivateMessage(userId, MESSAGE_ELEMENT_LIST);
+
+		}
 	}
 
 	private long sendMessage(OB11BaseMessageEvent event)
 	{
 		if (event == null)
 		{
-			LOGGER.error("Event实例为空");
+			LOGGER.error("Event实例为空，无法发送消息");
 			return -1;
 		}
 		if (event.bot == null)
 		{
-			LOGGER.error("Bot实例为空");
+			LOGGER.error("Bot实例为空，无法发送消息");
 			return -1;
 		}
 		boolean isGroupMsgEvent = event instanceof OB11GroupMessageEvent;
+		List<OB11MsgElement> msgElementList = new ArrayList<>(MESSAGE_ELEMENT_LIST);
+		MESSAGE_ELEMENT_LIST.clear();
 		if (isGroupMsgEvent)
 		{
-			return event.bot.getOB11MessageApiService().sendGroupMessage(((OB11GroupMessageEvent) event).groupId, MESSAGE_ELEMENT_LIST);
+			return event.bot.getMessageApiService().sendGroupMessage(((OB11GroupMessageEvent) event).groupId, msgElementList);
 		}
 		else
 		{
-			return event.bot.getOB11MessageApiService().sendGroupMessage(((OB11PrivateMessageEvent) event).userId, MESSAGE_ELEMENT_LIST);
+			return event.bot.getMessageApiService().sendPrivateMessage(((OB11PrivateMessageEvent) event).userId, msgElementList);
 		}
+	}
+
+	public List<OB11MsgElement> getMessageElementList()
+	{
+		return MESSAGE_ELEMENT_LIST;
 	}
 }

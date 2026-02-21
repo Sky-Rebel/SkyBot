@@ -50,7 +50,7 @@ public class OB11MessageSegment
 
 	public static List<Long> getAtList(List<OB11MsgElement> ob11MsgElementList)
 	{
-		List<Long> atList = new LinkedList<>();
+		List<Long> atList = new ArrayList<>();
 		ob11MsgElementList.forEach(messageElementObject ->
 		{
 			OB11MsgElement.ElementType elementType = messageElementObject.getElementType();

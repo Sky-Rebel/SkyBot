@@ -89,11 +89,11 @@ public class OB11GroupMessageEvent extends OB11BaseMessageEvent
 
 	private OB11GroupApiService getOB11GroupApiService()
 	{
-		return bot.getOB11GroupApiService();
+		return bot.getGroupApiService();
 	}
 
 	private OB11MessageApiService getOB11MessageApiService()
 	{
-		return bot.getOB11MessageApiService();
+		return bot.getMessageApiService();
 	}
 }

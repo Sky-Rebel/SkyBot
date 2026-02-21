@@ -60,8 +60,8 @@ public class SpringFestivalCountdown
 							Bot bot = Bot.getFirstBot();
 							if (bot != null)
 							{
-								bot.getOB11MessageApiService().sendTextMessageToFriendList(msg);
-								bot.getOB11MessageApiService().sendTextMessageToGroupList(msg);
+								bot.getMessageApiService().sendFriendListTextMessage(msg);
+								bot.getMessageApiService().sendGroupListTextMessage(msg);
 							}
 						}
 						catch (Exception e)

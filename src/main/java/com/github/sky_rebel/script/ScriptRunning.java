@@ -12,7 +12,7 @@ public class ScriptRunning
 {
 	public static void run(Bot bot, OB11GroupMessageEvent ob11GroupMessageEvent)
 	{
-		OB11MessageApiService ob11MessageApiService = bot.getOB11MessageApiService();
+		OB11MessageApiService ob11MessageApiService = bot.getMessageApiService();
 		List<CodeBlock> groupCodeBlock = ScriptCompiling.getGroupCodeBlockList();
 		if (!groupCodeBlock.isEmpty())
 		{
