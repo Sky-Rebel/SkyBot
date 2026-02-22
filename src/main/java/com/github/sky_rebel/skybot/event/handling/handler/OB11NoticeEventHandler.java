@@ -2,7 +2,7 @@ package com.github.sky_rebel.skybot.event.handling.handler;
 
 import com.github.sky_rebel.skybot.Bot;
 import com.github.sky_rebel.skybot.event.handling.listener.OB11NoticeEventListener;
-import com.github.sky_rebel.skybot.event.handling.manage.OB11EventListenerManage;
+import com.github.sky_rebel.skybot.event.handling.listener.manage.OB11EventListenerManage;
 import com.github.sky_rebel.skybot.event.notice.OB11BotOfflineNoticeEvent;
 import com.github.sky_rebel.skybot.event.notice.OB11FriendAddNoticeEvent;
 import com.github.sky_rebel.skybot.event.notice.OB11FriendRecallNoticeEvent;

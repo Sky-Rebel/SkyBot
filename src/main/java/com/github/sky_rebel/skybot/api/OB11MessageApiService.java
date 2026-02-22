@@ -1,7 +1,7 @@
 package com.github.sky_rebel.skybot.api;
 
 import com.github.sky_rebel.skybot.Bot;
-import com.github.sky_rebel.skybot.BotServer;
+import com.github.sky_rebel.skybot.BotApiService;
 import com.github.sky_rebel.skybot.msg.element.OB11JsonMsgElement;
 import com.github.sky_rebel.skybot.msg.element.OB11MsgElement;
 import com.github.sky_rebel.skybot.msg.element.OB11ReplyMsgElement;
@@ -348,16 +348,16 @@ public class OB11MessageApiService
 	 */
 	public long sendMessage(String messageType, long groupId, long userId, List<? extends OB11MsgElement> msgElementArray)
 	{
-		BotServer botServer = null;
+		BotApiService botApiService = null;
 		JSONObject rootObject = new JSONObject();
 		if (messageType.equals("group"))
 		{
-			botServer = new BotServer(bot, OB11MessageApiService.OB11MessageApiPath.SEND_GROUP_MSG.getValue());
+			botApiService = new BotApiService(bot, OB11MessageApiService.OB11MessageApiPath.SEND_GROUP_MSG.getValue());
 			rootObject.put("group_id", groupId);
 		}
 		else if (messageType.equals("private"))
 		{
-			botServer = new BotServer(bot, OB11MessageApiService.OB11MessageApiPath.SEND_PRIVATE_MSG.getValue());
+			botApiService = new BotApiService(bot, OB11MessageApiService.OB11MessageApiPath.SEND_PRIVATE_MSG.getValue());
 			rootObject.put("user_id", userId);
 		}
 		else
@@ -368,10 +368,10 @@ public class OB11MessageApiService
 		JSONArray messageArray = new JSONArray();
 		msgElementArray.forEach(ob11MsgElement -> messageArray.put(ob11MsgElement.toJSONObject()));
 		rootObject.put("message", messageArray);
-		BotServer.APIRequestResult apiRequestResult = null;
-		if (botServer != null)
+		BotApiService.APIRequestResult apiRequestResult = null;
+		if (botApiService != null)
 		{
-			apiRequestResult = botServer.sendRequest(rootObject.toString());
+			apiRequestResult = botApiService.sendRequest(rootObject.toString());
 			if (apiRequestResult != null)
 			{
 				if (apiRequestResult.data != null)
@@ -398,7 +398,7 @@ public class OB11MessageApiService
 	 * @param messageId 消息ID
 	 * @return API响应结果数据类
 	 */
-	public BotServer.APIRequestResult forwardGroupMessageToGroup(long groupId, long messageId)
+	public BotApiService.APIRequestResult forwardGroupMessageToGroup(long groupId, long messageId)
 	{
 		return forwardGroupMessage("group", groupId, 0, messageId);
 	}
@@ -409,7 +409,7 @@ public class OB11MessageApiService
 	 * @param messageId 消息ID
 	 * @return API响应结果数据类
 	 */
-	public BotServer.APIRequestResult forwardGroupMessageToPrivate(long userId, long messageId)
+	public BotApiService.APIRequestResult forwardGroupMessageToPrivate(long userId, long messageId)
 	{
 		return forwardGroupMessage("group", 0, userId, messageId);
 	}
@@ -422,7 +422,7 @@ public class OB11MessageApiService
 	 * @param messageId 消息ID
 	 * @return API响应结果数据类
 	 */
-	public BotServer.APIRequestResult forwardGroupMessage(String forwardTargetType, long groupId, long userId, long messageId)
+	public BotApiService.APIRequestResult forwardGroupMessage(String forwardTargetType, long groupId, long userId, long messageId)
 	{
 		return forwardMessage("group", forwardTargetType, groupId, userId, messageId);
 	}
@@ -433,7 +433,7 @@ public class OB11MessageApiService
 	 * @param messageId 消息ID
 	 * @return API响应结果数据类
 	 */
-	public BotServer.APIRequestResult forwardPrivateMessageToGroup(long groupId, long messageId)
+	public BotApiService.APIRequestResult forwardPrivateMessageToGroup(long groupId, long messageId)
 	{
 		return forwardPrivateMessage("group", groupId, 0, messageId);
 	}
@@ -444,7 +444,7 @@ public class OB11MessageApiService
 	 * @param messageId 消息ID
 	 * @return API响应结果数据类
 	 */
-	public BotServer.APIRequestResult forwardPrivateMessageToPrivate(long userId, long messageId)
+	public BotApiService.APIRequestResult forwardPrivateMessageToPrivate(long userId, long messageId)
 	{
 		return forwardPrivateMessage("private", 0, userId, messageId);
 	}
@@ -457,7 +457,7 @@ public class OB11MessageApiService
 	 * @param messageId 消息ID
 	 * @return API响应结果数据类
 	 */
-	public BotServer.APIRequestResult forwardPrivateMessage(String forwardTargetType, long groupId, long userId, long messageId)
+	public BotApiService.APIRequestResult forwardPrivateMessage(String forwardTargetType, long groupId, long userId, long messageId)
 	{
 		return forwardMessage("private", forwardTargetType, groupId, userId, messageId);
 	}
@@ -471,31 +471,31 @@ public class OB11MessageApiService
 	 * @param messageId 消息ID
 	 * @return API响应结果数据类
 	 */
-	public BotServer.APIRequestResult forwardMessage(String forwardMessageType, String forwardTargetType, long groupId, long userId, long messageId)
+	public BotApiService.APIRequestResult forwardMessage(String forwardMessageType, String forwardTargetType, long groupId, long userId, long messageId)
 	{
-		BotServer botServer = null;
+		BotApiService botApiService = null;
 		JSONObject rootObject = new JSONObject();
 		if (forwardMessageType.equals("group"))
 		{
-			botServer = new BotServer(bot, OB11MessageApiPath.FORWARD_GROUP_SINGLE_MSG.getValue());
+			botApiService = new BotApiService(bot, OB11MessageApiPath.FORWARD_GROUP_SINGLE_MSG.getValue());
 			if (forwardTargetType.equals("group")) rootObject.put("group_id", groupId);
 			else if (forwardTargetType.equals("private")) rootObject.put("user_id", userId);
 			else LOGGER.error("未知群聊消息转发类型 -> {}", forwardTargetType);
 		}
 		else if (forwardMessageType.equals("private"))
 		{
-			botServer = new BotServer(bot, OB11MessageApiPath.FORWARD_FRIEND_SINGLE_MSG.getValue());
+			botApiService = new BotApiService(bot, OB11MessageApiPath.FORWARD_FRIEND_SINGLE_MSG.getValue());
 			if (forwardTargetType.equals("group")) rootObject.put("group_id", groupId);
 			else if (forwardTargetType.equals("private")) rootObject.put("user_id", userId);
 			else LOGGER.error("未知私聊消息转发类型 -> {}", forwardTargetType);
 		}
 		else LOGGER.error("未知转发消息类型 -> {}", forwardMessageType);
 		rootObject.put("message_id", messageId);
-		if (botServer != null)
+		if (botApiService != null)
 		{
-			return botServer.sendRequest(rootObject.toString());
+			return botApiService.sendRequest(rootObject.toString());
 		}
-		return new BotServer.APIRequestResult();
+		return new BotApiService.APIRequestResult();
 	}
 
 	/**
@@ -504,7 +504,7 @@ public class OB11MessageApiService
 	 * @param userId 用户ID
 	 * @return API响应结果数据类
 	 */
-	public BotServer.APIRequestResult sendGroupPoke(long groupId, long userId)
+	public BotApiService.APIRequestResult sendGroupPoke(long groupId, long userId)
 	{
 		return sendPoke("group", groupId, userId);
 	}
@@ -514,7 +514,7 @@ public class OB11MessageApiService
 	 * @param userId 私聊ID
 	 * @return API响应结果数据类
 	 */
-	public BotServer.APIRequestResult sendPrivatePoke(long userId)
+	public BotApiService.APIRequestResult sendPrivatePoke(long userId)
 	{
 		return sendPoke("private", 0, userId);
 	}
@@ -526,9 +526,9 @@ public class OB11MessageApiService
 	 * @param userId 用户ID
 	 * @return API响应结果数据类
 	 */
-	public BotServer.APIRequestResult sendPoke(String pokeType, long groupId, long userId)
+	public BotApiService.APIRequestResult sendPoke(String pokeType, long groupId, long userId)
 	{
-		BotServer botServer = new BotServer(bot, OB11MessageApiPath.SEND_POKE.getValue());
+		BotApiService botApiService = new BotApiService(bot, OB11MessageApiPath.SEND_POKE.getValue());
 		JSONObject rootObject = new JSONObject();
 		if (pokeType.equals("group"))
 		{
@@ -542,9 +542,9 @@ public class OB11MessageApiService
 		else
 		{
 			LOGGER.error("未知戳一戳类型 -> {}", pokeType);
-			return new BotServer.APIRequestResult();
+			return new BotApiService.APIRequestResult();
 		}
-		return botServer.sendRequest(rootObject.toString());
+		return botApiService.sendRequest(rootObject.toString());
 	}
 
 	/**
@@ -552,12 +552,12 @@ public class OB11MessageApiService
 	 * @param messageId 消息ID
 	 * @return API响应结果数据类
 	 */
-	public BotServer.APIRequestResult deleteMessage(long messageId)
+	public BotApiService.APIRequestResult deleteMessage(long messageId)
 	{
-		BotServer botServer = new BotServer(bot, OB11MessageApiPath.DELETE_MSG.getValue());
+		BotApiService botApiService = new BotApiService(bot, OB11MessageApiPath.DELETE_MSG.getValue());
 		JSONObject rootObject = new JSONObject();
 		rootObject.put("message_id", messageId);
-		return botServer.sendRequest(rootObject.toString());
+		return botApiService.sendRequest(rootObject.toString());
 	}
 
 	/**
@@ -565,9 +565,9 @@ public class OB11MessageApiService
 	 * @param messageIdList 消息ID列表
 	 * @return API响应结果数据类
 	 */
-	public List<BotServer.APIRequestResult> deleteMessage(List<Long> messageIdList)
+	public List<BotApiService.APIRequestResult> deleteMessage(List<Long> messageIdList)
 	{
-		List<BotServer.APIRequestResult> apiRequestResultList = new ArrayList<>();
+		List<BotApiService.APIRequestResult> apiRequestResultList = new ArrayList<>();
 		if (!messageIdList.isEmpty())
 		{
 			messageIdList.forEach(messageId ->

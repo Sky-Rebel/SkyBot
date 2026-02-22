@@ -4,7 +4,7 @@ import com.github.sky_rebel.skybot.event.message.OB11GroupMessageEvent;
 
 import java.util.function.Consumer;
 
-public class FunctionInfo
+public class BotFunctionInfo
 {
 	public String command;
 

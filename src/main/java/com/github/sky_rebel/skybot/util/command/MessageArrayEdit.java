@@ -155,15 +155,8 @@ public class MessageArrayEdit
 			LOGGER.error("Bot实例为空，无法发送消息");
 			return -1;
 		}
-		if (isGroup)
-		{
-			return bot.getMessageApiService().sendGroupMessage(groupId, MESSAGE_ELEMENT_LIST);
-		}
-		else
-		{
-			return bot.getMessageApiService().sendPrivateMessage(userId, MESSAGE_ELEMENT_LIST);
-
-		}
+		String messageType = isGroup ? "group" : "private";
+		return bot.getMessageApiService().sendMessage(messageType, groupId, userId, MESSAGE_ELEMENT_LIST);
 	}
 
 	private long sendMessage(OB11BaseMessageEvent event)
@@ -173,7 +166,7 @@ public class MessageArrayEdit
 			LOGGER.error("Event实例为空，无法发送消息");
 			return -1;
 		}
-		if (event.bot == null)
+		if (event.getBot() == null)
 		{
 			LOGGER.error("Bot实例为空，无法发送消息");
 			return -1;
@@ -183,11 +176,11 @@ public class MessageArrayEdit
 		MESSAGE_ELEMENT_LIST.clear();
 		if (isGroupMsgEvent)
 		{
-			return event.bot.getMessageApiService().sendGroupMessage(((OB11GroupMessageEvent) event).groupId, msgElementList);
+			return event.getBot().getMessageApiService().sendGroupMessage(((OB11GroupMessageEvent)event).getGroupId(), msgElementList);
 		}
 		else
 		{
-			return event.bot.getMessageApiService().sendPrivateMessage(((OB11PrivateMessageEvent) event).userId, msgElementList);
+			return event.getBot().getMessageApiService().sendPrivateMessage(((OB11PrivateMessageEvent)event).getUserId(), msgElementList);
 		}
 	}
 

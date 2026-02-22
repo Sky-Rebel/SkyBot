@@ -18,7 +18,7 @@ public class ScriptRunning
 		{
 			groupCodeBlock.forEach(codeBlock ->
 			{
-				if (ob11GroupMessageEvent.rawMessage.equals(codeBlock.getCommand().trim()))
+				if (ob11GroupMessageEvent.getRawMessage().equals(codeBlock.getCommand().trim()))
 				{
 					Map<Integer, List<String>> operation = codeBlock.getOperation();
 					operation.forEach((operationCode, params) ->
@@ -27,7 +27,7 @@ public class ScriptRunning
 						{
 							case 0x0 ->
 							{
-								ob11MessageApiService.sendGroupTextMessage(ob11GroupMessageEvent.groupId, params.getFirst());
+								ob11MessageApiService.sendGroupTextMessage(ob11GroupMessageEvent.getGroupId(), params.getFirst());
 							}
 						}
 					});

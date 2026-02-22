@@ -1,6 +1,6 @@
 package com.github.sky_rebel.skybot.event.message;
 
-import com.github.sky_rebel.skybot.BotServer;
+import com.github.sky_rebel.skybot.BotApiService;
 import com.github.sky_rebel.skybot.api.OB11GroupApiService;
 import com.github.sky_rebel.skybot.api.OB11MessageApiService;
 import com.github.sky_rebel.skybot.event.OB11BaseMessageEvent;
@@ -10,35 +10,115 @@ import java.util.List;
 
 public class OB11GroupMessageEvent extends OB11BaseMessageEvent
 {
-	public long groupId;
+	private long groupId;
 
-	public Sender sender;
+	private Sender sender;
 
-	public boolean hasAt;
+	private boolean hasAt;
 
-	public List<Long> atList;
+	private List<Long> atList;
+
+	public long getGroupId()
+	{
+		return groupId;
+	}
+
+	public void setGroupId(long groupId)
+	{
+		this.groupId = groupId;
+	}
+
+	public Sender getSender()
+	{
+		return sender;
+	}
+
+	public void setSender(Sender sender)
+	{
+		this.sender = sender;
+	}
+
+	public boolean isHasAt()
+	{
+		return hasAt;
+	}
+
+	public void setHasAt(boolean hasAt)
+	{
+		this.hasAt = hasAt;
+	}
+
+	public List<Long> getAtList()
+	{
+		return atList;
+	}
+
+	public void setAtList(List<Long> atList)
+	{
+		this.atList = atList;
+	}
 
 	public static class Sender
 	{
-		public long userId;
+		private long userId;
 
-		public String card;
+		private String card;
 
-		public String role;
+		private String role;
 
-		public String nickname;
+		private String nickname;
 
 		@Override
 		public String toString()
 		{
 			StringBuffer stringBuffer = new StringBuffer("Sender");
 			stringBuffer.append("{");
-			stringBuffer.append("userId").append("=").append(userId);
-			stringBuffer.append(",").append("card").append("=").append(card);
-			stringBuffer.append(",").append("role").append("=").append(role);
-			stringBuffer.append(",").append("nickname").append("=").append(nickname);
+			stringBuffer.append("userId").append("=").append(getUserId());
+			stringBuffer.append(",").append("card").append("=").append(getCard());
+			stringBuffer.append(",").append("role").append("=").append(getRole());
+			stringBuffer.append(",").append("nickname").append("=").append(getNickname());
 			stringBuffer.append('}');
 			return stringBuffer.toString();
+		}
+
+		public long getUserId()
+		{
+			return userId;
+		}
+
+		public void setUserId(long userId)
+		{
+			this.userId = userId;
+		}
+
+		public String getCard()
+		{
+			return card;
+		}
+
+		public void setCard(String card)
+		{
+			this.card = card;
+		}
+
+		public String getRole()
+		{
+			return role;
+		}
+
+		public void setRole(String role)
+		{
+			this.role = role;
+		}
+
+		public String getNickname()
+		{
+			return nickname;
+		}
+
+		public void setNickname(String nickname)
+		{
+			this.nickname = nickname;
 		}
 	}
 
@@ -47,53 +127,53 @@ public class OB11GroupMessageEvent extends OB11BaseMessageEvent
 	{
 		StringBuffer stringBuffer = new StringBuffer("OB11GroupMessageEvent");
 		stringBuffer.append("{");
-		stringBuffer.append("groupId").append("=").append(groupId);
-		stringBuffer.append(",").append("sender").append("=").append(sender);
-		stringBuffer.append(",").append("hasAt").append("=").append(hasAt);
-		stringBuffer.append(",").append("atList").append("=").append(atList);
-		stringBuffer.append(",").append("userId").append("=").append(userId);
-		stringBuffer.append(",").append("messageId").append("=").append(messageId);
-		stringBuffer.append(",").append("rawMessage").append("=").append(rawMessage);
-		stringBuffer.append(",").append("messageArray").append("=").append(messageArray);
-		stringBuffer.append(",").append("messageElementArray").append("=").append(messageElementArray);
-		stringBuffer.append(",").append("time").append("=").append(time);
-		stringBuffer.append(",").append("selfId").append("=").append(selfId);
+		stringBuffer.append("groupId").append("=").append(getGroupId());
+		stringBuffer.append(",").append("sender").append("=").append(getSender());
+		stringBuffer.append(",").append("hasAt").append("=").append(isHasAt());
+		stringBuffer.append(",").append("atList").append("=").append(getAtList());
+		stringBuffer.append(",").append("userId").append("=").append(getUserId());
+		stringBuffer.append(",").append("messageId").append("=").append(getMessageId());
+		stringBuffer.append(",").append("rawMessage").append("=").append(getRawMessage());
+		stringBuffer.append(",").append("messageArray").append("=").append(getMessageArray());
+		stringBuffer.append(",").append("messageElementArray").append("=").append(getMessageElementArray());
+		stringBuffer.append(",").append("time").append("=").append(getTime());
+		stringBuffer.append(",").append("selfId").append("=").append(getSelfId());
 		stringBuffer.append('}');
 		return stringBuffer.toString();
 	}
 
 	public long sendMessage(List<? extends OB11MsgElement> msgElementList)
 	{
-		return getOB11MessageApiService().sendGroupMessage(this.groupId, msgElementList);
+		return getOB11MessageApiService().sendGroupMessage(this.getGroupId(), msgElementList);
 	}
 
 	public long sendTextMessage(String text)
 	{
-		return getOB11MessageApiService().sendGroupTextMessage(this.groupId, text);
+		return getOB11MessageApiService().sendGroupTextMessage(this.getGroupId(), text);
 	}
 
 	public long sendReplyTextMessage(String text)
 	{
-		return getOB11MessageApiService().sendGroupReplyTextMessage(this.groupId, this.messageId, text);
+		return getOB11MessageApiService().sendGroupReplyTextMessage(this.getGroupId(), this.getMessageId(), text);
 	}
 
-	public BotServer.APIRequestResult setKick(long userId)
+	public BotApiService.APIRequestResult setKick(long userId)
 	{
-		return getOB11GroupApiService().setGroupKick(this.groupId, userId);
+		return getOB11GroupApiService().setGroupKick(this.getGroupId(), userId);
 	}
 
-	public BotServer.APIRequestResult setBan(long userId, long duration)
+	public BotApiService.APIRequestResult setBan(long userId, long duration)
 	{
-		return getOB11GroupApiService().setGroupBan(this.groupId, userId, duration);
+		return getOB11GroupApiService().setGroupBan(this.getGroupId(), userId, duration);
 	}
 
 	private OB11GroupApiService getOB11GroupApiService()
 	{
-		return bot.getGroupApiService();
+		return getBot().getGroupApiService();
 	}
 
 	private OB11MessageApiService getOB11MessageApiService()
 	{
-		return bot.getMessageApiService();
+		return getBot().getMessageApiService();
 	}
 }

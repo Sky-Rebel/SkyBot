@@ -4,26 +4,66 @@ import com.github.sky_rebel.skybot.event.OB11BaseMessageEvent;
 
 public class OB11PrivateMessageEvent extends OB11BaseMessageEvent
 {
-	public Sender sender;
+	private Sender sender;
+
+	public Sender getSender()
+	{
+		return sender;
+	}
+
+	public void setSender(Sender sender)
+	{
+		this.sender = sender;
+	}
 
 	public static class Sender
 	{
-		public long userId;
+		private long userId;
 
-		public long groupId;
+		private long groupId;
 
-		public String nickname;
+		private String nickname;
 
 		@Override
 		public String toString()
 		{
 			StringBuffer stringBuffer = new StringBuffer("Sender");
 			stringBuffer.append("{");
-			stringBuffer.append("userId").append("=").append(userId);
-			stringBuffer.append(",").append("groupId").append("=").append(groupId);
-			stringBuffer.append(",").append("nickname").append("=").append(nickname);
+			stringBuffer.append("userId").append("=").append(getUserId());
+			stringBuffer.append(",").append("groupId").append("=").append(getGroupId());
+			stringBuffer.append(",").append("nickname").append("=").append(getNickname());
 			stringBuffer.append('}');
 			return stringBuffer.toString();
+		}
+
+		public long getUserId()
+		{
+			return userId;
+		}
+
+		public void setUserId(long userId)
+		{
+			this.userId = userId;
+		}
+
+		public long getGroupId()
+		{
+			return groupId;
+		}
+
+		public void setGroupId(long groupId)
+		{
+			this.groupId = groupId;
+		}
+
+		public String getNickname()
+		{
+			return nickname;
+		}
+
+		public void setNickname(String nickname)
+		{
+			this.nickname = nickname;
 		}
 	}
 
@@ -32,14 +72,14 @@ public class OB11PrivateMessageEvent extends OB11BaseMessageEvent
 	{
 		StringBuffer stringBuffer = new StringBuffer("OB11PrivateMessageEvent");
 		stringBuffer.append("{");
-		stringBuffer.append("sender").append("=").append(sender);
-		stringBuffer.append(",").append("userId").append("=").append(userId);
-		stringBuffer.append(",").append("messageId").append("=").append(messageId);
-		stringBuffer.append(",").append("rawMessage").append("=").append(rawMessage);
-		stringBuffer.append(",").append("messageArray").append("=").append(messageArray);
-		stringBuffer.append(",").append("messageElementArray").append("=").append(messageElementArray);
-		stringBuffer.append(",").append("time").append("=").append(time);
-		stringBuffer.append(",").append("selfId").append("=").append(selfId);
+		stringBuffer.append("sender").append("=").append(getSender());
+		stringBuffer.append(",").append("userId").append("=").append(getUserId());
+		stringBuffer.append(",").append("messageId").append("=").append(getMessageId());
+		stringBuffer.append(",").append("rawMessage").append("=").append(getRawMessage());
+		stringBuffer.append(",").append("messageArray").append("=").append(getMessageArray());
+		stringBuffer.append(",").append("messageElementArray").append("=").append(getMessageElementArray());
+		stringBuffer.append(",").append("time").append("=").append(getTime());
+		stringBuffer.append(",").append("selfId").append("=").append(getSelfId());
 		stringBuffer.append('}');
 		return stringBuffer.toString();
 	}

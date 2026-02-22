@@ -6,8 +6,8 @@ import com.github.sky_rebel.skybot.api.OB11MessageApiService;
 import com.github.sky_rebel.skybot.event.handling.listener.OB11EventListener;
 import com.github.sky_rebel.skybot.util.CMDExecutor;
 import com.github.sky_rebel.skybot.util.NapcatInstall;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.github.sky_rebel.skybot.util.logger.Logger;
+import com.github.sky_rebel.skybot.util.logger.SkybotLogger;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,11 +22,13 @@ public class Bot
 
 	private static boolean isUseDefConfig = false;
 
+	private static final String NAPCAT = "napcat";
+
 	private static final Map<Long, Bot> botMap = new HashMap<>();
 
-	public static final String LAUNCHER_USER_BAT = "launcher-user.bat";
+	private static final String LAUNCHER_USER_BAT = "launcher-user.bat";
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(Bot.class);
+	private static final Logger LOGGER = SkybotLogger.getLogger(Bot.class);
 
 	private Bot() {}
 
@@ -52,7 +54,7 @@ public class Bot
 		}
 		if (botConfig.skybotConfig.botId == -1)
 		{
-			LOGGER.error("BotId未配置，无法获取配置！");
+			LOGGER.error("BotId未配置，无法创建实例！");
 			return null;
 		}
 		if (botMap.containsKey(botConfig.skybotConfig.botId))
@@ -75,11 +77,11 @@ public class Bot
 			LOGGER.error("Bot配置为空，无法启动Bot！");
 			return;
 		}
-		CMDExecutor.startBatProcess("napcat", LAUNCHER_USER_BAT, String.valueOf(botConfig.skybotConfig.botId));
+		CMDExecutor.startBatProcess(NAPCAT, LAUNCHER_USER_BAT, String.valueOf(botConfig.skybotConfig.botId));
 		Runtime.getRuntime().addShutdownHook(new Thread(() ->
 		{
 			CMDExecutor.shutdownExecutor();
-			CMDExecutor.forceCleanInvalidProcess("napcat", LAUNCHER_USER_BAT, String.valueOf(botConfig.skybotConfig.botId));
+			CMDExecutor.forceCleanInvalidProcess(NAPCAT, LAUNCHER_USER_BAT, String.valueOf(botConfig.skybotConfig.botId));
 		}));
 		new OB11EventListener(this).start();
 		isStart = true;
@@ -121,17 +123,17 @@ public class Bot
 
 	public OB11GroupApiService getGroupApiService()
 	{
-		return (OB11GroupApiService) getApiService(OB11GroupApiService.class);
+		return (OB11GroupApiService)getApiService(OB11GroupApiService.class);
 	}
 
 	public OB11MessageApiService getMessageApiService()
 	{
-		return (OB11MessageApiService) getApiService(OB11MessageApiService.class);
+		return (OB11MessageApiService)getApiService(OB11MessageApiService.class);
 	}
 
 	public OB11AccountApiService getAccountApiService()
 	{
-		return (OB11AccountApiService) getApiService(OB11AccountApiService.class);
+		return (OB11AccountApiService)getApiService(OB11AccountApiService.class);
 	}
 
 	public Object getApiService(Class<?> apiServiceClass)

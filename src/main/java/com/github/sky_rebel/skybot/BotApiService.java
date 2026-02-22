@@ -11,9 +11,9 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.StringJoiner;
 
-public class BotServer
+public class BotApiService
 {
-	public static final Logger LOGGER = LoggerFactory.getLogger(BotServer.class);
+	public static final Logger LOGGER = LoggerFactory.getLogger(BotApiService.class);
 
 	public URI uri;
 
@@ -25,7 +25,7 @@ public class BotServer
 
 	public static final String scheme = "http";
 
-	public BotServer(Bot bot, String path)
+	public BotApiService(Bot bot, String path)
 	{
 		try
 		{
@@ -48,7 +48,7 @@ public class BotServer
 
 	public static class APIRequestResult
 	{
-		public boolean isSuccess = false;
+		public Object data;
 
 		public int retcode;
 
@@ -56,16 +56,16 @@ public class BotServer
 
 		public String wording;
 
-		public Object data;
+		public boolean isSuccess;
 
 		public static APIRequestResult getInstance(JSONObject requestResult)
 		{
 			APIRequestResult apiRequestResult = new APIRequestResult();
-			apiRequestResult.isSuccess = requestResult.optString("status").equals("ok");
+			apiRequestResult.data = requestResult.opt("data");
 			apiRequestResult.retcode = requestResult.optInt("retcode");
 			apiRequestResult.message = requestResult.optString("message");
 			apiRequestResult.wording = requestResult.optString("wording");
-			apiRequestResult.data = requestResult.opt("data");
+			apiRequestResult.isSuccess = requestResult.optString("status").equals("ok");
 			return apiRequestResult;
 		}
 
@@ -73,13 +73,18 @@ public class BotServer
 		public String toString()
 		{
 			return new StringJoiner(", ", APIRequestResult.class.getSimpleName() + "[", "]")
-				.add("isSuccess=" + isSuccess)
+				.add("data=" + data)
 				.add("retcode=" + retcode)
 				.add("message='" + message + "'")
 				.add("wording='" + wording + "'")
-				.add("data=" + data)
+				.add("isSuccess=" + isSuccess)
 				.toString();
 		}
+	}
+
+	public APIRequestResult sendRequest(JSONObject requestBody)
+	{
+		return sendRequest(requestBody.toString());
 	}
 
 	public APIRequestResult sendRequest(String requestBody)
@@ -105,7 +110,7 @@ public class BotServer
 		}
 		catch (Exception e)
 		{
-			LOGGER.error("请求Api发生异常", e);
+			LOGGER.error("Api请求异常", e);
 			return null;
 		}
 	}

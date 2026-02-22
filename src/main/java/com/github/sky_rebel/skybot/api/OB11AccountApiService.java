@@ -1,7 +1,7 @@
 package com.github.sky_rebel.skybot.api;
 
 import com.github.sky_rebel.skybot.Bot;
-import com.github.sky_rebel.skybot.BotServer;
+import com.github.sky_rebel.skybot.BotApiService;
 import com.github.sky_rebel.skybot.api.data.account.OB11FriendInfo;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -45,7 +45,7 @@ public class OB11AccountApiService
 	 * 点赞所有好友并且发送消息（如果点赞成功）
 	 * @return API响应结果列表
 	 */
-	public List<BotServer.APIRequestResult> sendLikeAndMessageToFriendListIfSuccess(String text)
+	public List<BotApiService.APIRequestResult> sendLikeAndMessageToFriendListIfSuccess(String text)
 	{
 		return sendLikeAndMessageToFriendList(20, true, text);
 	}
@@ -55,7 +55,7 @@ public class OB11AccountApiService
 	 * @param times 点赞次数
 	 * @return API响应结果列表
 	 */
-	public List<BotServer.APIRequestResult> sendLikeAndMessageToFriendListIfSuccess(int times, String text)
+	public List<BotApiService.APIRequestResult> sendLikeAndMessageToFriendListIfSuccess(int times, String text)
 	{
 		return sendLikeAndMessageToFriendList(times, true, text);
 	}
@@ -64,7 +64,7 @@ public class OB11AccountApiService
 	 * 点赞所有好友
 	 * @return API响应结果列表
 	 */
-	public List<BotServer.APIRequestResult> sendLikeToFriendList()
+	public List<BotApiService.APIRequestResult> sendLikeToFriendList()
 	{
 		return sendLikeAndToFriendList(20);
 	}
@@ -74,7 +74,7 @@ public class OB11AccountApiService
 	 * @param times 点赞次数
 	 * @return API响应结果列表
 	 */
-	public List<BotServer.APIRequestResult> sendLikeAndToFriendList(int times)
+	public List<BotApiService.APIRequestResult> sendLikeAndToFriendList(int times)
 	{
 		return sendLikeAndMessageToFriendList(times, false, null);
 	}
@@ -84,10 +84,10 @@ public class OB11AccountApiService
 	 * @param times 点赞次数
 	 * @return API响应结果列表
 	 */
-	public List<BotServer.APIRequestResult> sendLikeAndMessageToFriendList(int times, boolean isSuccessSend, String text)
+	public List<BotApiService.APIRequestResult> sendLikeAndMessageToFriendList(int times, boolean isSuccessSend, String text)
 	{
 		List<Long> friendIdList = getFriendIdList();
-		List<BotServer.APIRequestResult> apiRequestResultList = new ArrayList<>();
+		List<BotApiService.APIRequestResult> apiRequestResultList = new ArrayList<>();
 		AtomicReference<OB11MessageApiService> atomicReference = new AtomicReference<>();
 		if (isSuccessSend)
 		{
@@ -97,7 +97,7 @@ public class OB11AccountApiService
 		{
 			friendIdList.forEach(friendId ->
 			{
-				BotServer.APIRequestResult apiRequestResult = sendLike(friendId, times);
+				BotApiService.APIRequestResult apiRequestResult = sendLike(friendId, times);
 				if (apiRequestResult.isSuccess)
 				{
 					atomicReference.get().sendPrivateTextMessage(friendId, text);
@@ -113,7 +113,7 @@ public class OB11AccountApiService
 	 * @param userId 用户ID
 	 * @return API响应结果
 	 */
-	public BotServer.APIRequestResult sendLikeAndMessageIfSuccess(long userId, String text)
+	public BotApiService.APIRequestResult sendLikeAndMessageIfSuccess(long userId, String text)
 	{
 		return sendLikeAndMessageIfSuccess(userId, 20, text);
 	}
@@ -124,10 +124,10 @@ public class OB11AccountApiService
 	 * @param times 点赞次数
 	 * @return API响应结果
 	 */
-	public BotServer.APIRequestResult sendLikeAndMessageIfSuccess(long userId, int times, String text)
+	public BotApiService.APIRequestResult sendLikeAndMessageIfSuccess(long userId, int times, String text)
 	{
 		OB11MessageApiService ob11MessageApiService = bot.getMessageApiService();
-		BotServer.APIRequestResult apiRequestResult = sendLike(userId, times);
+		BotApiService.APIRequestResult apiRequestResult = sendLike(userId, times);
 		if (apiRequestResult.isSuccess)
 		{
 			if (text != null)
@@ -143,7 +143,7 @@ public class OB11AccountApiService
 	 * @param userId 用户ID
 	 * @return API响应结果
 	 */
-	public BotServer.APIRequestResult sendLike(long userId)
+	public BotApiService.APIRequestResult sendLike(long userId)
 	{
 		return sendLike(userId, 20);
 	}
@@ -154,13 +154,13 @@ public class OB11AccountApiService
 	 * @param times 点赞次数
 	 * @return API响应结果
 	 */
-	public BotServer.APIRequestResult sendLike(long userId, int times)
+	public BotApiService.APIRequestResult sendLike(long userId, int times)
 	{
-		BotServer botServer = new BotServer(bot, OB11AccountApiPath.SEND_LIKE.getValue());
+		BotApiService botApiService = new BotApiService(bot, OB11AccountApiPath.SEND_LIKE.getValue());
 		JSONObject rootObject = new JSONObject();
 		rootObject.put("user_id", userId);
 		rootObject.put("times", times);
-		return botServer.sendRequest(rootObject.toString());
+		return botApiService.sendRequest(rootObject.toString());
 	}
 
 	/**
@@ -208,9 +208,9 @@ public class OB11AccountApiService
 	 */
 	public List<OB11FriendInfo> getFriendInfoList(boolean noCache)
 	{
-		BotServer botServer = new BotServer(bot, OB11AccountApiPath.GET_FRIEND_LIST.getValue());
+		BotApiService botApiService = new BotApiService(bot, OB11AccountApiPath.GET_FRIEND_LIST.getValue());
 		JSONObject data = new JSONObject().put("no_cache", noCache);
-		BotServer.APIRequestResult apiRequestResult = botServer.sendRequest(data.toString());
+		BotApiService.APIRequestResult apiRequestResult = botApiService.sendRequest(data.toString());
 		if (apiRequestResult.isSuccess)
 		{
 			if (apiRequestResult.data != null)
@@ -245,7 +245,7 @@ public class OB11AccountApiService
 	 */
 	public JSONObject getMiniAppArk(String type, String title, String desc, String picUrl, String jumpUrl, String webUrl, boolean rawArkData)
 	{
-		BotServer botServer = new BotServer(bot, OB11AccountApiPath.GET_MINI_APP_ARK.getValue());
+		BotApiService botApiService = new BotApiService(bot, OB11AccountApiPath.GET_MINI_APP_ARK.getValue());
 		JSONObject data = new JSONObject()
 		.put("type", type)
 		.put("title", title)
@@ -260,7 +260,7 @@ public class OB11AccountApiService
 		{
 			data.put("webUrl", webUrl);
 		}
-		BotServer.APIRequestResult apiRequestResult = botServer.sendRequest(data.toString());
+		BotApiService.APIRequestResult apiRequestResult = botApiService.sendRequest(data.toString());
 		if (apiRequestResult.isSuccess)
 		{
 			if (apiRequestResult.data != null)

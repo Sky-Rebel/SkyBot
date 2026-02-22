@@ -16,9 +16,9 @@ public class OB11MetaEventDispatcher
 		if (metaEventType.equals(OB11LifeCycleEvent.META_EVENT_TYPE))
 		{
 			OB11LifeCycleEvent ob11LifeCycleEvent = new OB11LifeCycleEvent();
-			ob11LifeCycleEvent.bot = bot;
-			ob11LifeCycleEvent.time = ob11EventPostData.getLong("time");
-			ob11LifeCycleEvent.selfId = ob11EventPostData.getLong("self_id");
+			ob11LifeCycleEvent.setBot(bot);
+			ob11LifeCycleEvent.setTime(ob11EventPostData.getLong("time"));
+			ob11LifeCycleEvent.setSelfId(ob11EventPostData.getLong("self_id"));
 			ob11LifeCycleEvent.lifeCycleSubType = OB11LifeCycleEvent.LifeCycleSubType.valueOf(ob11EventPostData.getString("sub_type").toUpperCase());
 			switch (ob11LifeCycleEvent.lifeCycleSubType)
 			{
@@ -31,10 +31,10 @@ public class OB11MetaEventDispatcher
 		else if (metaEventType.equals(OB11HeartbeatEvent.META_EVENT_TYPE))
 		{
 			OB11HeartbeatEvent ob11HeartbeatEvent = new OB11HeartbeatEvent();
-			ob11HeartbeatEvent.bot = bot;
-			ob11HeartbeatEvent.selfId = ob11EventPostData.getLong("self_id");
+			ob11HeartbeatEvent.setBot(bot);
+			ob11HeartbeatEvent.setSelfId(ob11EventPostData.getLong("self_id"));
 			ob11HeartbeatEvent.interval = ob11EventPostData.getInt("interval");
-			ob11HeartbeatEvent.time = ob11EventPostData.getLong("time");
+			ob11HeartbeatEvent.setTime(ob11EventPostData.getLong("time"));
 			JSONObject status = ob11EventPostData.getJSONObject("status");
 			OB11HeartbeatEvent.HeartbeatStatus heartbeatStatus = new OB11HeartbeatEvent.HeartbeatStatus();
 			heartbeatStatus.good = status.getBoolean("good");

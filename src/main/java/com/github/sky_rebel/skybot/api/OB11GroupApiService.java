@@ -1,7 +1,7 @@
 package com.github.sky_rebel.skybot.api;
 
 import com.github.sky_rebel.skybot.Bot;
-import com.github.sky_rebel.skybot.BotServer;
+import com.github.sky_rebel.skybot.BotApiService;
 import com.github.sky_rebel.skybot.api.data.group.OB11EssenceMsgInfo;
 import com.github.sky_rebel.skybot.api.data.group.OB11GroupAtAllRemainInfo;
 import com.github.sky_rebel.skybot.api.data.group.OB11GroupDetailInfo;
@@ -90,9 +90,9 @@ public class OB11GroupApiService
 	 * @param duration 禁言时间（秒）
 	 * @return API请求结果
 	 */
-	public LinkedHashMap<Long, BotServer.APIRequestResult> setGroupBan(long groupId, List<Long> userIdList, long duration)
+	public LinkedHashMap<Long, BotApiService.APIRequestResult> setGroupBan(long groupId, List<Long> userIdList, long duration)
 	{
-		LinkedHashMap<Long, BotServer.APIRequestResult> longAPIRequestResultMap = new LinkedHashMap<>();
+		LinkedHashMap<Long, BotApiService.APIRequestResult> longAPIRequestResultMap = new LinkedHashMap<>();
 		if (!userIdList.isEmpty())
 		{
 			userIdList.forEach(userId ->
@@ -110,14 +110,14 @@ public class OB11GroupApiService
 	 * @param duration 禁言时间（秒）
 	 * @return API请求结果
 	 */
-	public BotServer.APIRequestResult setGroupBan(long groupId, long userId, long duration)
+	public BotApiService.APIRequestResult setGroupBan(long groupId, long userId, long duration)
 	{
-		BotServer botServer = new BotServer(bot, OB11GroupApiPath.SET_GROUP_BAN.getValue());
+		BotApiService botApiService = new BotApiService(bot, OB11GroupApiPath.SET_GROUP_BAN.getValue());
 		JSONObject rootObject = new JSONObject()
 			.put("group_id", groupId)
 			.put("user_id", userId)
 			.put("duration", duration);
-		return botServer.sendRequest(rootObject.toString());
+		return botApiService.sendRequest(rootObject.toString());
 	}
 
 
@@ -126,11 +126,11 @@ public class OB11GroupApiService
 	 * @param groupId 群聊ID
 	 * @return API请求结果
 	 */
-	public BotServer.APIRequestResult setGroupSign(long groupId)
+	public BotApiService.APIRequestResult setGroupSign(long groupId)
 	{
-		BotServer botServer = new BotServer(bot, OB11GroupApiPath.SET_GROUP_SIGN.getValue());
+		BotApiService botApiService = new BotApiService(bot, OB11GroupApiPath.SET_GROUP_SIGN.getValue());
 		JSONObject rootObject = new JSONObject().put("group_id", groupId);
-		return botServer.sendRequest(rootObject.toString());
+		return botApiService.sendRequest(rootObject.toString());
 	}
 
 	/**
@@ -138,11 +138,11 @@ public class OB11GroupApiService
 	 * @param groupId 群聊ID
 	 * @return API请求结果
 	 */
-	public BotServer.APIRequestResult sendGroupSign(long groupId)
+	public BotApiService.APIRequestResult sendGroupSign(long groupId)
 	{
-		BotServer botServer = new BotServer(bot, OB11GroupApiPath.SEND_GROUP_SIGN.getValue());
+		BotApiService botApiService = new BotApiService(bot, OB11GroupApiPath.SEND_GROUP_SIGN.getValue());
 		JSONObject rootObject = new JSONObject().put("group_id", groupId);
-		return botServer.sendRequest(rootObject.toString());
+		return botApiService.sendRequest(rootObject.toString());
 	}
 
 	/**
@@ -151,13 +151,13 @@ public class OB11GroupApiService
 	 * @param messageId 消息ID
 	 * @return API请求结果
 	 */
-	public BotServer.APIRequestResult setGroupTodo(long groupId, long messageId)
+	public BotApiService.APIRequestResult setGroupTodo(long groupId, long messageId)
 	{
-		BotServer botServer = new BotServer(bot, OB11GroupApiPath.SET_GROUP_TODO.getValue());
+		BotApiService botApiService = new BotApiService(bot, OB11GroupApiPath.SET_GROUP_TODO.getValue());
 		JSONObject rootObject = new JSONObject()
 			.put("group_id", groupId)
 			.put("message_id", messageId);
-		return botServer.sendRequest(rootObject.toString());
+		return botApiService.sendRequest(rootObject.toString());
 	}
 
 	/**
@@ -166,13 +166,13 @@ public class OB11GroupApiService
 	 * @param userId 用户ID
 	 * @return API请求结果
 	 */
-	public BotServer.APIRequestResult setGroupKick(long groupId, long userId)
+	public BotApiService.APIRequestResult setGroupKick(long groupId, long userId)
 	{
-		BotServer botServer = new BotServer(bot, OB11GroupApiPath.SET_GROUP_KICK.getValue());
+		BotApiService botApiService = new BotApiService(bot, OB11GroupApiPath.SET_GROUP_KICK.getValue());
 		JSONObject rootObject = new JSONObject()
 			.put("group_id", groupId)
 			.put("user_id", userId);
-		return botServer.sendRequest(rootObject.toString());
+		return botApiService.sendRequest(rootObject.toString());
 	}
 
 	/**
@@ -182,9 +182,9 @@ public class OB11GroupApiService
 	 */
 	public OB11GroupInfo getGroupInfo(long groupId)
 	{
-		BotServer botServer = new BotServer(bot, OB11GroupApiPath.GET_GROUP_INFO.getValue());
+		BotApiService botApiService = new BotApiService(bot, OB11GroupApiPath.GET_GROUP_INFO.getValue());
 		JSONObject rootObject = new JSONObject().put("group_id", groupId);
-		BotServer.APIRequestResult apiRequestResult = botServer.sendRequest(rootObject.toString());
+		BotApiService.APIRequestResult apiRequestResult = botApiService.sendRequest(rootObject.toString());
 		if (apiRequestResult.isSuccess)
 		{
 			if (apiRequestResult.data instanceof JSONObject data)
@@ -203,14 +203,14 @@ public class OB11GroupApiService
 	 * @param card 名片
 	 * @return API请求结果
 	 */
-	public BotServer.APIRequestResult setGroupCard(long groupId, long userId, String card)
+	public BotApiService.APIRequestResult setGroupCard(long groupId, long userId, String card)
 	{
-		BotServer botServer = new BotServer(bot, OB11GroupApiPath.SET_GROUP_CARD.getValue());
+		BotApiService botApiService = new BotApiService(bot, OB11GroupApiPath.SET_GROUP_CARD.getValue());
 		JSONObject rootObject = new JSONObject()
 			.put("group_id", groupId)
 			.put("user_id", userId)
 			.put("card", card);
-		return botServer.sendRequest(rootObject.toString());
+		return botApiService.sendRequest(rootObject.toString());
 	}
 
 	/**
@@ -258,9 +258,9 @@ public class OB11GroupApiService
 	 */
 	public List<OB11GroupInfo> getGroupInfoList(boolean noCache)
 	{
-		BotServer botServer = new BotServer(bot, OB11GroupApiPath.GET_GROUP_LIST.getValue());
+		BotApiService botApiService = new BotApiService(bot, OB11GroupApiPath.GET_GROUP_LIST.getValue());
 		JSONObject rootObject = new JSONObject().put("no_cache", noCache);
-		BotServer.APIRequestResult apiRequestResult = botServer.sendRequest(rootObject.toString());
+		BotApiService.APIRequestResult apiRequestResult = botApiService.sendRequest(rootObject.toString());
 		List<OB11GroupInfo> ob11GroupInfoList = new ArrayList<>();
 		if (apiRequestResult.isSuccess)
 		{
@@ -291,13 +291,13 @@ public class OB11GroupApiService
 	 * @param groupName 群聊名字
 	 * @return API响应结果
 	 */
-	public BotServer.APIRequestResult setGroupName(long groupId, String groupName)
+	public BotApiService.APIRequestResult setGroupName(long groupId, String groupName)
 	{
-		BotServer botServer = new BotServer(bot, OB11GroupApiPath.SET_GROUP_NAME.getValue());
+		BotApiService botApiService = new BotApiService(bot, OB11GroupApiPath.SET_GROUP_NAME.getValue());
 		JSONObject rootObject = new JSONObject()
 			.put("group_id", groupId)
 			.put("group_name", groupName);
-		return botServer.sendRequest(rootObject.toString());
+		return botApiService.sendRequest(rootObject.toString());
 	}
 
 	/**
@@ -305,11 +305,11 @@ public class OB11GroupApiService
 	 * @param groupId 群聊ID
 	 * @return API响应结果
 	 */
-	public BotServer.APIRequestResult setGroupLeave(long groupId)
+	public BotApiService.APIRequestResult setGroupLeave(long groupId)
 	{
-		BotServer botServer = new BotServer(bot, OB11GroupApiPath.SET_GROUP_LEAVE.getValue());
+		BotApiService botApiService = new BotApiService(bot, OB11GroupApiPath.SET_GROUP_LEAVE.getValue());
 		JSONObject rootObject = new JSONObject().put("group_id", groupId);
-		return botServer.sendRequest(rootObject.toString());
+		return botApiService.sendRequest(rootObject.toString());
 	}
 
 	/**
@@ -317,11 +317,11 @@ public class OB11GroupApiService
 	 * @param message_id 消息ID
 	 * @return API响应结果
 	 */
-	public BotServer.APIRequestResult setEssenceMsg(long message_id)
+	public BotApiService.APIRequestResult setEssenceMsg(long message_id)
 	{
-		BotServer botServer = new BotServer(bot, OB11GroupApiPath.SET_ESSENCE_MSG.getValue());
+		BotApiService botApiService = new BotApiService(bot, OB11GroupApiPath.SET_ESSENCE_MSG.getValue());
 		JSONObject rootObject = new JSONObject().put("message_id", message_id);
-		return botServer.sendRequest(rootObject.toString());
+		return botApiService.sendRequest(rootObject.toString());
 	}
 
 	/**
@@ -331,14 +331,14 @@ public class OB11GroupApiService
 	 * @param enable 设置/取消
 	 * @return API响应结果
 	 */
-	public BotServer.APIRequestResult setGroupAdmin(long groupId, long userId, boolean enable)
+	public BotApiService.APIRequestResult setGroupAdmin(long groupId, long userId, boolean enable)
 	{
-		BotServer botServer = new BotServer(bot, OB11GroupApiPath.SET_GROUP_ADMIN.getValue());
+		BotApiService botApiService = new BotApiService(bot, OB11GroupApiPath.SET_GROUP_ADMIN.getValue());
 		JSONObject rootObject = new JSONObject()
 			.put("group_id", groupId)
 			.put("user_id", userId)
 			.put("enable", enable);
-		return botServer.sendRequest(rootObject.toString());
+		return botApiService.sendRequest(rootObject.toString());
 	}
 
 	/**
@@ -347,13 +347,13 @@ public class OB11GroupApiService
 	 * @param remark 备注
 	 * @return API响应结果
 	 */
-	public BotServer.APIRequestResult setGroupRemark(long groupId, String remark)
+	public BotApiService.APIRequestResult setGroupRemark(long groupId, String remark)
 	{
-		BotServer botServer = new BotServer(bot, OB11GroupApiPath.SET_GROUP_REMARK.getValue());
+		BotApiService botApiService = new BotApiService(bot, OB11GroupApiPath.SET_GROUP_REMARK.getValue());
 		JSONObject rootObject = new JSONObject()
 			.put("group_id", groupId)
 			.put("remark", remark);
-		return botServer.sendRequest(rootObject.toString());
+		return botApiService.sendRequest(rootObject.toString());
 	}
 
 	/**
@@ -364,15 +364,15 @@ public class OB11GroupApiService
 	 * @param image 图片路径（无请提交NULL）
 	 * @return API响应结果
 	 */
-	public BotServer.APIRequestResult sendGroupNotice(long groupId, String content, String image)
+	public BotApiService.APIRequestResult sendGroupNotice(long groupId, String content, String image)
 	{
-		BotServer botServer = new BotServer(bot, OB11GroupApiPath.SEND_GROUP_NOTICE.getValue());
+		BotApiService botApiService = new BotApiService(bot, OB11GroupApiPath.SEND_GROUP_NOTICE.getValue());
 		JSONObject rootObject = new JSONObject()
 			.put("group_id", groupId)
 			.put("content", content);
 		if (image != null)
 			rootObject.put("image", image);
-		return botServer.sendRequest(rootObject.toString());
+		return botApiService.sendRequest(rootObject.toString());
 	}
 
 	/**
@@ -382,9 +382,9 @@ public class OB11GroupApiService
 	 */
 	public List<OB11GroupNoticeInfo> getGroupNotice(long groupId)
 	{
-		BotServer botServer = new BotServer(bot, OB11GroupApiPath.GET_GROUP_NOTICE.getValue());
+		BotApiService botApiService = new BotApiService(bot, OB11GroupApiPath.GET_GROUP_NOTICE.getValue());
 		JSONObject rootObject = new JSONObject().put("group_id", groupId);
-		BotServer.APIRequestResult apiRequestResult = botServer.sendRequest(rootObject.toString());
+		BotApiService.APIRequestResult apiRequestResult = botApiService.sendRequest(rootObject.toString());
 		if (apiRequestResult.isSuccess)
 		{
 			if (apiRequestResult.data != null)
@@ -416,13 +416,13 @@ public class OB11GroupApiService
 	 * @param noticeId 公告ID
 	 * @return API响应结果
 	 */
-	public BotServer.APIRequestResult delGroupNotice(long groupId, String noticeId)
+	public BotApiService.APIRequestResult delGroupNotice(long groupId, String noticeId)
 	{
-		BotServer botServer = new BotServer(bot, OB11GroupApiPath.DEL_GROUP_NOTICE.getValue());
+		BotApiService botApiService = new BotApiService(bot, OB11GroupApiPath.DEL_GROUP_NOTICE.getValue());
 		JSONObject rootObject = new JSONObject()
 			.put("group_id", groupId)
 			.put("notice_id", noticeId);
-		return botServer.sendRequest(rootObject.toString());
+		return botApiService.sendRequest(rootObject.toString());
 	}
 
 	/**
@@ -432,14 +432,14 @@ public class OB11GroupApiService
 	 * @param noFingerOpen 禁止搜索
 	 * @return API响应结果
 	 */
-	public BotServer.APIRequestResult setGroupSearch(long groupId, int noCodeFingerOpen, int noFingerOpen)
+	public BotApiService.APIRequestResult setGroupSearch(long groupId, int noCodeFingerOpen, int noFingerOpen)
 	{
-		BotServer botServer = new BotServer(bot, OB11GroupApiPath.SET_GROUP_SEARCH.getValue());
+		BotApiService botApiService = new BotApiService(bot, OB11GroupApiPath.SET_GROUP_SEARCH.getValue());
 		JSONObject rootObject = new JSONObject()
 			.put("group_id", groupId)
 			.put("no_finger_open", noFingerOpen)
 			.put("no_code_finger_open", noCodeFingerOpen);
-		return botServer.sendRequest(rootObject.toString());
+		return botApiService.sendRequest(rootObject.toString());
 	}
 
 	/**
@@ -449,9 +449,9 @@ public class OB11GroupApiService
 	 */
 	public OB11GroupExInfo getGroupInfoEx(long groupId)
 	{
-		BotServer botServer = new BotServer(bot, OB11GroupApiPath.GET_GROUP_INFO_EX.getValue());
+		BotApiService botApiService = new BotApiService(bot, OB11GroupApiPath.GET_GROUP_INFO_EX.getValue());
 		JSONObject rootObject = new JSONObject().put("group_id", groupId);
-		BotServer.APIRequestResult apiRequestResult = botServer.sendRequest(rootObject.toString());
+		BotApiService.APIRequestResult apiRequestResult = botApiService.sendRequest(rootObject.toString());
 		if (apiRequestResult.isSuccess)
 		{
 			if (apiRequestResult.data != null)
@@ -472,13 +472,13 @@ public class OB11GroupApiService
 	 * @param file 图片地址
 	 * @return API响应结果
 	 */
-	public BotServer.APIRequestResult setGroupPortrait(long groupId, String file)
+	public BotApiService.APIRequestResult setGroupPortrait(long groupId, String file)
 	{
-		BotServer botServer = new BotServer(bot, OB11GroupApiPath.SET_GROUP_PORTRAIT.getValue());
+		BotApiService botApiService = new BotApiService(bot, OB11GroupApiPath.SET_GROUP_PORTRAIT.getValue());
 		JSONObject rootObject = new JSONObject()
 			.put("group_id", groupId)
 			.put("file", file);
-		return botServer.sendRequest(rootObject.toString());
+		return botApiService.sendRequest(rootObject.toString());
 	}
 
 	/**
@@ -486,11 +486,11 @@ public class OB11GroupApiService
 	 * @param messageId 消息ID
 	 * @return API响应结果
 	 */
-	public BotServer.APIRequestResult deleteEssenceMsg(long messageId)
+	public BotApiService.APIRequestResult deleteEssenceMsg(long messageId)
 	{
-		BotServer botServer = new BotServer(bot, OB11GroupApiPath.DELETE_ESSENCE_MSG.getValue());
+		BotApiService botApiService = new BotApiService(bot, OB11GroupApiPath.DELETE_ESSENCE_MSG.getValue());
 		JSONObject rootObject = new JSONObject().put("message_id", messageId);
-		return botServer.sendRequest(rootObject.toString());
+		return botApiService.sendRequest(rootObject.toString());
 	}
 
 	/**
@@ -500,9 +500,9 @@ public class OB11GroupApiService
 	 */
 	public List<OB11GroupShutInfo> getGroupShutList(long groupId)
 	{
-		BotServer botServer = new BotServer(bot, OB11GroupApiPath.GET_GROUP_SHUT_LIST.getValue());
+		BotApiService botApiService = new BotApiService(bot, OB11GroupApiPath.GET_GROUP_SHUT_LIST.getValue());
 		JSONObject rootObject = new JSONObject().put("group_id", groupId);
-		BotServer.APIRequestResult apiRequestResult = botServer.sendRequest(rootObject.toString());
+		BotApiService.APIRequestResult apiRequestResult = botApiService.sendRequest(rootObject.toString());
 		if (apiRequestResult.isSuccess)
 		{
 			if (apiRequestResult.data != null)
@@ -531,13 +531,13 @@ public class OB11GroupApiService
 	 * @param enable 全禁 或 全解
 	 * @return API响应结果
 	 */
-	public BotServer.APIRequestResult setGroupWholeBan(long groupId, boolean enable)
+	public BotApiService.APIRequestResult setGroupWholeBan(long groupId, boolean enable)
 	{
-		BotServer botServer = new BotServer(bot, OB11GroupApiPath.SET_GROUP_WHOLE_BAN.getValue());
+		BotApiService botApiService = new BotApiService(bot, OB11GroupApiPath.SET_GROUP_WHOLE_BAN.getValue());
 		JSONObject rootObject = new JSONObject()
 			.put("group_id", groupId)
 			.put("enable", enable);
-		return botServer.sendRequest(rootObject.toString());
+		return botApiService.sendRequest(rootObject.toString());
 	}
 
 	/**
@@ -547,9 +547,9 @@ public class OB11GroupApiService
 	 */
 	public List<OB11EssenceMsgInfo> getEssenceMsgList(long groupId)
 	{
-		BotServer botServer = new BotServer(bot, OB11GroupApiPath.GET_ESSENCE_MSG_LIST.getValue());
+		BotApiService botApiService = new BotApiService(bot, OB11GroupApiPath.GET_ESSENCE_MSG_LIST.getValue());
 		JSONObject rootObject = new JSONObject().put("group_id", groupId);
-		BotServer.APIRequestResult apiRequestResult = botServer.sendRequest(rootObject.toString());
+		BotApiService.APIRequestResult apiRequestResult = botApiService.sendRequest(rootObject.toString());
 		if (apiRequestResult.isSuccess)
 		{
 			if (apiRequestResult.data != null)
@@ -579,9 +579,9 @@ public class OB11GroupApiService
 	 */
 	public OB11GroupRequestMsgInfo getGroupSystemMsg(int count)
 	{
-		BotServer botServer = new BotServer(bot, OB11GroupApiPath.GET_GROUP_SYSTEM_MSG.getValue());
+		BotApiService botApiService = new BotApiService(bot, OB11GroupApiPath.GET_GROUP_SYSTEM_MSG.getValue());
 		JSONObject rootObject = new JSONObject().put("count", count);
-		BotServer.APIRequestResult apiRequestResult = botServer.sendRequest(rootObject.toString());
+		BotApiService.APIRequestResult apiRequestResult = botApiService.sendRequest(rootObject.toString());
 		if (apiRequestResult.isSuccess)
 		{
 			return OB11GroupRequestMsgInfo.getInstance((JSONObject) apiRequestResult.data);
@@ -597,11 +597,11 @@ public class OB11GroupApiService
 	 */
 	public OB11GroupHonorInfo getGroupHonorInfo(long groupId)
 	{
-		BotServer botServer = new BotServer(bot, OB11GroupApiPath.GET_GROUP_HONOR_INFO.getValue());
+		BotApiService botApiService = new BotApiService(bot, OB11GroupApiPath.GET_GROUP_HONOR_INFO.getValue());
 		JSONObject rootObject = new JSONObject()
 			.put("group_id", groupId)
 			.put("type", "all");
-		BotServer.APIRequestResult apiRequestResult = botServer.sendRequest(rootObject.toString());
+		BotApiService.APIRequestResult apiRequestResult = botApiService.sendRequest(rootObject.toString());
 		if (apiRequestResult.isSuccess)
 		{
 			return OB11GroupHonorInfo.getInstance((JSONObject) apiRequestResult.data);
@@ -625,15 +625,15 @@ public class OB11GroupApiService
 	 * @param groupAnswer 答案
 	 * @return API响应结果
 	 */
-	public BotServer.APIRequestResult setGroupAddOption(long groupId, String addType, String groupQuestion, String groupAnswer)
+	public BotApiService.APIRequestResult setGroupAddOption(long groupId, String addType, String groupQuestion, String groupAnswer)
 	{
-		BotServer botServer = new BotServer(bot, OB11GroupApiPath.SET_GROUP_ADD_OPTION.getValue());
+		BotApiService botApiService = new BotApiService(bot, OB11GroupApiPath.SET_GROUP_ADD_OPTION.getValue());
 		JSONObject rootObject = new JSONObject()
 			.put("group_id", groupId)
 			.put("add_type", addType)
 			.put("group_question", groupQuestion)
 			.put("group_answer", groupAnswer);
-		return botServer.sendRequest(rootObject.toString());
+		return botApiService.sendRequest(rootObject.toString());
 	}
 
 	/**
@@ -643,14 +643,14 @@ public class OB11GroupApiService
 	 * @param reason 拒绝理由
 	 * @return API响应结果
 	 */
-	public BotServer.APIRequestResult setGroupAddRequest(String flag, boolean approve, String reason)
+	public BotApiService.APIRequestResult setGroupAddRequest(String flag, boolean approve, String reason)
 	{
-		BotServer botServer = new BotServer(bot, OB11GroupApiPath.SET_GROUP_ADD_REQUEST.getValue());
+		BotApiService botApiService = new BotApiService(bot, OB11GroupApiPath.SET_GROUP_ADD_REQUEST.getValue());
 		JSONObject rootObject = new JSONObject()
 			.put("flag", flag)
 			.put("approve", approve)
 			.put("reason", reason);
-		return botServer.sendRequest(rootObject.toString());
+		return botApiService.sendRequest(rootObject.toString());
 	}
 
 	/**
@@ -662,12 +662,12 @@ public class OB11GroupApiService
 	 */
 	public OB11GroupMemberInfo getGroupMemberInfo(long groupId, long userId, boolean noCache)
 	{
-		BotServer botServer = new BotServer(bot, OB11GroupApiPath.GET_GROUP_MEMBER_INFO.getValue());
+		BotApiService botApiService = new BotApiService(bot, OB11GroupApiPath.GET_GROUP_MEMBER_INFO.getValue());
 		JSONObject rootObject = new JSONObject()
 			.put("group_id", groupId)
 			.put("user_id", userId)
 			.put("no_cache", noCache);
-		BotServer.APIRequestResult apiRequestResult = botServer.sendRequest(rootObject.toString());
+		BotApiService.APIRequestResult apiRequestResult = botApiService.sendRequest(rootObject.toString());
 		if (apiRequestResult.isSuccess)
 		{
 			if (apiRequestResult.data != null)
@@ -690,11 +690,11 @@ public class OB11GroupApiService
 	 */
 	public List<OB11GroupMemberInfo> getGroupMemberList(long groupId, boolean noCache)
 	{
-		BotServer botServer = new BotServer(bot, OB11GroupApiPath.GET_GROUP_MEMBER_LIST.getValue());
+		BotApiService botApiService = new BotApiService(bot, OB11GroupApiPath.GET_GROUP_MEMBER_LIST.getValue());
 		JSONObject rootObject = new JSONObject()
 			.put("group_id", groupId)
 			.put("no_cache", noCache);
-		BotServer.APIRequestResult apiRequestResult = botServer.sendRequest(rootObject.toString());
+		BotApiService.APIRequestResult apiRequestResult = botApiService.sendRequest(rootObject.toString());
 		if (apiRequestResult.isSuccess)
 		{
 			if (apiRequestResult.data != null)
@@ -724,9 +724,9 @@ public class OB11GroupApiService
 	 */
 	public OB11GroupDetailInfo getGroupDetailInfo(long groupId)
 	{
-		BotServer botServer = new BotServer(bot, OB11GroupApiPath.GET_GROUP_DETAIL_INFO.getValue());
+		BotApiService botApiService = new BotApiService(bot, OB11GroupApiPath.GET_GROUP_DETAIL_INFO.getValue());
 		JSONObject rootObject = new JSONObject().put("group_id", groupId);
-		BotServer.APIRequestResult apiRequestResult = botServer.sendRequest(rootObject.toString());
+		BotApiService.APIRequestResult apiRequestResult = botApiService.sendRequest(rootObject.toString());
 		if (apiRequestResult.isSuccess)
 		{
 			if (apiRequestResult.data != null)
@@ -747,14 +747,14 @@ public class OB11GroupApiService
 	 * @param rejectAddRequest 是否拒绝再次申请
 	 * @return API请求结果
 	 */
-	public BotServer.APIRequestResult setGroupKickMembers(long groupId, List<Long> userIdList, boolean rejectAddRequest)
+	public BotApiService.APIRequestResult setGroupKickMembers(long groupId, List<Long> userIdList, boolean rejectAddRequest)
 	{
-		BotServer botServer = new BotServer(bot, OB11GroupApiPath.SET_GROUP_KICK_MEMBERS.getValue());
+		BotApiService botApiService = new BotApiService(bot, OB11GroupApiPath.SET_GROUP_KICK_MEMBERS.getValue());
 		JSONObject rootObject = new JSONObject()
 			.put("group_id", groupId)
 			.put("user_id", userIdList)
 			.put("reject_add_request", rejectAddRequest);
-		return botServer.sendRequest(rootObject.toString());
+		return botApiService.sendRequest(rootObject.toString());
 	}
 
 	/**
@@ -764,14 +764,14 @@ public class OB11GroupApiService
 	 * @param specialTitle 头衔
 	 * @return APi响应结果
 	 */
-	public BotServer.APIRequestResult setGroupSpecialTitle(long groupId, long userId, String specialTitle)
+	public BotApiService.APIRequestResult setGroupSpecialTitle(long groupId, long userId, String specialTitle)
 	{
-		BotServer botServer = new BotServer(bot, OB11GroupApiPath.SET_GROUP_SPECIAL_TITLE.getValue());
+		BotApiService botApiService = new BotApiService(bot, OB11GroupApiPath.SET_GROUP_SPECIAL_TITLE.getValue());
 		JSONObject rootObject = new JSONObject()
 			.put("group_id", groupId)
 			.put("user_id", userId)
 			.put("special_title", specialTitle);
-		return botServer.sendRequest(rootObject.toString());
+		return botApiService.sendRequest(rootObject.toString());
 	}
 
 	/**
@@ -781,9 +781,9 @@ public class OB11GroupApiService
 	 */
 	public OB11GroupAtAllRemainInfo getGroupAtAllRemain(long groupId)
 	{
-		BotServer botServer = new BotServer(bot, OB11GroupApiPath.GET_GROUP_AT_ALL_REMAIN.getValue());
+		BotApiService botApiService = new BotApiService(bot, OB11GroupApiPath.GET_GROUP_AT_ALL_REMAIN.getValue());
 		JSONObject rootObject = new JSONObject().put("group_id", groupId);
-		BotServer.APIRequestResult apiRequestResult = botServer.sendRequest(rootObject.toString());
+		BotApiService.APIRequestResult apiRequestResult = botApiService.sendRequest(rootObject.toString());
 		if (apiRequestResult.isSuccess)
 		{
 			if (apiRequestResult.data != null)
@@ -803,8 +803,8 @@ public class OB11GroupApiService
 	 */
 	public OB11GroupRequestMsgInfo getGroupIgnoredNotifies()
 	{
-		BotServer botServer = new BotServer(bot, OB11GroupApiPath.GET_GROUP_IGNORED_NOTIFIES.getValue());
-		BotServer.APIRequestResult apiRequestResult = botServer.sendRequest("{}");
+		BotApiService botApiService = new BotApiService(bot, OB11GroupApiPath.GET_GROUP_IGNORED_NOTIFIES.getValue());
+		BotApiService.APIRequestResult apiRequestResult = botApiService.sendRequest("{}");
 		if (apiRequestResult.isSuccess)
 		{
 			return OB11GroupRequestMsgInfo.getInstance((JSONObject) apiRequestResult.data);
@@ -828,13 +828,13 @@ public class OB11GroupApiService
 	 * </ul>
 	 * @return API响应结果
 	 */
-	public BotServer.APIRequestResult setGroupRobotAddOption(long groupId, int robotMemberSwitch, int robotMemberExamine)
+	public BotApiService.APIRequestResult setGroupRobotAddOption(long groupId, int robotMemberSwitch, int robotMemberExamine)
 	{
-		BotServer botServer = new BotServer(bot, OB11GroupApiPath.SET_GROUP_ROBOT_ADD_OPTION.getValue());
+		BotApiService botApiService = new BotApiService(bot, OB11GroupApiPath.SET_GROUP_ROBOT_ADD_OPTION.getValue());
 		JSONObject rootObject = new JSONObject()
 			.put("group_id", groupId)
 			.put("robot_member_switch", robotMemberSwitch)
 			.put("robot_member_examine", robotMemberExamine);
-		return botServer.sendRequest(rootObject.toString());
+		return botApiService.sendRequest(rootObject.toString());
 	}
 }

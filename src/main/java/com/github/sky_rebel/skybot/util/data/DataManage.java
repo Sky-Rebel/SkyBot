@@ -63,7 +63,7 @@ public class DataManage
 		putData(getData().put(key, gson.toJson(dataClass)));
 	}
 
-	private static JSONObject getData()
+	public static JSONObject getData()
 	{
 		try
 		{
@@ -81,7 +81,7 @@ public class DataManage
 		}
 	}
 
-	private static void putData(JSONObject json)
+	public static void putData(JSONObject json)
 	{
 		try
 		{

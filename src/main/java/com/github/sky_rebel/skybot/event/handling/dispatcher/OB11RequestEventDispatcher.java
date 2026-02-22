@@ -17,12 +17,12 @@ public class OB11RequestEventDispatcher
 		if (requestEventType.equals("friend"))
 		{
 			OB11FriendAddRequestEvent ob11FriendAddRequestEvent = new OB11FriendAddRequestEvent();
-			ob11FriendAddRequestEvent.bot = bot;
-			ob11FriendAddRequestEvent.comment = ob11EventPostData.getString("comment");
-			ob11FriendAddRequestEvent.userId = ob11EventPostData.getLong("user_id");
-			ob11FriendAddRequestEvent.flag = ob11EventPostData.getString("flag");
-			ob11FriendAddRequestEvent.time = ob11EventPostData.getLong("time");
-			ob11FriendAddRequestEvent.selfId = ob11EventPostData.getLong("self_id");
+			ob11FriendAddRequestEvent.setBot(bot);
+			ob11FriendAddRequestEvent.setComment(ob11EventPostData.getString("comment"));
+			ob11FriendAddRequestEvent.setUserId(ob11EventPostData.getLong("user_id"));
+			ob11FriendAddRequestEvent.setFlag(ob11EventPostData.getString("flag"));
+			ob11FriendAddRequestEvent.setTime(ob11EventPostData.getLong("time"));
+			ob11FriendAddRequestEvent.setSelfId(ob11EventPostData.getLong("self_id"));
 			OB11RequestHandler.onFriendRequest(bot, ob11FriendAddRequestEvent);
 		}
 		else if (requestEventType.equals("group"))
@@ -31,25 +31,25 @@ public class OB11RequestEventDispatcher
 			if (subType.equals("add"))
 			{
 				OB11GroupAddRequestEvent ob11GroupAddRequestEvent = new OB11GroupAddRequestEvent();
-				ob11GroupAddRequestEvent.bot = bot;
-				ob11GroupAddRequestEvent.time = ob11EventPostData.getLong("time");
-				ob11GroupAddRequestEvent.comment = ob11EventPostData.getString("comment");
+				ob11GroupAddRequestEvent.setBot(bot);
+				ob11GroupAddRequestEvent.setTime(ob11EventPostData.getLong("time"));
+				ob11GroupAddRequestEvent.setComment(ob11EventPostData.getString("comment"));
 				ob11GroupAddRequestEvent.groupId = ob11EventPostData.getLong("group_id");
-				ob11GroupAddRequestEvent.flag = ob11EventPostData.getString("flag");
-				ob11GroupAddRequestEvent.selfId = ob11EventPostData.getLong("self_id");
-				ob11GroupAddRequestEvent.userId = ob11EventPostData.getLong("user_id");
+				ob11GroupAddRequestEvent.setFlag(ob11EventPostData.getString("flag"));
+				ob11GroupAddRequestEvent.setSelfId(ob11EventPostData.getLong("self_id"));
+				ob11GroupAddRequestEvent.setUserId(ob11EventPostData.getLong("user_id"));
 				OB11RequestHandler.onGroupAddRequest(bot, ob11GroupAddRequestEvent);
 			}
 			else if (subType.equals("invite"))
 			{
 				OB11GroupInviteRequestEvent ob11GroupInviteRequestEvent = new OB11GroupInviteRequestEvent();
-				ob11GroupInviteRequestEvent.bot = bot;
-				ob11GroupInviteRequestEvent.time = ob11EventPostData.getLong("time");
-				ob11GroupInviteRequestEvent.selfId = ob11EventPostData.getLong("self_id");
+				ob11GroupInviteRequestEvent.setBot(bot);
+				ob11GroupInviteRequestEvent.setTime(ob11EventPostData.getLong("time"));
+				ob11GroupInviteRequestEvent.setSelfId(ob11EventPostData.getLong("self_id"));
 				ob11GroupInviteRequestEvent.groupId = ob11EventPostData.getLong("group_id");
-				ob11GroupInviteRequestEvent.userId = ob11EventPostData.getLong("user_id");
-				ob11GroupInviteRequestEvent.flag = ob11EventPostData.getString("flag");
-				ob11GroupInviteRequestEvent.comment = ob11EventPostData.getString("comment");
+				ob11GroupInviteRequestEvent.setUserId(ob11EventPostData.getLong("user_id"));
+				ob11GroupInviteRequestEvent.setFlag(ob11EventPostData.getString("flag"));
+				ob11GroupInviteRequestEvent.setComment(ob11EventPostData.getString("comment"));
 				OB11RequestHandler.onGroupInviteRequest(bot, ob11GroupInviteRequestEvent);
 			}
 			else LOGGER.warn("未知群组请求事件类型！");

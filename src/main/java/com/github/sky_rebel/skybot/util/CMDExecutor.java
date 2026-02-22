@@ -81,7 +81,7 @@ public class CMDExecutor
 				String batAbsolutePath = batFilePath.toString();
 				String startCmd = String.format
 				(
-					"start \"SkyBot-BAT-%s\" /wait cmd.exe /k \"%s %s\"",
+					"start \"SkyBot-%s\" /wait cmd.exe /k \"%s %s\"",
 					batFile,
 					batAbsolutePath,
 					argsJoin

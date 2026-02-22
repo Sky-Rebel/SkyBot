@@ -1,12 +1,12 @@
-package com.github.sky_rebel.skybot.event.handling.manage;
+package com.github.sky_rebel.skybot.event.handling.listener.manage;
 
 import com.github.sky_rebel.skybot.event.handling.listener.OB11MessageSentEventListener;
 import com.github.sky_rebel.skybot.event.handling.listener.OB11MetaEventListener;
 import com.github.sky_rebel.skybot.event.handling.listener.OB11NoticeEventListener;
 import com.github.sky_rebel.skybot.event.handling.listener.OB11RequestEventListener;
-import com.github.sky_rebel.skybot.event.handling.listener.message.OB11GroupMessageEventListener;
-import com.github.sky_rebel.skybot.event.handling.listener.message.OB11MessageEventListener;
-import com.github.sky_rebel.skybot.event.handling.listener.message.OB11PrivateMessageEventListener;
+import com.github.sky_rebel.skybot.event.handling.listener.OB11GroupMessageEventListener;
+import com.github.sky_rebel.skybot.event.handling.listener.OB11MessageEventListener;
+import com.github.sky_rebel.skybot.event.handling.listener.OB11PrivateMessageEventListener;
 import com.github.sky_rebel.skybot.util.logger.Logger;
 import com.github.sky_rebel.skybot.util.logger.SkybotLogger;
 
