@@ -1,7 +1,7 @@
 package com.github.sky_rebel.skybot.api;
 
-import com.github.sky_rebel.skybot.Bot;
-import com.github.sky_rebel.skybot.BotApiService;
+import com.github.sky_rebel.skybot.bot.Bot;
+import com.github.sky_rebel.skybot.bot.BotApiService;
 import com.github.sky_rebel.skybot.api.data.group.OB11EssenceMsgInfo;
 import com.github.sky_rebel.skybot.api.data.group.OB11GroupAtAllRemainInfo;
 import com.github.sky_rebel.skybot.api.data.group.OB11GroupDetailInfo;

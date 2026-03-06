@@ -1,6 +1,6 @@
 package com.github.sky_rebel.skybot.event;
 
-import com.github.sky_rebel.skybot.Bot;
+import com.github.sky_rebel.skybot.bot.Bot;
 import com.github.sky_rebel.skybot.event.message_sent.OB11GroupMessageSentEvent;
 import com.github.sky_rebel.skybot.event.message_sent.OB11PrivateMessageSentEvent;
 import com.github.sky_rebel.skybot.msg.OB11MessageSegment;
@@ -183,7 +183,7 @@ public class OB11BaseMessageSentEvent extends OB11BaseEvent
 		OB11GroupMessageSentEvent ob11GroupMessageSentEvent = new OB11GroupMessageSentEvent();
 		ob11GroupMessageSentEvent.setBot(bot);
 		ob11GroupMessageSentEvent.setTime(json.optLong("time"));
-		ob11GroupMessageSentEvent.setSelfId(json.optLong("self_id"));
+		ob11GroupMessageSentEvent.setBotId(json.optLong("self_id"));
 		ob11GroupMessageSentEvent.setUserId(json.optLong("user_id"));
 		ob11GroupMessageSentEvent.setGroupId(json.optLong("group_id"));
 		ob11GroupMessageSentEvent.setTargetId(json.optLong("taropt_id"));
@@ -221,7 +221,7 @@ public class OB11BaseMessageSentEvent extends OB11BaseEvent
 		OB11PrivateMessageSentEvent ob11PrivateMessageSentEvent = new OB11PrivateMessageSentEvent();
 		ob11PrivateMessageSentEvent.setBot(bot);
 		ob11PrivateMessageSentEvent.setTime(json.optLong("time"));
-		ob11PrivateMessageSentEvent.setSelfId(json.optLong("self_id"));
+		ob11PrivateMessageSentEvent.setBotId(json.optLong("self_id"));
 		ob11PrivateMessageSentEvent.setUserId(json.optLong("user_id"));
 		ob11PrivateMessageSentEvent.setTargetId(json.optLong("target_id"));
 		ob11PrivateMessageSentEvent.setMessageId(json.optLong("message_id"));

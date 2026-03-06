@@ -1,6 +1,6 @@
 package com.github.sky_rebel.script;
 
-import com.github.sky_rebel.skybot.Bot;
+import com.github.sky_rebel.skybot.bot.Bot;
 import com.github.sky_rebel.skybot.api.OB11MessageApiService;
 import com.github.sky_rebel.skybot.event.message.OB11GroupMessageEvent;
 import com.github.sky_rebel.script.compile.ScriptCompiling;

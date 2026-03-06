@@ -1,6 +1,6 @@
 package com.github.sky_rebel.skybot.event.handling.dispatcher;
 
-import com.github.sky_rebel.skybot.Bot;
+import com.github.sky_rebel.skybot.bot.Bot;
 import com.github.sky_rebel.skybot.event.handling.handler.OB11RequestHandler;
 import com.github.sky_rebel.skybot.event.request.OB11FriendAddRequestEvent;
 import com.github.sky_rebel.skybot.event.request.OB11GroupAddRequestEvent;
@@ -22,7 +22,7 @@ public class OB11RequestEventDispatcher
 			ob11FriendAddRequestEvent.setUserId(ob11EventPostData.getLong("user_id"));
 			ob11FriendAddRequestEvent.setFlag(ob11EventPostData.getString("flag"));
 			ob11FriendAddRequestEvent.setTime(ob11EventPostData.getLong("time"));
-			ob11FriendAddRequestEvent.setSelfId(ob11EventPostData.getLong("self_id"));
+			ob11FriendAddRequestEvent.setBotId(ob11EventPostData.getLong("self_id"));
 			OB11RequestHandler.onFriendRequest(bot, ob11FriendAddRequestEvent);
 		}
 		else if (requestEventType.equals("group"))
@@ -36,7 +36,7 @@ public class OB11RequestEventDispatcher
 				ob11GroupAddRequestEvent.setComment(ob11EventPostData.getString("comment"));
 				ob11GroupAddRequestEvent.groupId = ob11EventPostData.getLong("group_id");
 				ob11GroupAddRequestEvent.setFlag(ob11EventPostData.getString("flag"));
-				ob11GroupAddRequestEvent.setSelfId(ob11EventPostData.getLong("self_id"));
+				ob11GroupAddRequestEvent.setBotId(ob11EventPostData.getLong("self_id"));
 				ob11GroupAddRequestEvent.setUserId(ob11EventPostData.getLong("user_id"));
 				OB11RequestHandler.onGroupAddRequest(bot, ob11GroupAddRequestEvent);
 			}
@@ -45,7 +45,7 @@ public class OB11RequestEventDispatcher
 				OB11GroupInviteRequestEvent ob11GroupInviteRequestEvent = new OB11GroupInviteRequestEvent();
 				ob11GroupInviteRequestEvent.setBot(bot);
 				ob11GroupInviteRequestEvent.setTime(ob11EventPostData.getLong("time"));
-				ob11GroupInviteRequestEvent.setSelfId(ob11EventPostData.getLong("self_id"));
+				ob11GroupInviteRequestEvent.setBotId(ob11EventPostData.getLong("self_id"));
 				ob11GroupInviteRequestEvent.groupId = ob11EventPostData.getLong("group_id");
 				ob11GroupInviteRequestEvent.setUserId(ob11EventPostData.getLong("user_id"));
 				ob11GroupInviteRequestEvent.setFlag(ob11EventPostData.getString("flag"));

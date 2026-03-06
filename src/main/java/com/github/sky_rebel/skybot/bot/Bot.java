@@ -1,10 +1,10 @@
-package com.github.sky_rebel.skybot;
+package com.github.sky_rebel.skybot.bot;
 
 import com.github.sky_rebel.skybot.api.OB11AccountApiService;
 import com.github.sky_rebel.skybot.api.OB11GroupApiService;
 import com.github.sky_rebel.skybot.api.OB11MessageApiService;
 import com.github.sky_rebel.skybot.event.handling.listener.OB11EventListener;
-import com.github.sky_rebel.skybot.util.CMDExecutor;
+import com.github.sky_rebel.skybot.util.cmd.CMDExecutor;
 import com.github.sky_rebel.skybot.util.NapcatInstall;
 import com.github.sky_rebel.skybot.util.logger.Logger;
 import com.github.sky_rebel.skybot.util.logger.SkybotLogger;

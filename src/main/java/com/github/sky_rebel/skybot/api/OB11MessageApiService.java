@@ -1,7 +1,7 @@
 package com.github.sky_rebel.skybot.api;
 
-import com.github.sky_rebel.skybot.Bot;
-import com.github.sky_rebel.skybot.BotApiService;
+import com.github.sky_rebel.skybot.bot.Bot;
+import com.github.sky_rebel.skybot.bot.BotApiService;
 import com.github.sky_rebel.skybot.msg.element.OB11JsonMsgElement;
 import com.github.sky_rebel.skybot.msg.element.OB11MsgElement;
 import com.github.sky_rebel.skybot.msg.element.OB11ReplyMsgElement;

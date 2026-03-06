@@ -1,4 +1,4 @@
-import com.github.sky_rebel.skybot.Bot;
+import com.github.sky_rebel.skybot.bot.Bot;
 import com.github.sky_rebel.skybot.util.logger.SkybotLogger;
 import com.github.sky_rebel.skybot.util.logger.Logger;
 

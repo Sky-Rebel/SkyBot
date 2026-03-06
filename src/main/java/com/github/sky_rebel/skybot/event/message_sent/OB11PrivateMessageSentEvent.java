@@ -2,8 +2,6 @@ package com.github.sky_rebel.skybot.event.message_sent;
 
 import com.github.sky_rebel.skybot.event.OB11BaseMessageSentEvent;
 
-import java.util.StringJoiner;
-
 public class OB11PrivateMessageSentEvent extends OB11BaseMessageSentEvent
 {
 	private Sender sender;
@@ -41,7 +39,7 @@ public class OB11PrivateMessageSentEvent extends OB11BaseMessageSentEvent
 		stringBuffer.append(",").append("messageElementArray").append("=").append(getMessageElementArray());
 		stringBuffer.append(",").append("bot").append("=").append(getBot());
 		stringBuffer.append(",").append("time").append("=").append(getTime());
-		stringBuffer.append(",").append("selfId").append("=").append(getSelfId());
+		stringBuffer.append(",").append("selfId").append("=").append(getBotId());
 		stringBuffer.append('}');
 		return stringBuffer.toString();
 	}

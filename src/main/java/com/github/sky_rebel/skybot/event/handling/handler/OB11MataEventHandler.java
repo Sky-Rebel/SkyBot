@@ -1,6 +1,6 @@
 package com.github.sky_rebel.skybot.event.handling.handler;
 
-import com.github.sky_rebel.skybot.Bot;
+import com.github.sky_rebel.skybot.bot.Bot;
 import com.github.sky_rebel.skybot.event.handling.listener.OB11MetaEventListener;
 import com.github.sky_rebel.skybot.event.handling.listener.manage.OB11EventListenerManage;
 import com.github.sky_rebel.skybot.event.meta.OB11HeartbeatEvent;

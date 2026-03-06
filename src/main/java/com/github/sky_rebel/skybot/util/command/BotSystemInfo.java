@@ -1,19 +1,73 @@
 package com.github.sky_rebel.skybot.util.command;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 public class BotSystemInfo
 {
-	public int id;
+	private int id;
 
-	public String name;
+	private String name;
 
-	public String command;
+	private String command;
 
-	public String description;
+	private String description;
 
-	public List<BotSystemInfo> botSystemInfoList = new LinkedList<>();
+	private List<BotFunctionInfo> botFunctionInfoList = new ArrayList<>();
 
-	public List<BotFunctionInfo> botFunctionInfoList = new LinkedList<>();
+	public int getFunctionCount()
+	{
+		return botFunctionInfoList.size();
+	}
+
+	public int getId()
+	{
+		return id;
+	}
+
+	public void setId(int id)
+	{
+		this.id = id;
+	}
+
+	public String getName()
+	{
+		return name;
+	}
+
+	public void setName(String name)
+	{
+		this.name = name;
+		setCommand(name);
+	}
+
+	public String getCommand()
+	{
+		return command;
+	}
+
+	public void setCommand(String command)
+	{
+		this.command = command;
+	}
+
+	public String getDescription()
+	{
+		return description;
+	}
+
+	public void setDescription(String description)
+	{
+		this.description = description;
+	}
+
+	public List<BotFunctionInfo> getBotFunctionInfoList()
+	{
+		return botFunctionInfoList;
+	}
+
+	public void addBotFunctionInfo(BotFunctionInfo botFunctionInfo)
+	{
+		this.botFunctionInfoList.add(botFunctionInfo);
+	}
 }

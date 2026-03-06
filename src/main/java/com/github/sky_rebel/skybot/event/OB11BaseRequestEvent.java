@@ -89,7 +89,7 @@ public class OB11BaseRequestEvent extends OB11BaseEvent
 		stringBuffer.append(",").append("flag").append("=").append(getFlag());
 		stringBuffer.append(",").append("comment").append("=").append(getComment());
 		stringBuffer.append(",").append("time").append("=").append(getTime());
-		stringBuffer.append(",").append("selfId").append("=").append(getSelfId());
+		stringBuffer.append(",").append("selfId").append("=").append(getBotId());
 		stringBuffer.append('}');
 		return stringBuffer.toString();
 	}

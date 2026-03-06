@@ -79,7 +79,7 @@ public class OB11PrivateMessageEvent extends OB11BaseMessageEvent
 		stringBuffer.append(",").append("messageArray").append("=").append(getMessageArray());
 		stringBuffer.append(",").append("messageElementArray").append("=").append(getMessageElementArray());
 		stringBuffer.append(",").append("time").append("=").append(getTime());
-		stringBuffer.append(",").append("selfId").append("=").append(getSelfId());
+		stringBuffer.append(",").append("selfId").append("=").append(getBotId());
 		stringBuffer.append('}');
 		return stringBuffer.toString();
 	}

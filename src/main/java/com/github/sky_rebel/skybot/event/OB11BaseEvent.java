@@ -1,6 +1,6 @@
 package com.github.sky_rebel.skybot.event;
 
-import com.github.sky_rebel.skybot.Bot;
+import com.github.sky_rebel.skybot.bot.Bot;
 
 /**
  * Represents the base class for all events in the OneBot v11 protocol. This class is designed to
@@ -52,12 +52,11 @@ public class OB11BaseEvent
 	private long time;
 
 	/**
-	 * Represents the ID of the bot itself within the context of the event. This field is used to
-	 * uniquely identify the bot that is associated with or has triggered this event. It is particularly
-	 * useful for distinguishing between multiple bots in a scenario where more than one bot is operating,
-	 * and for correctly attributing actions or messages to the specific bot.
+	 * Represents the unique identifier of the bot involved in the event. This ID is used to
+	 * uniquely identify the bot within the OneBot v11 protocol and is essential for tracking
+	 * and managing bot-specific data and interactions.
 	 */
-	private long selfId;
+	private long botId;
 
 	public Bot getBot()
 	{
@@ -79,14 +78,14 @@ public class OB11BaseEvent
 		this.time = time;
 	}
 
-	public long getSelfId()
+	public long getBotId()
 	{
-		return selfId;
+		return botId;
 	}
 
-	public void setSelfId(long selfId)
+	public void setBotId(long botId)
 	{
-		this.selfId = selfId;
+		this.botId = botId;
 	}
 
 	@Override
@@ -96,7 +95,7 @@ public class OB11BaseEvent
 		stringBuffer.append("{");
 		stringBuffer.append("bot").append("=").append(getBot());
 		stringBuffer.append(",").append("time").append("=").append(getTime());
-		stringBuffer.append(",").append("selfId").append("=").append(getSelfId());
+		stringBuffer.append(",").append("selfId").append("=").append(getBotId());
 		stringBuffer.append('}');
 		return stringBuffer.toString();
 	}

@@ -1,6 +1,6 @@
 package com.github.sky_rebel.skybot.event.message;
 
-import com.github.sky_rebel.skybot.BotApiService;
+import com.github.sky_rebel.skybot.bot.BotApiService;
 import com.github.sky_rebel.skybot.api.OB11GroupApiService;
 import com.github.sky_rebel.skybot.api.OB11MessageApiService;
 import com.github.sky_rebel.skybot.event.OB11BaseMessageEvent;
@@ -137,7 +137,7 @@ public class OB11GroupMessageEvent extends OB11BaseMessageEvent
 		stringBuffer.append(",").append("messageArray").append("=").append(getMessageArray());
 		stringBuffer.append(",").append("messageElementArray").append("=").append(getMessageElementArray());
 		stringBuffer.append(",").append("time").append("=").append(getTime());
-		stringBuffer.append(",").append("selfId").append("=").append(getSelfId());
+		stringBuffer.append(",").append("selfId").append("=").append(getBotId());
 		stringBuffer.append('}');
 		return stringBuffer.toString();
 	}

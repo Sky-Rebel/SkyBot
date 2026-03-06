@@ -1,7 +1,6 @@
 package com.github.sky_rebel.skybot.event.message_sent;
 
 import com.github.sky_rebel.skybot.event.OB11BaseMessageSentEvent;
-import com.github.sky_rebel.skybot.event.message.OB11GroupMessageEvent;
 
 import java.util.List;
 import java.util.StringJoiner;
@@ -133,7 +132,7 @@ public class OB11GroupMessageSentEvent extends OB11BaseMessageSentEvent
 			.add("rawMessage='" + getRawMessage() + "'")
 			.add("messageArray=" + getMessageArray())
 			.add("time=" + getTime())
-			.add("selfId=" + getSelfId())
+			.add("selfId=" + getBotId())
 			.toString();
 	}
 }

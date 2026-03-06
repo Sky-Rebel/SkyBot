@@ -31,6 +31,7 @@ public class OB11AtMsgElement extends OB11MsgElement
 			'}';
 	}
 
+	@Override
 	public ElementType getElementType()
 	{
 		return ELEMENT_TYPE;

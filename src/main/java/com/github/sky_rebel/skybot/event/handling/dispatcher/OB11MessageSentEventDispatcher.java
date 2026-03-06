@@ -1,6 +1,6 @@
 package com.github.sky_rebel.skybot.event.handling.dispatcher;
 
-import com.github.sky_rebel.skybot.Bot;
+import com.github.sky_rebel.skybot.bot.Bot;
 import com.github.sky_rebel.skybot.event.OB11BaseMessageSentEvent;
 import com.github.sky_rebel.skybot.event.handling.handler.OB11MessageSentEventHandler;
 import com.github.sky_rebel.skybot.event.message_sent.OB11GroupMessageSentEvent;

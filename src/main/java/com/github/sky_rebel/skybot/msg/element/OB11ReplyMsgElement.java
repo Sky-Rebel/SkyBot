@@ -27,6 +27,7 @@ public class OB11ReplyMsgElement extends OB11MsgElement
 		.toString();
 	}
 
+	@Override
 	public OB11MsgElement.ElementType getElementType()
 	{
 		return ELEMENT_TYPE;

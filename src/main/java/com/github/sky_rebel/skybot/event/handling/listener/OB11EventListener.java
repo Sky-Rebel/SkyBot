@@ -1,7 +1,7 @@
 package com.github.sky_rebel.skybot.event.handling.listener;
 
-import com.github.sky_rebel.skybot.Bot;
-import com.github.sky_rebel.skybot.BotConfig;
+import com.github.sky_rebel.skybot.bot.Bot;
+import com.github.sky_rebel.skybot.bot.BotConfig;
 import com.github.sky_rebel.skybot.event.handling.dispatcher.OB11EventDispatcher;
 import org.java_websocket.WebSocket;
 import org.java_websocket.handshake.ClientHandshake;

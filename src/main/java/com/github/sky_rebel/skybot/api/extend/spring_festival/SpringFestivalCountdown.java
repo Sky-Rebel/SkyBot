@@ -1,6 +1,6 @@
 package com.github.sky_rebel.skybot.api.extend.spring_festival;
 
-import com.github.sky_rebel.skybot.Bot;
+import com.github.sky_rebel.skybot.bot.Bot;
 import com.github.sky_rebel.skybot.util.logger.SkybotLogger;
 import com.github.sky_rebel.skybot.util.logger.Logger;
 

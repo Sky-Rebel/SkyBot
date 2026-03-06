@@ -1,4 +1,4 @@
-package com.github.sky_rebel.skybot;
+package com.github.sky_rebel.skybot.bot;
 
 import org.json.JSONObject;
 import org.slf4j.Logger;

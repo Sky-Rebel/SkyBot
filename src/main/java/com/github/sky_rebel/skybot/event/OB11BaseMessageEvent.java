@@ -1,6 +1,6 @@
 package com.github.sky_rebel.skybot.event;
 
-import com.github.sky_rebel.skybot.Bot;
+import com.github.sky_rebel.skybot.bot.Bot;
 import com.github.sky_rebel.skybot.event.handling.handler.OB11MessageEventHandler;
 import com.github.sky_rebel.skybot.event.message.OB11GroupMessageEvent;
 import com.github.sky_rebel.skybot.event.message.OB11PrivateMessageEvent;
@@ -9,6 +9,7 @@ import com.github.sky_rebel.skybot.msg.element.OB11MsgElement;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.util.Arrays;
 import java.util.List;
 
 import static com.github.sky_rebel.skybot.event.handling.dispatcher.OB11EventDispatcher.LOGGER;
@@ -25,6 +26,26 @@ import static com.github.sky_rebel.skybot.event.handling.dispatcher.OB11EventDis
  */
 public class OB11BaseMessageEvent extends OB11BaseEvent
 {
+
+	public boolean isHasParam()
+	{
+		return hasParam;
+	}
+
+	public void setHasParam(boolean hasParam)
+	{
+		this.hasParam = hasParam;
+	}
+
+	public List<String> getCommand()
+	{
+		return command;
+	}
+
+	public void setCommand(List<String> command)
+	{
+		this.command = command;
+	}
 
 	/**
 	 * Enumerates the types of messages that can be processed within the OneBot v11 protocol.
@@ -46,6 +67,10 @@ public class OB11BaseMessageEvent extends OB11BaseEvent
 	 * as messages, requests, or notices.
 	 */
 	private long userId;
+
+	private boolean hasParam;
+
+	private List<String> command;
 
 	/**
 	 * Represents the unique identifier for a message. This field is used to store the ID of the message
@@ -171,11 +196,17 @@ public class OB11BaseMessageEvent extends OB11BaseEvent
 		OB11GroupMessageEvent ob11GroupMessageEvent = new OB11GroupMessageEvent();
 		ob11GroupMessageEvent.setBot(bot);
 		ob11GroupMessageEvent.setTime(json.optLong("time"));
-		ob11GroupMessageEvent.setSelfId(json.optLong("self_id"));
+		ob11GroupMessageEvent.setBotId(json.optLong("self_id"));
 		ob11GroupMessageEvent.setUserId(json.optLong("user_id"));
 		ob11GroupMessageEvent.setGroupId(json.optLong("group_id"));
 		ob11GroupMessageEvent.setMessageId(json.optLong("message_id"));
 		ob11GroupMessageEvent.setRawMessage(json.optString("raw_message"));
+		String[] command = ob11GroupMessageEvent.getRawMessage().split(" ");
+		if (command.length > 1)
+		{
+			ob11GroupMessageEvent.setHasParam(true);
+			ob11GroupMessageEvent.setCommand(Arrays.asList(command));
+		}
 		ob11GroupMessageEvent.setMessageArray(json.optJSONArray("message"));
 		ob11GroupMessageEvent.setMessageElementArray(OB11MessageSegment.getMessageElementArray(ob11GroupMessageEvent.getMessageArray()));
 		if (!ob11GroupMessageEvent.getMessageElementArray().isEmpty())
@@ -208,10 +239,16 @@ public class OB11BaseMessageEvent extends OB11BaseEvent
 		OB11PrivateMessageEvent ob11PrivateMessageEvent = new OB11PrivateMessageEvent();
 		ob11PrivateMessageEvent.setBot(bot);
 		ob11PrivateMessageEvent.setTime(json.optLong("time"));
-		ob11PrivateMessageEvent.setSelfId(json.optLong("self_id"));
+		ob11PrivateMessageEvent.setBotId(json.optLong("self_id"));
 		ob11PrivateMessageEvent.setUserId(json.optLong("user_id"));
 		ob11PrivateMessageEvent.setMessageId(json.optLong("message_id"));
 		ob11PrivateMessageEvent.setRawMessage(json.optString("raw_message"));
+		String[] command = ob11PrivateMessageEvent.getRawMessage().split(" ");
+		if (command.length > 1)
+		{
+			ob11PrivateMessageEvent.setHasParam(true);
+			ob11PrivateMessageEvent.setCommand(Arrays.asList(command));
+		}
 		ob11PrivateMessageEvent.setMessageArray(json.optJSONArray("message"));
 		ob11PrivateMessageEvent.setMessageElementArray(OB11MessageSegment.getMessageElementArray(ob11PrivateMessageEvent.getMessageArray()));
 		JSONObject senderJson = json.optJSONObject("sender");
@@ -230,7 +267,7 @@ public class OB11BaseMessageEvent extends OB11BaseEvent
 		StringBuffer stringBuffer = new StringBuffer("OB11BaseMessageEvent");
 		stringBuffer.append("{");
 		stringBuffer.append(",").append("time").append("=").append(getTime());
-		stringBuffer.append(",").append("selfId").append("=").append(getSelfId());
+		stringBuffer.append(",").append("selfId").append("=").append(getBotId());
 		stringBuffer.append(",").append("userId").append("=").append(getUserId());
 		stringBuffer.append(",").append("messageId").append("=").append(getMessageId());
 		stringBuffer.append(",").append("rawMessage").append("=").append(getRawMessage());

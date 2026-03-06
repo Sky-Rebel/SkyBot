@@ -1,6 +1,6 @@
 package com.github.sky_rebel.skybot.event.handling.dispatcher;
 
-import com.github.sky_rebel.skybot.Bot;
+import com.github.sky_rebel.skybot.bot.Bot;
 import com.github.sky_rebel.skybot.event.handling.handler.OB11MataEventHandler;
 import com.github.sky_rebel.skybot.event.meta.OB11HeartbeatEvent;
 import com.github.sky_rebel.skybot.event.meta.OB11LifeCycleEvent;
@@ -18,7 +18,7 @@ public class OB11MetaEventDispatcher
 			OB11LifeCycleEvent ob11LifeCycleEvent = new OB11LifeCycleEvent();
 			ob11LifeCycleEvent.setBot(bot);
 			ob11LifeCycleEvent.setTime(ob11EventPostData.getLong("time"));
-			ob11LifeCycleEvent.setSelfId(ob11EventPostData.getLong("self_id"));
+			ob11LifeCycleEvent.setBotId(ob11EventPostData.getLong("self_id"));
 			ob11LifeCycleEvent.lifeCycleSubType = OB11LifeCycleEvent.LifeCycleSubType.valueOf(ob11EventPostData.getString("sub_type").toUpperCase());
 			switch (ob11LifeCycleEvent.lifeCycleSubType)
 			{
@@ -32,7 +32,7 @@ public class OB11MetaEventDispatcher
 		{
 			OB11HeartbeatEvent ob11HeartbeatEvent = new OB11HeartbeatEvent();
 			ob11HeartbeatEvent.setBot(bot);
-			ob11HeartbeatEvent.setSelfId(ob11EventPostData.getLong("self_id"));
+			ob11HeartbeatEvent.setBotId(ob11EventPostData.getLong("self_id"));
 			ob11HeartbeatEvent.interval = ob11EventPostData.getInt("interval");
 			ob11HeartbeatEvent.setTime(ob11EventPostData.getLong("time"));
 			JSONObject status = ob11EventPostData.getJSONObject("status");

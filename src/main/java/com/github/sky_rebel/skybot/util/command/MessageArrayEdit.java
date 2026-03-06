@@ -1,6 +1,6 @@
 package com.github.sky_rebel.skybot.util.command;
 
-import com.github.sky_rebel.skybot.Bot;
+import com.github.sky_rebel.skybot.bot.Bot;
 import com.github.sky_rebel.skybot.event.OB11BaseMessageEvent;
 import com.github.sky_rebel.skybot.event.message.OB11GroupMessageEvent;
 import com.github.sky_rebel.skybot.event.message.OB11PrivateMessageEvent;
@@ -22,7 +22,7 @@ public class MessageArrayEdit
 
 	private static final Logger LOGGER = SkybotLogger.getLogger(MessageArrayEdit.class);
 
-	private static final List<OB11MsgElement> MESSAGE_ELEMENT_LIST = new LinkedList<>();
+	private final List<OB11MsgElement> MESSAGE_ELEMENT_LIST = new ArrayList<>();
 
 	private OB11BaseMessageEvent ob11BaseMessageEvent;
 
@@ -43,7 +43,7 @@ public class MessageArrayEdit
 		return addAt("all");
 	}
 
-	private MessageArrayEdit addAt(long id)
+	public MessageArrayEdit addAt(long id)
 	{
 		return addAt(String.valueOf(id));
 	}
@@ -187,5 +187,19 @@ public class MessageArrayEdit
 	public List<OB11MsgElement> getMessageElementList()
 	{
 		return MESSAGE_ELEMENT_LIST;
+	}
+
+	@Override
+	public String toString()
+	{
+		StringBuilder stringBuilder = new StringBuilder();
+		MESSAGE_ELEMENT_LIST.forEach(ob11MsgElement ->
+		{
+			if (ob11MsgElement.getElementType().equals(OB11MsgElement.ElementType.TEXT))
+			{
+				stringBuilder.append(((OB11TextMsgElement)ob11MsgElement).getText());
+			}
+		});
+		return stringBuilder.toString();
 	}
 }

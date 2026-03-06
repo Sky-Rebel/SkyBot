@@ -22,7 +22,7 @@ public class OB11GroupRecallNoticeEvent extends OB11BaseNoticeEvent
 		stringBuffer.append(",").append("messageId").append("=").append(messageId);
 		stringBuffer.append(",").append("operatorId").append("=").append(operatorId);
 		stringBuffer.append(",").append("time").append("=").append(getTime());
-		stringBuffer.append(",").append("selfId").append("=").append(getSelfId());
+		stringBuffer.append(",").append("selfId").append("=").append(getBotId());
 		stringBuffer.append('}');
 		return stringBuffer.toString();
 	}

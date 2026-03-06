@@ -1,6 +1,6 @@
 package com.github.sky_rebel.skybot.event.handling.listener;
 
-import com.github.sky_rebel.skybot.Bot;
+import com.github.sky_rebel.skybot.bot.Bot;
 import com.github.sky_rebel.skybot.event.request.OB11FriendAddRequestEvent;
 import com.github.sky_rebel.skybot.event.request.OB11GroupAddRequestEvent;
 import com.github.sky_rebel.skybot.event.request.OB11GroupInviteRequestEvent;

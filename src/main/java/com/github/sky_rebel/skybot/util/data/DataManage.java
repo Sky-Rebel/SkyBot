@@ -38,7 +38,7 @@ public class DataManage
 				}
 				catch (JSONException e)
 				{
-					LOGGER.error("数据文件内容格式非法");
+					LOGGER.error("数据文件内容格式非法将重置");
 					Files.writeString(FILE_PATH, "{}");
 				}
 			}
